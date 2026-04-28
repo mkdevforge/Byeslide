@@ -53,7 +53,7 @@ function createStaticServer(root, options = {}) {
       const port = Number(options.port || 0);
       await listenWithFallback(server, host, port, options.portAttempts || 20);
       const address = server.address();
-      return `http://${address.address}:${address.port}`;
+      return formatServerUrl(address);
     },
     async close() {
       for (const client of clients) {
@@ -124,23 +124,51 @@ async function serveFile(root, pathname, response) {
     return;
   }
 
-  let stat;
+  let realRoot;
   try {
-    stat = await fsp.stat(filePath);
-    if (stat.isDirectory()) {
-      filePath = path.join(filePath, "index.html");
-      stat = await fsp.stat(filePath);
-    }
+    realRoot = await fsp.realpath(root);
   } catch {
     response.statusCode = 404;
     response.end("Not found");
     return;
   }
 
+  let stat;
+  let realFilePath;
+  try {
+    stat = await fsp.stat(filePath);
+    if (stat.isDirectory()) {
+      filePath = path.join(filePath, "index.html");
+      stat = await fsp.stat(filePath);
+    }
+    realFilePath = await fsp.realpath(filePath);
+  } catch {
+    response.statusCode = 404;
+    response.end("Not found");
+    return;
+  }
+
+  if (!isInside(realRoot, realFilePath)) {
+    response.statusCode = 403;
+    response.end("Forbidden");
+    return;
+  }
+
   response.statusCode = 200;
   response.setHeader("Content-Length", stat.size);
   response.setHeader("Content-Type", MIME_TYPES[path.extname(filePath).toLowerCase()] || "application/octet-stream");
-  fs.createReadStream(filePath).pipe(response);
+  fs.createReadStream(realFilePath).pipe(response);
+}
+
+function formatServerUrl(address) {
+  if (!address || typeof address === "string") {
+    return String(address || "");
+  }
+
+  const host = address.address.includes(":")
+    ? `[${address.address}]`
+    : address.address;
+  return `http://${host}:${address.port}`;
 }
 
 function handleEvents(request, response, clients) {
@@ -156,6 +184,7 @@ function handleEvents(request, response, clients) {
 
 module.exports = {
   createStaticServer,
+  formatServerUrl,
   listenOnce,
   listenWithFallback
 };
