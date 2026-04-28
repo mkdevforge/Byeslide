@@ -2,6 +2,8 @@
 
 This deck is authored as HTML fragments in `slides/` and built into a Reveal.js deck at `dist/index.html`.
 
+The starter deck demonstrates title, comparison, timeline, dashboard chart, embedded video, presenter-mode, and closing layouts.
+
 ```sh
 pnpm install
 pnpm install:browsers

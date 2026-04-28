@@ -1,0 +1,51 @@
+<section class="slide">
+  <div class="slide__topline">
+    <span class="eyebrow">Charts</span>
+    <div class="caption">Pure HTML and SVG</div>
+  </div>
+  <div class="dashboard-grid">
+    <div class="chart-panel">
+      <h3>Deck production cycle</h3>
+      <div class="bar-chart" aria-label="Bar chart showing time spent by workflow step">
+        <div class="bar" style="height: 34%; --bar-color: var(--color-subtle);">12m</div>
+        <div class="bar" style="height: 48%; --bar-color: var(--color-violet);">18m</div>
+        <div class="bar" style="height: 68%; --bar-color: var(--color-accent);">26m</div>
+        <div class="bar" style="height: 42%; --bar-color: var(--color-green);">16m</div>
+        <div class="bar" style="height: 24%; --bar-color: var(--color-warm);">9m</div>
+      </div>
+      <div class="chart-labels">
+        <span>outline</span>
+        <span>copy</span>
+        <span>visuals</span>
+        <span>check</span>
+        <span>export</span>
+      </div>
+    </div>
+    <div class="chart-panel">
+      <h3>Confidence through iteration</h3>
+      <svg class="line-chart" viewBox="0 0 720 280" role="img" aria-label="Line chart showing confidence rising through four build checks">
+        <rect width="720" height="280" fill="#fbfcff"></rect>
+        <g stroke="#d8dce2" stroke-width="2">
+          <line x1="60" y1="55" x2="660" y2="55"></line>
+          <line x1="60" y1="120" x2="660" y2="120"></line>
+          <line x1="60" y1="185" x2="660" y2="185"></line>
+          <line x1="60" y1="250" x2="660" y2="250"></line>
+        </g>
+        <polyline fill="none" stroke="#2f6df6" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" points="72,224 210,180 348,138 486,96 648,62"></polyline>
+        <g fill="#ffffff" stroke="#1647b8" stroke-width="8">
+          <circle cx="72" cy="224" r="14"></circle>
+          <circle cx="210" cy="180" r="14"></circle>
+          <circle cx="348" cy="138" r="14"></circle>
+          <circle cx="486" cy="96" r="14"></circle>
+          <circle cx="648" cy="62" r="14"></circle>
+        </g>
+      </svg>
+      <ul class="insight-list">
+        <li>Every slide is measured against the same fixed viewport.</li>
+        <li>Overflow reports point back to the source slide file.</li>
+        <li>Charts are just markup, so agents can edit them directly.</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">This is intentionally not a charting dependency. It demonstrates that common executive-deck charts can be expressed as stable HTML and SVG inside a slide.</aside>
+</section>
