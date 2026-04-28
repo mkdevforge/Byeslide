@@ -131,7 +131,15 @@ async function copyDeckAssets(root, outDir, assetsDir) {
     return;
   }
 
-  await copyDirectory(source, path.join(outDir, "assets"));
+  if (isInside(outDir, source)) {
+    return;
+  }
+
+  await copyDirectory(source, path.join(outDir, "assets"), {
+    skip(_entry, sourcePath) {
+      return isInside(outDir, sourcePath);
+    }
+  });
 }
 
 function renderIndex({ config, revealOptions, slides, css, plugins, dev }) {
@@ -255,6 +263,7 @@ function escapeAttribute(value) {
 module.exports = {
   addSourceAttribute,
   buildDeck,
+  copyDeckAssets,
   normalizeSlideHtml,
   renderIndex,
   stripFullDocument

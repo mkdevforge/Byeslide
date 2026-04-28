@@ -51,7 +51,7 @@ function createStaticServer(root, options = {}) {
     async start() {
       const host = options.host || "127.0.0.1";
       const port = Number(options.port || 0);
-      await new Promise((resolve) => server.listen(port, host, resolve));
+      await listenWithFallback(server, host, port, options.portAttempts || 20);
       const address = server.address();
       return `http://${address.address}:${address.port}`;
     },
@@ -70,6 +70,47 @@ function createStaticServer(root, options = {}) {
       }
     }
   };
+}
+
+async function listenWithFallback(server, host, preferredPort, portAttempts = 20) {
+  const requestedAttempts = Number(portAttempts);
+  const maxAttempts = preferredPort === 0
+    ? 1
+    : Math.max(1, Number.isFinite(requestedAttempts) ? requestedAttempts : 20);
+  let port = preferredPort;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    try {
+      await listenOnce(server, host, port);
+      return;
+    } catch (error) {
+      if (error.code !== "EADDRINUSE" || preferredPort === 0 || attempt === maxAttempts - 1) {
+        throw error;
+      }
+      port += 1;
+    }
+  }
+}
+
+function listenOnce(server, host, port) {
+  return new Promise((resolve, reject) => {
+    const cleanup = () => {
+      server.off("error", onError);
+      server.off("listening", onListening);
+    };
+    const onError = (error) => {
+      cleanup();
+      reject(error);
+    };
+    const onListening = () => {
+      cleanup();
+      resolve();
+    };
+
+    server.once("error", onError);
+    server.once("listening", onListening);
+    server.listen(port, host);
+  });
 }
 
 async function serveFile(root, pathname, response) {
@@ -114,5 +155,7 @@ function handleEvents(request, response, clients) {
 }
 
 module.exports = {
-  createStaticServer
+  createStaticServer,
+  listenOnce,
+  listenWithFallback
 };

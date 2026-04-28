@@ -43,12 +43,23 @@ test("buildDeck refuses to write outside the deck root", async () => {
   );
 });
 
-async function makeDeck() {
+test("buildDeck skips generated output when copying broad asset directories", async () => {
+  const deckDir = await makeDeck({
+    extraConfig: "assetsDir: '.',\n"
+  });
+
+  const result = await buildDeck(deckDir);
+  assert.ok(await exists(path.join(result.outDir, "assets", "slides", "01-title.html")));
+  assert.equal(await exists(path.join(result.outDir, "assets", "dist")), false);
+});
+
+async function makeDeck(options = {}) {
   const deckDir = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-build-"));
   await fs.mkdir(path.join(deckDir, "slides"), { recursive: true });
   await fs.mkdir(path.join(deckDir, "assets"), { recursive: true });
   await fs.writeFile(path.join(deckDir, "deck.config.js"), `module.exports = {
     title: "Test Deck",
+    ${options.extraConfig || ""}
     plugins: []
   };
 `);

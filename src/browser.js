@@ -9,10 +9,7 @@ async function exportPdf(deckDir = process.cwd(), options = {}) {
     clean: options.clean !== false,
     outDir: options.outDir
   });
-  const output = path.resolve(
-    result.deckDir,
-    options.output || path.join(result.config.outDir, `${slugify(result.config.title)}.pdf`)
-  );
+  const output = resolvePdfOutput(result, options.output);
   await fs.mkdir(path.dirname(output), { recursive: true });
 
   const server = createStaticServer(result.outDir);
@@ -241,6 +238,14 @@ function slugify(value) {
   return slug || "deck";
 }
 
+function resolvePdfOutput(result, explicitOutput) {
+  if (explicitOutput) {
+    return path.resolve(result.deckDir, explicitOutput);
+  }
+
+  return path.join(result.outDir, `${slugify(result.config.title)}.pdf`);
+}
+
 function firstLine(value) {
   return String(value).split(/\r?\n/)[0];
 }
@@ -253,6 +258,7 @@ module.exports = {
   installBrowsers,
   launchChromium,
   measureSlides,
+  resolvePdfOutput,
   slugify,
   waitForReveal
 };
