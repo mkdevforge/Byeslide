@@ -5,6 +5,7 @@ const path = require("node:path");
 const test = require("node:test");
 const { initDeck } = require("../src/init");
 const { parseArgs } = require("../src/cli");
+const rootPackage = require("../package.json");
 
 test("initDeck copies the starter template", async () => {
   const target = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-init-"));
@@ -14,6 +15,9 @@ test("initDeck copies the starter template", async () => {
   assert.ok(await exists(path.join(target, "deck.config.js")));
   assert.ok(await exists(path.join(target, "patterns", "title.html")));
   assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-author", "SKILL.md")));
+
+  const deckPackage = JSON.parse(await fs.readFile(path.join(target, "package.json"), "utf8"));
+  assert.equal(deckPackage.devDependencies.byeslide, rootPackage.version);
 });
 
 test("initDeck refuses a non-empty directory without force", async () => {

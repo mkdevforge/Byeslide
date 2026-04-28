@@ -21,12 +21,32 @@ async function initDeck(target = ".", options = {}) {
       return entry.name === "node_modules" || entry.name === "dist";
     }
   });
+  await stampPackageVersion(root);
 
   return {
     deckDir: root
   };
 }
 
+async function stampPackageVersion(deckDir) {
+  const sourcePackagePath = path.resolve(__dirname, "..", "package.json");
+  const deckPackagePath = path.join(deckDir, "package.json");
+
+  if (!(await pathExists(deckPackagePath))) {
+    return;
+  }
+
+  const sourcePackage = JSON.parse(await fs.readFile(sourcePackagePath, "utf8"));
+  const deckPackage = JSON.parse(await fs.readFile(deckPackagePath, "utf8"));
+  deckPackage.devDependencies = {
+    ...(deckPackage.devDependencies || {}),
+    byeslide: sourcePackage.version
+  };
+
+  await fs.writeFile(deckPackagePath, `${JSON.stringify(deckPackage, null, 2)}\n`, "utf8");
+}
+
 module.exports = {
-  initDeck
+  initDeck,
+  stampPackageVersion
 };

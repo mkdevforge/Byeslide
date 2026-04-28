@@ -28,8 +28,9 @@ async function exportPdf(deckDir = process.cwd(), options = {}) {
         height: result.config.height
       }
     });
+    const diagnostics = collectPageDiagnostics(page);
     await page.goto(`${url}/index.html?view=print`, { waitUntil: "networkidle" });
-    await waitForReveal(page);
+    await waitForReveal(page, diagnostics);
     await page.pdf({
       path: output,
       printBackground: true,
@@ -74,8 +75,9 @@ async function checkDeck(deckDir = process.cwd(), options = {}) {
         height: result.config.height
       }
     });
+    const diagnostics = collectPageDiagnostics(page);
     await page.goto(`${url}/index.html`, { waitUntil: "networkidle" });
-    await waitForReveal(page);
+    await waitForReveal(page, diagnostics);
     const slides = await measureSlides(page);
     return {
       ...result,
@@ -140,16 +142,40 @@ async function installBrowsers(browser = "chromium") {
   });
 }
 
-async function waitForReveal(page) {
+async function waitForReveal(page, diagnostics = [], timeoutMs = 15000) {
   try {
     await page.waitForFunction(
       () => window.Reveal && typeof window.Reveal.isReady === "function" && window.Reveal.isReady(),
       null,
-      { timeout: 15000 }
+      { timeout: timeoutMs }
     );
-  } catch {
-    await page.waitForTimeout(1000);
+  } catch (error) {
+    const details = formatDiagnostics(diagnostics);
+    throw new Error(`Reveal did not become ready within ${timeoutMs}ms.${details ? `\n${details}` : ""}`);
   }
+}
+
+function collectPageDiagnostics(page) {
+  const diagnostics = [];
+
+  page.on("pageerror", (error) => {
+    diagnostics.push(`pageerror: ${firstLine(error.message)}`);
+  });
+  page.on("console", (message) => {
+    if (message.type() === "error") {
+      diagnostics.push(`console error: ${firstLine(message.text())}`);
+    }
+  });
+
+  return diagnostics;
+}
+
+function formatDiagnostics(diagnostics) {
+  if (!diagnostics.length) {
+    return "";
+  }
+
+  return diagnostics.slice(-5).map((entry) => `- ${entry}`).join("\n");
 }
 
 async function measureSlides(page) {
@@ -222,8 +248,11 @@ function firstLine(value) {
 module.exports = {
   checkDeck,
   exportPdf,
+  collectPageDiagnostics,
+  formatDiagnostics,
   installBrowsers,
   launchChromium,
   measureSlides,
-  slugify
+  slugify,
+  waitForReveal
 };

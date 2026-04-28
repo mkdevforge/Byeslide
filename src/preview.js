@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { buildDeck } = require("./build");
+const { isInside } = require("./fs-utils");
 const { createStaticServer } = require("./static-server");
 
 async function previewDeck(deckDir = process.cwd(), options = {}) {
@@ -15,7 +16,7 @@ async function previewDeck(deckDir = process.cwd(), options = {}) {
     port: options.port || 4173
   });
   const url = await server.start();
-  const watcher = watchDeck(result.deckDir, result.config.outDir, async () => {
+  const watcher = watchDeck(result.deckDir, path.relative(result.deckDir, result.outDir), async () => {
     try {
       result = await buildDeck(deckDir, {
         clean: true,
@@ -45,15 +46,16 @@ async function previewDeck(deckDir = process.cwd(), options = {}) {
 }
 
 function watchDeck(root, outDir, onChange) {
-  const ignored = new Set([".git", "node_modules", outDir || "dist"]);
+  const resolvedRoot = path.resolve(root);
+  const ignoredOutput = path.resolve(resolvedRoot, outDir || "dist");
   let timer = null;
 
   const schedule = (filename) => {
     if (!filename) {
       return;
     }
-    const parts = filename.split(/[\\/]/);
-    if (parts.some((part) => ignored.has(part))) {
+    const candidate = path.resolve(resolvedRoot, filename);
+    if (shouldIgnoreWatchPath(resolvedRoot, candidate, ignoredOutput)) {
       return;
     }
 
@@ -62,21 +64,22 @@ function watchDeck(root, outDir, onChange) {
   };
 
   try {
-    return fs.watch(root, { recursive: true }, (_event, filename) => schedule(String(filename || "")));
+    return fs.watch(resolvedRoot, { recursive: true }, (_event, filename) => schedule(String(filename || "")));
   } catch {
-    return watchRecursively(root, schedule, ignored);
+    return watchRecursively(resolvedRoot, schedule, ignoredOutput);
   }
 }
 
-function watchRecursively(root, onChange, ignored) {
+function watchRecursively(root, onChange, ignoredOutput) {
   const watchers = [];
 
   const add = (dir) => {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     watchers.push(fs.watch(dir, (_event, filename) => onChange(path.relative(root, path.join(dir, String(filename || ""))))));
     for (const entry of entries) {
-      if (entry.isDirectory() && !ignored.has(entry.name)) {
-        add(path.join(dir, entry.name));
+      const child = path.join(dir, entry.name);
+      if (entry.isDirectory() && !shouldIgnoreWatchPath(root, child, ignoredOutput)) {
+        add(child);
       }
     }
   };
@@ -91,7 +94,22 @@ function watchRecursively(root, onChange, ignored) {
   };
 }
 
+function shouldIgnoreWatchPath(root, candidate, ignoredOutput) {
+  const relative = path.relative(root, candidate);
+  if (!relative || relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    return false;
+  }
+
+  const parts = relative.split(/[\\/]+/);
+  if (parts.includes(".git") || parts.includes("node_modules")) {
+    return true;
+  }
+
+  return isInside(ignoredOutput, candidate);
+}
+
 module.exports = {
   previewDeck,
+  shouldIgnoreWatchPath,
   watchDeck
 };
