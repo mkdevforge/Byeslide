@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
   <title id="title">Animated presentation demo</title>
-  <desc id="desc">A stylized product demo frame with animated chart bars, a line graph, and a play control.</desc>
+  <desc id="desc">A stylized product demo frame with animated chart bars, a line graph, and a live status marker.</desc>
   <rect width="1280" height="720" fill="#111827"/>
   <rect x="54" y="48" width="1172" height="624" rx="22" fill="#151f32" stroke="#293244" stroke-width="3"/>
   <rect x="92" y="88" width="356" height="70" rx="12" fill="#f6f4ee"/>
@@ -43,13 +43,14 @@
     </rect>
   </g>
 
-  <g transform="translate(533 300)">
-    <circle cx="108" cy="108" r="94" fill="#f6f4ee" opacity=".96"/>
-    <path d="M84 62 166 108 84 154Z" fill="#2f6df6"/>
-    <circle cx="108" cy="108" r="104" fill="none" stroke="#8fb0ff" stroke-width="6" opacity=".72">
+  <g transform="translate(535 312)">
+    <circle cx="106" cy="96" r="86" fill="#f6f4ee" opacity=".96"/>
+    <circle cx="106" cy="96" r="104" fill="none" stroke="#8fb0ff" stroke-width="6" opacity=".72">
       <animate attributeName="r" values="104;124;104" dur="2.4s" repeatCount="indefinite"/>
       <animate attributeName="opacity" values=".72;.12;.72" dur="2.4s" repeatCount="indefinite"/>
     </circle>
+    <text x="106" y="86" fill="#111827" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-size="24" font-weight="760">LIVE</text>
+    <text x="106" y="122" fill="#2f6df6" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-size="42" font-weight="820">+42%</text>
   </g>
 
   <g transform="translate(96 588)" font-family="Inter, Segoe UI, sans-serif" font-size="24" font-weight="720">
