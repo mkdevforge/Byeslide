@@ -534,7 +534,7 @@
   color: #ffffff;
   isolation: isolate;
   padding: 0;
-  position: relative;
+  position: absolute;
 }
 
 .three-scene {

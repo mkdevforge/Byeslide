@@ -3,7 +3,7 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
-const { buildDeck, normalizeSlideHtml, stripFullDocument } = require("../src/build");
+const { buildDeck, extractSlideScripts, normalizeSlideHtml, stripFullDocument } = require("../src/build");
 
 test("normalizes slide fragments into Reveal sections", () => {
   const html = normalizeSlideHtml("<h1>Hello</h1>", "slides/01.html");
@@ -21,6 +21,12 @@ test("extracts body content from full HTML documents", () => {
   assert.equal(html, "<main>Slide</main>");
 });
 
+test("extracts slide scripts from Reveal slide markup", () => {
+  const result = extractSlideScripts("<section><h1>Demo</h1><script type=\"module\" src=\"./assets/demo.js\"></script></section>");
+  assert.equal(result.html, "<section><h1>Demo</h1></section>");
+  assert.deepEqual(result.scripts, ["<script type=\"module\" src=\"./assets/demo.js\"></script>"]);
+});
+
 test("buildDeck writes a Reveal-compatible deck", async () => {
   const deckDir = await makeDeck();
   const result = await buildDeck(deckDir);
@@ -32,6 +38,25 @@ test("buildDeck writes a Reveal-compatible deck", async () => {
   assert.match(index, /Reveal\.initialize/);
   assert.ok(await exists(path.join(result.outDir, "vendor", "reveal", "reveal.css")));
   assert.ok(await exists(path.join(result.outDir, "assets", "note.txt")));
+});
+
+test("buildDeck moves slide-owned scripts outside Reveal slides", async () => {
+  const deckDir = await makeDeck();
+  await fs.writeFile(path.join(deckDir, "slides", "03-script.html"), [
+    "<section class=\"slide\">",
+    "  <h2>Scripted</h2>",
+    "  <script type=\"module\" src=\"./assets/demo.js\"></script>",
+    "</section>"
+  ].join("\n"));
+
+  const result = await buildDeck(deckDir);
+  const index = await fs.readFile(result.indexPath, "utf8");
+  const slideStart = index.indexOf("data-byeslide-source=\"slides/03-script.html\"");
+  const slideEnd = index.indexOf("</section>", slideStart);
+  const scriptIndex = index.indexOf("<script type=\"module\" src=\"./assets/demo.js\"></script>");
+
+  assert.ok(slideStart >= 0);
+  assert.ok(scriptIndex > slideEnd);
 });
 
 test("buildDeck refuses to write outside the deck root", async () => {

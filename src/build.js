@@ -38,10 +38,13 @@ async function buildDeck(deckDir = process.cwd(), options = {}) {
   }
 
   const slides = [];
+  const slideScripts = [];
   for (const file of slideFiles) {
     const source = toPosixPath(path.relative(root, file));
     const raw = await fs.readFile(file, "utf8");
-    slides.push(normalizeSlideHtml(raw, source));
+    const normalized = normalizeSlide(raw, source);
+    slides.push(normalized.html);
+    slideScripts.push(...normalized.scripts);
   }
 
   const cssBlocks = [];
@@ -58,6 +61,7 @@ async function buildDeck(deckDir = process.cwd(), options = {}) {
     config,
     revealOptions: revealOptions(config),
     slides: slides.join("\n\n"),
+    slideScripts: dedupeScripts(slideScripts).join("\n"),
     css: cssBlocks.join("\n\n"),
     plugins,
     dev: Boolean(options.dev)
@@ -77,16 +81,48 @@ async function buildDeck(deckDir = process.cwd(), options = {}) {
 }
 
 function normalizeSlideHtml(raw, source) {
+  return normalizeSlide(raw, source).html;
+}
+
+function normalizeSlide(raw, source) {
   const html = stripFullDocument(raw.replace(/^\uFEFF/, "")).trim();
-  if (!html) {
-    return `<section data-byeslide-source="${escapeAttribute(source)}"></section>`;
+  const extracted = extractSlideScripts(html);
+  const slideHtml = extracted.html.trim();
+  if (!slideHtml) {
+    return {
+      html: `<section data-byeslide-source="${escapeAttribute(source)}"></section>`,
+      scripts: extracted.scripts
+    };
   }
 
-  if (/^<section(?:\s|>)/i.test(html)) {
-    return addSourceAttribute(html, source);
+  if (/^<section(?:\s|>)/i.test(slideHtml)) {
+    return {
+      html: addSourceAttribute(slideHtml, source),
+      scripts: extracted.scripts
+    };
   }
 
-  return `<section data-byeslide-source="${escapeAttribute(source)}">\n${html}\n</section>`;
+  return {
+    html: `<section data-byeslide-source="${escapeAttribute(source)}">\n${slideHtml}\n</section>`,
+    scripts: extracted.scripts
+  };
+}
+
+function extractSlideScripts(html) {
+  const scripts = [];
+  const withoutScripts = html.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, (script) => {
+    scripts.push(script.trim());
+    return "";
+  });
+
+  return {
+    html: withoutScripts,
+    scripts
+  };
+}
+
+function dedupeScripts(scripts) {
+  return Array.from(new Set(scripts.filter(Boolean)));
 }
 
 function stripFullDocument(html) {
@@ -142,7 +178,7 @@ async function copyDeckAssets(root, outDir, assetsDir) {
   });
 }
 
-function renderIndex({ config, revealOptions, slides, css, plugins, dev }) {
+function renderIndex({ config, revealOptions, slides, slideScripts, css, plugins, dev }) {
   const pluginStyles = plugins
     .filter((plugin) => plugin.stylesheet)
     .map((plugin) => `<link rel="stylesheet" href="./vendor/reveal/${escapeAttribute(plugin.stylesheet)}">`)
@@ -226,7 +262,7 @@ ${indent(slides, 8)}
           plugins
         });
       })();
-    </script>${devScript}
+    </script>${slideScripts ? `\n${indent(slideScripts, 4)}` : ""}${devScript}
   </body>
 </html>
 `;
@@ -264,6 +300,7 @@ module.exports = {
   addSourceAttribute,
   buildDeck,
   copyDeckAssets,
+  extractSlideScripts,
   normalizeSlideHtml,
   renderIndex,
   stripFullDocument
