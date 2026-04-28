@@ -1,0 +1,28 @@
+{
+  "name": "byeslide",
+  "version": "0.1.0",
+  "description": "Agent-first HTML presentation authoring on Reveal.js.",
+  "license": "MIT",
+  "bin": {
+    "byeslide": "./src/cli.js"
+  },
+  "files": [
+    "src",
+    "template",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "build:template": "node src/cli.js build template",
+    "check:template": "node src/cli.js check template",
+    "install:browsers": "node src/cli.js install-browsers",
+    "preview:template": "node src/cli.js preview template"
+  },
+  "dependencies": {
+    "playwright": "^1.59.1",
+    "reveal.js": "^6.0.1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

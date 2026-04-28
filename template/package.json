@@ -1,0 +1,14 @@
+{
+  "name": "byeslide-deck",
+  "private": true,
+  "scripts": {
+    "build": "byeslide build",
+    "preview": "byeslide preview",
+    "check": "byeslide check",
+    "pdf": "byeslide pdf --output dist/deck.pdf",
+    "install:browsers": "byeslide install-browsers"
+  },
+  "devDependencies": {
+    "byeslide": "latest"
+  }
+}

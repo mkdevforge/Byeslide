@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Abstract slide placeholder</title>
+  <desc id="desc">Layered blocks and chart lines for replacing with a real visual.</desc>
+  <rect width="960" height="720" fill="#111827"/>
+  <rect x="88" y="92" width="784" height="536" rx="18" fill="#f6f4ee"/>
+  <path d="M154 494 298 356 422 428 592 238 806 310" fill="none" stroke="#2f6df6" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="156" y="150" width="190" height="42" rx="8" fill="#d84f3f"/>
+  <rect x="156" y="226" width="458" height="28" rx="8" fill="#87919a"/>
+  <rect x="156" y="278" width="334" height="28" rx="8" fill="#d8dce2"/>
+  <circle cx="808" cy="310" r="34" fill="#16885f"/>
+</svg>

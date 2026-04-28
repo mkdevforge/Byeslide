@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+*.log
+*.tmp
+template/dist/
+template/*.pdf
+test/
+prd-rough.md
