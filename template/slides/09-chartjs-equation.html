@@ -7,50 +7,50 @@
     <div class="chartjs-panel chartjs-panel--main">
       <div class="chartjs-panel__header">
         <div>
-          <h2 class="heading">Move the constants and the model responds</h2>
-          <p>A live equation slide lets the presenter explain behavior by changing assumptions in front of the room.</p>
+          <h2 class="heading">Tune adoption live</h2>
+          <p>Move the ceiling, growth rate, and inflection point; the charts recalculate from the equation in the slide.</p>
         </div>
       </div>
       <div class="chartjs-equation-charts">
         <div class="chartjs-canvas-wrap chartjs-canvas-wrap--model">
-          <canvas data-chartjs-model aria-label="Damped oscillator response over time"></canvas>
+          <canvas data-chartjs-logistic aria-label="Logistic growth curve"></canvas>
         </div>
-        <div class="chartjs-canvas-wrap chartjs-canvas-wrap--phase">
-          <canvas data-chartjs-phase aria-label="Damped oscillator phase portrait"></canvas>
+        <div class="chartjs-canvas-wrap chartjs-canvas-wrap--velocity">
+          <canvas data-chartjs-velocity aria-label="Logistic growth velocity curve"></canvas>
         </div>
       </div>
     </div>
     <div class="chartjs-panel chartjs-panel--control">
-      <h3>Damped oscillator</h3>
-      <div class="chartjs-equation" aria-label="Damped oscillator equation">
-        <span>x(t) =</span>
-        <strong><span data-equation-amplitude>1.20</span>e<sup>-<span data-equation-damping>0.24</span>t</sup> cos(<span data-equation-frequency>2.10</span>t)</strong>
+      <h3>Logistic growth</h3>
+      <div class="chartjs-equation" aria-label="Logistic growth equation">
+        <span>P(t) =</span>
+        <strong><span data-equation-k>100</span> / (1 + e<sup>-<span data-equation-r>0.80</span>(t - <span data-equation-t0>5.0</span>)</sup>)</strong>
       </div>
       <div class="chartjs-parameter-list">
         <label>
-          <span>Amplitude A</span>
-          <input type="range" min="0.4" max="2.4" value="1.2" step="0.05" data-parameter="amplitude">
-          <strong data-parameter-value="amplitude">1.20</strong>
+          <span>Ceiling K</span>
+          <input type="range" min="60" max="140" value="100" step="5" data-parameter="ceiling">
+          <strong data-parameter-value="ceiling">100</strong>
         </label>
         <label>
-          <span>Damping lambda</span>
-          <input type="range" min="0.02" max="0.65" value="0.24" step="0.01" data-parameter="damping">
-          <strong data-parameter-value="damping">0.24</strong>
+          <span>Growth rate r</span>
+          <input type="range" min="0.25" max="1.45" value="0.8" step="0.05" data-parameter="rate">
+          <strong data-parameter-value="rate">0.80</strong>
         </label>
         <label>
-          <span>Frequency omega</span>
-          <input type="range" min="0.7" max="4.2" value="2.1" step="0.05" data-parameter="frequency">
-          <strong data-parameter-value="frequency">2.10</strong>
+          <span>Inflection t0</span>
+          <input type="range" min="2.0" max="8.0" value="5.0" step="0.25" data-parameter="inflection">
+          <strong data-parameter-value="inflection">5.0</strong>
         </label>
       </div>
       <div class="chartjs-model-stats">
         <div>
-          <span>Half-life</span>
-          <strong data-model-half-life>2.89s</strong>
+          <span>Time to 80%</span>
+          <strong data-model-eighty>6.7</strong>
         </div>
         <div>
-          <span>Period</span>
-          <strong data-model-period>2.99s</strong>
+          <span>Peak growth</span>
+          <strong data-model-peak>20.0</strong>
         </div>
       </div>
     </div>
@@ -59,48 +59,106 @@
   <script>
     (() => {
       const slide = window.Byeslide?.slideForScript(document.currentScript);
-      const modelCanvas = slide?.querySelector("[data-chartjs-model]");
-      const phaseCanvas = slide?.querySelector("[data-chartjs-phase]");
-      if (!slide || !modelCanvas || !phaseCanvas || !window.Chart || modelCanvas.dataset.chartReady === "true") {
+      const logisticCanvas = slide?.querySelector("[data-chartjs-logistic]");
+      const velocityCanvas = slide?.querySelector("[data-chartjs-velocity]");
+      if (!slide || !logisticCanvas || !velocityCanvas || !window.Chart || logisticCanvas.dataset.chartReady === "true") {
         return;
       }
 
-      modelCanvas.dataset.chartReady = "true";
-      phaseCanvas.dataset.chartReady = "true";
+      logisticCanvas.dataset.chartReady = "true";
+      velocityCanvas.dataset.chartReady = "true";
 
       const controls = {
-        amplitude: slide.querySelector("[data-parameter='amplitude']"),
-        damping: slide.querySelector("[data-parameter='damping']"),
-        frequency: slide.querySelector("[data-parameter='frequency']")
+        ceiling: slide.querySelector("[data-parameter='ceiling']"),
+        rate: slide.querySelector("[data-parameter='rate']"),
+        inflection: slide.querySelector("[data-parameter='inflection']")
       };
       const values = {
-        amplitude: slide.querySelector("[data-parameter-value='amplitude']"),
-        damping: slide.querySelector("[data-parameter-value='damping']"),
-        frequency: slide.querySelector("[data-parameter-value='frequency']")
+        ceiling: slide.querySelector("[data-parameter-value='ceiling']"),
+        rate: slide.querySelector("[data-parameter-value='rate']"),
+        inflection: slide.querySelector("[data-parameter-value='inflection']")
       };
       const equation = {
-        amplitude: slide.querySelector("[data-equation-amplitude]"),
-        damping: slide.querySelector("[data-equation-damping]"),
-        frequency: slide.querySelector("[data-equation-frequency]")
+        ceiling: slide.querySelector("[data-equation-k]"),
+        rate: slide.querySelector("[data-equation-r]"),
+        inflection: slide.querySelector("[data-equation-t0]")
       };
-      const halfLife = slide.querySelector("[data-model-half-life]");
-      const period = slide.querySelector("[data-model-period]");
+      const eighty = slide.querySelector("[data-model-eighty]");
+      const peak = slide.querySelector("[data-model-peak]");
       const colors = {
         blue: "#2f6df6",
+        blueFill: "rgba(47, 109, 246, 0.13)",
         green: "#16885f",
+        greenFill: "rgba(22, 136, 95, 0.15)",
         warm: "#d84f3f",
         rule: "#d8dce2",
-        muted: "#606a73"
+        muted: "#606a73",
+        ink: "#15171a"
+      };
+      const backgroundPlugin = {
+        id: "byeslideLogisticBands",
+        beforeDatasetsDraw(chart) {
+          const { ctx, chartArea, scales } = chart;
+          if (!chartArea || !scales.x) {
+            return;
+          }
+          const t0 = chart.options.plugins.byeslideModel?.inflection ?? 5;
+          const bands = [
+            { from: 0, to: Math.max(0, t0 - 1.6), color: "rgba(47, 109, 246, 0.06)", label: "early" },
+            { from: Math.max(0, t0 - 1.6), to: Math.min(10, t0 + 1.6), color: "rgba(22, 136, 95, 0.07)", label: "acceleration" },
+            { from: Math.min(10, t0 + 1.6), to: 10, color: "rgba(216, 79, 63, 0.06)", label: "saturation" }
+          ];
+
+          ctx.save();
+          bands.forEach((band) => {
+            const x1 = scales.x.getPixelForValue(band.from);
+            const x2 = scales.x.getPixelForValue(band.to);
+            ctx.fillStyle = band.color;
+            ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+            ctx.fillStyle = colors.muted;
+            ctx.font = "700 13px Inter, system-ui, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(band.label, (x1 + x2) / 2, chartArea.top + 20);
+          });
+
+          const marker = scales.x.getPixelForValue(t0);
+          ctx.strokeStyle = colors.warm;
+          ctx.lineWidth = 3;
+          ctx.setLineDash([8, 8]);
+          ctx.beginPath();
+          ctx.moveTo(marker, chartArea.top + 28);
+          ctx.lineTo(marker, chartArea.bottom);
+          ctx.stroke();
+          ctx.restore();
+        }
       };
 
-      const modelChart = new Chart(modelCanvas, {
+      const logisticChart = new Chart(logisticCanvas, {
         type: "line",
+        plugins: [backgroundPlugin],
         data: {
-          datasets: [
-            responseDataset("x(t)", colors.blue, 5),
-            responseDataset("+A e-lambda t", colors.green, 3, [8, 8]),
-            responseDataset("-A e-lambda t", colors.warm, 3, [8, 8])
-          ]
+          datasets: [{
+            label: "P(t)",
+            data: [],
+            borderColor: colors.blue,
+            backgroundColor: colors.blueFill,
+            borderWidth: 6,
+            fill: true,
+            pointBackgroundColor: colors.blue,
+            pointBorderColor: "#ffffff",
+            pointBorderWidth: 4,
+            pointRadius: 0,
+            tension: 0.34
+          }, {
+            label: "inflection",
+            data: [],
+            borderColor: colors.warm,
+            backgroundColor: colors.warm,
+            borderWidth: 0,
+            pointRadius: 9,
+            pointHoverRadius: 10,
+            showLine: false
+          }]
         },
         options: {
           animation: { duration: 420 },
@@ -109,30 +167,38 @@
           responsive: true,
           interaction: { intersect: false, mode: "nearest" },
           plugins: {
-            legend: {
-              labels: { color: "#15171a", font: { size: 16, weight: "700" }, usePointStyle: true }
-            },
-            tooltip: { backgroundColor: "#111827", bodyFont: { size: 15 }, padding: 12 }
+            byeslideModel: { inflection: 5 },
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: colors.ink,
+              bodyFont: { size: 15 },
+              callbacks: {
+                label(context) {
+                  return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`;
+                }
+              },
+              padding: 12
+            }
           },
           scales: {
-            x: axis("time t", 0, 10),
-            y: axis("displacement x(t)", -2.6, 2.6)
+            x: axis("time", 0, 10),
+            y: axis("adoption P(t)", 0, 145)
           }
         }
       });
 
-      const phaseChart = new Chart(phaseCanvas, {
-        type: "scatter",
+      const velocityChart = new Chart(velocityCanvas, {
+        type: "line",
         data: {
           datasets: [{
-            label: "phase portrait",
+            label: "growth velocity dP/dt",
             data: [],
-            borderColor: colors.blue,
-            backgroundColor: "rgba(47, 109, 246, 0.2)",
-            borderWidth: 3,
+            borderColor: colors.green,
+            backgroundColor: colors.greenFill,
+            borderWidth: 4,
+            fill: true,
             pointRadius: 0,
-            showLine: true,
-            tension: 0.18
+            tension: 0.34
           }]
         },
         options: {
@@ -144,49 +210,49 @@
             legend: { display: false },
             tooltip: { enabled: false },
             title: {
-              color: "#606a73",
+              color: colors.muted,
               display: true,
               font: { size: 17, weight: "700" },
               padding: { bottom: 8 },
-              text: "phase space: x versus dx/dt"
+              text: "growth velocity peaks at the inflection point"
             }
           },
           scales: {
-            x: axis("x", -2.6, 2.6),
-            y: axis("dx/dt", -6, 6)
+            x: axis("time", 0, 10),
+            y: axis("dP/dt", 0, 52)
           }
         }
       });
 
       const readParameters = () => ({
-        amplitude: Number(controls.amplitude.value),
-        damping: Number(controls.damping.value),
-        frequency: Number(controls.frequency.value)
+        ceiling: Number(controls.ceiling.value),
+        rate: Number(controls.rate.value),
+        inflection: Number(controls.inflection.value)
       });
 
       const update = () => {
         const params = readParameters();
-        const samples = sampleModel(params);
-        const envelope = samples.map(({ t }) => ({
-          t,
-          upper: params.amplitude * Math.exp(-params.damping * t),
-          lower: -params.amplitude * Math.exp(-params.damping * t)
-        }));
+        const samples = sampleLogistic(params);
+        const inflectionPoint = logistic(params.inflection, params);
 
-        modelChart.data.datasets[0].data = samples.map(({ t, x }) => ({ x: t, y: x }));
-        modelChart.data.datasets[1].data = envelope.map(({ t, upper }) => ({ x: t, y: upper }));
-        modelChart.data.datasets[2].data = envelope.map(({ t, lower }) => ({ x: t, y: lower }));
-        phaseChart.data.datasets[0].data = samples.map(({ x, velocity }) => ({ x, y: velocity }));
+        logisticChart.data.datasets[0].data = samples.map(({ t, p }) => ({ x: t, y: p }));
+        logisticChart.data.datasets[1].data = [{ x: params.inflection, y: inflectionPoint }];
+        logisticChart.options.plugins.byeslideModel.inflection = params.inflection;
+        logisticChart.options.scales.y.max = Math.max(90, params.ceiling * 1.22);
+        velocityChart.data.datasets[0].data = samples.map(({ t, velocity }) => ({ x: t, y: velocity }));
+        velocityChart.options.scales.y.max = Math.max(18, (params.ceiling * params.rate / 4) * 1.65);
 
-        for (const [name, value] of Object.entries(params)) {
-          values[name].textContent = value.toFixed(2);
-          equation[name].textContent = value.toFixed(2);
-        }
-        halfLife.textContent = `${(Math.log(2) / params.damping).toFixed(2)}s`;
-        period.textContent = `${((2 * Math.PI) / params.frequency).toFixed(2)}s`;
+        values.ceiling.textContent = params.ceiling.toFixed(0);
+        values.rate.textContent = params.rate.toFixed(2);
+        values.inflection.textContent = params.inflection.toFixed(1);
+        equation.ceiling.textContent = params.ceiling.toFixed(0);
+        equation.rate.textContent = params.rate.toFixed(2);
+        equation.inflection.textContent = params.inflection.toFixed(1);
+        eighty.textContent = (params.inflection + Math.log(4) / params.rate).toFixed(1);
+        peak.textContent = (params.ceiling * params.rate / 4).toFixed(1);
 
-        modelChart.update();
-        phaseChart.update();
+        logisticChart.update();
+        velocityChart.update();
       };
 
       Object.values(controls).forEach((control) => {
@@ -194,41 +260,31 @@
       });
       update();
 
-      function responseDataset(label, color, width, dash = []) {
-        return {
-          label,
-          data: [],
-          borderColor: color,
-          borderDash: dash,
-          borderWidth: width,
-          pointRadius: 0,
-          tension: 0.26
-        };
+      function sampleLogistic(params) {
+        return Array.from({ length: 121 }, (_, index) => {
+          const t = index / 12;
+          const p = logistic(t, params);
+          const velocity = params.rate * p * (1 - p / params.ceiling);
+          return { t, p, velocity };
+        });
       }
 
-      function sampleModel({ amplitude, damping, frequency }) {
-        const points = [];
-        for (let index = 0; index <= 140; index += 1) {
-          const t = index / 14;
-          const decay = Math.exp(-damping * t);
-          const x = amplitude * decay * Math.cos(frequency * t);
-          const velocity = amplitude * decay * (-damping * Math.cos(frequency * t) - frequency * Math.sin(frequency * t));
-          points.push({ t, x, velocity });
-        }
-        return points;
+      function logistic(t, { ceiling, rate, inflection }) {
+        return ceiling / (1 + Math.exp(-rate * (t - inflection)));
       }
 
       function axis(title, min, max) {
         return {
+          type: "linear",
           min,
           max,
           border: { display: false },
           grid: { color: colors.rule },
           title: { color: colors.muted, display: true, font: { size: 15, weight: "700" }, text: title },
-          ticks: { color: colors.muted, font: { size: 14, weight: "600" }, maxTicksLimit: 6 }
+          ticks: { color: colors.muted, font: { size: 14, weight: "600" }, maxTicksLimit: 5 }
         };
       }
     })();
   </script>
-  <aside class="notes">This slide intentionally repeats the Chart.js dependency from slide 8. The equation controls prove that the second slide keeps its own inline setup script and chart state while sharing the external library.</aside>
+  <aside class="notes">This slide intentionally repeats the Chart.js dependency from slide 8. The logistic model is easier to explain live: K changes the ceiling, r changes steepness, and t0 moves the acceleration window.</aside>
 </section>

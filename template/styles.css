@@ -596,6 +596,10 @@
   min-height: 180px;
 }
 
+.chartjs-canvas-wrap--velocity {
+  min-height: 170px;
+}
+
 .chartjs-canvas-wrap canvas {
   height: 100% !important;
   inset: 0;

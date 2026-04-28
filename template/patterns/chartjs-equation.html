@@ -13,26 +13,34 @@
       </div>
       <div class="chartjs-equation-charts">
         <div class="chartjs-canvas-wrap chartjs-canvas-wrap--model">
-          <canvas data-chartjs-model aria-label="Equation output over time"></canvas>
+          <canvas data-chartjs-logistic aria-label="Logistic growth curve"></canvas>
+        </div>
+        <div class="chartjs-canvas-wrap chartjs-canvas-wrap--velocity">
+          <canvas data-chartjs-velocity aria-label="Logistic growth velocity curve"></canvas>
         </div>
       </div>
     </div>
     <div class="chartjs-panel chartjs-panel--control">
-      <h3>Model</h3>
+      <h3>Logistic growth</h3>
       <div class="chartjs-equation">
-        <span>y =</span>
-        <strong><span data-equation-amplitude>1.00</span> sin(<span data-equation-frequency>2.00</span>x)</strong>
+        <span>P(t) =</span>
+        <strong><span data-equation-k>100</span> / (1 + e<sup>-<span data-equation-r>0.80</span>(t - <span data-equation-t0>5.0</span>)</sup>)</strong>
       </div>
       <div class="chartjs-parameter-list">
         <label>
-          <span>Amplitude</span>
-          <input type="range" min="0.4" max="2.4" value="1" step="0.05" data-parameter="amplitude">
-          <strong data-parameter-value="amplitude">1.00</strong>
+          <span>Ceiling K</span>
+          <input type="range" min="60" max="140" value="100" step="5" data-parameter="ceiling">
+          <strong data-parameter-value="ceiling">100</strong>
         </label>
         <label>
-          <span>Frequency</span>
-          <input type="range" min="0.7" max="4.2" value="2" step="0.05" data-parameter="frequency">
-          <strong data-parameter-value="frequency">2.00</strong>
+          <span>Growth rate r</span>
+          <input type="range" min="0.25" max="1.45" value="0.8" step="0.05" data-parameter="rate">
+          <strong data-parameter-value="rate">0.80</strong>
+        </label>
+        <label>
+          <span>Inflection t0</span>
+          <input type="range" min="2.0" max="8.0" value="5.0" step="0.25" data-parameter="inflection">
+          <strong data-parameter-value="inflection">5.0</strong>
         </label>
       </div>
     </div>
@@ -41,40 +49,100 @@
   <script>
     (() => {
       const slide = window.Byeslide?.slideForScript(document.currentScript);
-      const canvas = slide?.querySelector("[data-chartjs-model]");
-      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+      const logisticCanvas = slide?.querySelector("[data-chartjs-logistic]");
+      const velocityCanvas = slide?.querySelector("[data-chartjs-velocity]");
+      if (!slide || !logisticCanvas || !velocityCanvas || !window.Chart || logisticCanvas.dataset.chartReady === "true") {
         return;
       }
 
-      canvas.dataset.chartReady = "true";
-      const amplitude = slide.querySelector("[data-parameter='amplitude']");
-      const frequency = slide.querySelector("[data-parameter='frequency']");
-      const amplitudeValue = slide.querySelector("[data-parameter-value='amplitude']");
-      const frequencyValue = slide.querySelector("[data-parameter-value='frequency']");
-      const equationAmplitude = slide.querySelector("[data-equation-amplitude]");
-      const equationFrequency = slide.querySelector("[data-equation-frequency]");
-      const chart = new Chart(canvas, {
+      logisticCanvas.dataset.chartReady = "true";
+      velocityCanvas.dataset.chartReady = "true";
+      const controls = {
+        ceiling: slide.querySelector("[data-parameter='ceiling']"),
+        rate: slide.querySelector("[data-parameter='rate']"),
+        inflection: slide.querySelector("[data-parameter='inflection']")
+      };
+      const values = {
+        ceiling: slide.querySelector("[data-parameter-value='ceiling']"),
+        rate: slide.querySelector("[data-parameter-value='rate']"),
+        inflection: slide.querySelector("[data-parameter-value='inflection']")
+      };
+      const equation = {
+        ceiling: slide.querySelector("[data-equation-k]"),
+        rate: slide.querySelector("[data-equation-r]"),
+        inflection: slide.querySelector("[data-equation-t0]")
+      };
+      const logisticChart = new Chart(logisticCanvas, {
         type: "line",
-        data: { datasets: [{ label: "y", data: [], borderColor: "#2f6df6", borderWidth: 5, pointRadius: 0 }] },
-        options: { maintainAspectRatio: false, parsing: false, responsive: true }
+        data: {
+          datasets: [{
+            label: "P(t)",
+            data: [],
+            backgroundColor: "rgba(47, 109, 246, 0.13)",
+            borderColor: "#2f6df6",
+            borderWidth: 5,
+            fill: true,
+            pointRadius: 0,
+            tension: 0.34
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          parsing: false,
+          responsive: true,
+          scales: {
+            x: { type: "linear" },
+            y: { type: "linear" }
+          }
+        }
+      });
+      const velocityChart = new Chart(velocityCanvas, {
+        type: "line",
+        data: {
+          datasets: [{
+            label: "dP/dt",
+            data: [],
+            backgroundColor: "rgba(22, 136, 95, 0.15)",
+            borderColor: "#16885f",
+            borderWidth: 4,
+            fill: true,
+            pointRadius: 0,
+            tension: 0.34
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          parsing: false,
+          responsive: true,
+          scales: {
+            x: { type: "linear" },
+            y: { type: "linear" }
+          }
+        }
       });
 
       const update = () => {
-        const a = Number(amplitude.value);
-        const f = Number(frequency.value);
-        amplitudeValue.textContent = a.toFixed(2);
-        frequencyValue.textContent = f.toFixed(2);
-        equationAmplitude.textContent = a.toFixed(2);
-        equationFrequency.textContent = f.toFixed(2);
-        chart.data.datasets[0].data = Array.from({ length: 100 }, (_, index) => {
-          const x = index / 10;
-          return { x, y: a * Math.sin(f * x) };
+        const ceiling = Number(controls.ceiling.value);
+        const rate = Number(controls.rate.value);
+        const inflection = Number(controls.inflection.value);
+        values.ceiling.textContent = ceiling.toFixed(0);
+        values.rate.textContent = rate.toFixed(2);
+        values.inflection.textContent = inflection.toFixed(1);
+        equation.ceiling.textContent = ceiling.toFixed(0);
+        equation.rate.textContent = rate.toFixed(2);
+        equation.inflection.textContent = inflection.toFixed(1);
+        const samples = Array.from({ length: 100 }, (_, index) => {
+          const t = index / 10;
+          const p = ceiling / (1 + Math.exp(-rate * (t - inflection)));
+          return { t, p, velocity: rate * p * (1 - p / ceiling) };
         });
-        chart.update();
+        logisticChart.data.datasets[0].data = samples.map(({ t, p }) => ({ x: t, y: p }));
+        velocityChart.data.datasets[0].data = samples.map(({ t, velocity }) => ({ x: t, y: velocity }));
+        logisticChart.update();
+        velocityChart.update();
       };
 
-      amplitude.addEventListener("input", update);
-      frequency.addEventListener("input", update);
+      Object.values(controls).forEach((control) => control.addEventListener("input", update));
       update();
     })();
   </script>
