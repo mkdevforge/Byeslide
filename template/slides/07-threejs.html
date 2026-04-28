@@ -1,0 +1,20 @@
+<section class="slide slide--threejs">
+  <canvas class="three-scene" data-three-demo aria-label="Animated 3D presentation scene"></canvas>
+  <div class="three-overlay">
+    <div class="slide__topline">
+      <span class="eyebrow">Three.js</span>
+      <div class="caption">Slide-contained browser dependency</div>
+    </div>
+    <div class="three-copy">
+      <h2 class="heading">A 3D scene can belong to one slide</h2>
+      <p>Keep the dependency and scene module with the deck, import them from the slide, and let the build copy the whole asset bundle.</p>
+    </div>
+    <div class="three-meta">
+      <span><code>assets/vendor/three.module.min.js</code></span>
+      <span><code>assets/three-demo.js</code></span>
+      <span>full-frame canvas</span>
+    </div>
+  </div>
+  <script type="module" src="./assets/three-demo.js"></script>
+  <aside class="notes">This demonstrates the dependency model: browser-side libraries can live under assets, and a slide can import a local module. The canvas is full-frame so the 3D scene reads like presentation content instead of a preview widget.</aside>
+</section>

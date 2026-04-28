@@ -1,0 +1,20 @@
+<section class="slide slide--threejs">
+  <canvas class="three-scene" data-three-demo aria-label="Animated 3D slide scene"></canvas>
+  <div class="three-overlay">
+    <div class="slide__topline">
+      <span class="eyebrow">Three.js</span>
+      <div class="caption">Slide-contained browser dependency</div>
+    </div>
+    <div class="three-copy">
+      <h2 class="heading">A 3D scene can belong to one slide</h2>
+      <p>Put the library under <code>assets/vendor/</code>, put scene code under <code>assets/</code>, and import it from the slide.</p>
+    </div>
+    <div class="three-meta">
+      <span><code>assets/vendor/three.module.min.js</code></span>
+      <span><code>assets/three-demo.js</code></span>
+      <span>full-frame canvas</span>
+    </div>
+  </div>
+  <script type="module" src="./assets/three-demo.js"></script>
+  <aside class="notes">Replace the scene module with the 3D scene for your deck, and keep the dependency local when the talk needs to work offline.</aside>
+</section>
