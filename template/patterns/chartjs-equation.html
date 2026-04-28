@@ -1,0 +1,82 @@
+<section class="slide">
+  <div class="slide__topline">
+    <span class="eyebrow">Chart.js</span>
+    <div class="caption">Parameterized equation</div>
+  </div>
+  <div class="chartjs-layout chartjs-layout--equation">
+    <div class="chartjs-panel chartjs-panel--main">
+      <div class="chartjs-panel__header">
+        <div>
+          <h2 class="heading">Change parameters live</h2>
+          <p>Use an equation and range inputs to drive one or more Chart.js charts.</p>
+        </div>
+      </div>
+      <div class="chartjs-equation-charts">
+        <div class="chartjs-canvas-wrap chartjs-canvas-wrap--model">
+          <canvas data-chartjs-model aria-label="Equation output over time"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="chartjs-panel chartjs-panel--control">
+      <h3>Model</h3>
+      <div class="chartjs-equation">
+        <span>y =</span>
+        <strong><span data-equation-amplitude>1.00</span> sin(<span data-equation-frequency>2.00</span>x)</strong>
+      </div>
+      <div class="chartjs-parameter-list">
+        <label>
+          <span>Amplitude</span>
+          <input type="range" min="0.4" max="2.4" value="1" step="0.05" data-parameter="amplitude">
+          <strong data-parameter-value="amplitude">1.00</strong>
+        </label>
+        <label>
+          <span>Frequency</span>
+          <input type="range" min="0.7" max="4.2" value="2" step="0.05" data-parameter="frequency">
+          <strong data-parameter-value="frequency">2.00</strong>
+        </label>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-chartjs-model]");
+      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      canvas.dataset.chartReady = "true";
+      const amplitude = slide.querySelector("[data-parameter='amplitude']");
+      const frequency = slide.querySelector("[data-parameter='frequency']");
+      const amplitudeValue = slide.querySelector("[data-parameter-value='amplitude']");
+      const frequencyValue = slide.querySelector("[data-parameter-value='frequency']");
+      const equationAmplitude = slide.querySelector("[data-equation-amplitude]");
+      const equationFrequency = slide.querySelector("[data-equation-frequency]");
+      const chart = new Chart(canvas, {
+        type: "line",
+        data: { datasets: [{ label: "y", data: [], borderColor: "#2f6df6", borderWidth: 5, pointRadius: 0 }] },
+        options: { maintainAspectRatio: false, parsing: false, responsive: true }
+      });
+
+      const update = () => {
+        const a = Number(amplitude.value);
+        const f = Number(frequency.value);
+        amplitudeValue.textContent = a.toFixed(2);
+        frequencyValue.textContent = f.toFixed(2);
+        equationAmplitude.textContent = a.toFixed(2);
+        equationFrequency.textContent = f.toFixed(2);
+        chart.data.datasets[0].data = Array.from({ length: 100 }, (_, index) => {
+          const x = index / 10;
+          return { x, y: a * Math.sin(f * x) };
+        });
+        chart.update();
+      };
+
+      amplitude.addEventListener("input", update);
+      frequency.addEventListener("input", update);
+      update();
+    })();
+  </script>
+  <aside class="notes">Replace the equation, controls, and sample function with the model for your talk.</aside>
+</section>

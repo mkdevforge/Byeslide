@@ -2,7 +2,7 @@
 
 This deck is authored as HTML fragments in `slides/` and built into a Reveal.js deck at `dist/index.html`.
 
-The starter deck demonstrates title, comparison, timeline, dashboard chart, embedded video, Three.js 3D animation, two interactive Chart.js slides, presenter-mode, and closing layouts.
+The starter deck demonstrates title, comparison, timeline, dashboard chart, embedded video, Three.js 3D animation, an interactive Chart.js trend, a parameterized Chart.js equation model, presenter-mode, and closing layouts.
 
 ```sh
 pnpm install

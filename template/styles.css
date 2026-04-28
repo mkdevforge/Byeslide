@@ -509,6 +509,10 @@
   grid-template-columns: minmax(0, 0.98fr) minmax(420px, 0.82fr);
 }
 
+.chartjs-layout--equation {
+  grid-template-columns: minmax(0, 1.08fr) minmax(430px, 0.72fr);
+}
+
 .chartjs-panel {
   background: var(--color-surface);
   border: var(--rule-width) solid var(--color-rule);
@@ -526,6 +530,10 @@
 
 .chartjs-panel--control {
   justify-content: center;
+}
+
+.chartjs-layout--equation .chartjs-panel--control {
+  justify-content: flex-start;
 }
 
 .chartjs-panel__header {
@@ -580,11 +588,113 @@
   min-height: 500px;
 }
 
+.chartjs-canvas-wrap--model {
+  min-height: 330px;
+}
+
+.chartjs-canvas-wrap--phase {
+  min-height: 180px;
+}
+
 .chartjs-canvas-wrap canvas {
   height: 100% !important;
   inset: 0;
   position: absolute;
   width: 100% !important;
+}
+
+.chartjs-equation-charts {
+  display: grid;
+  flex: 1;
+  gap: 18px;
+  grid-template-rows: minmax(0, 1.45fr) minmax(160px, 0.8fr);
+  min-height: 0;
+}
+
+.chartjs-equation {
+  background: #fbfcff;
+  border: var(--rule-width) solid var(--color-rule);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 10px;
+  padding: 24px;
+}
+
+.chartjs-equation span {
+  color: var(--color-muted);
+  font-size: 24px;
+  font-weight: 720;
+}
+
+.chartjs-equation strong {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.chartjs-equation sup {
+  font-size: 0.6em;
+}
+
+.chartjs-parameter-list {
+  display: grid;
+  gap: 18px;
+}
+
+.chartjs-parameter-list label {
+  background: #fbfcff;
+  border: var(--rule-width) solid var(--color-rule);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 76px;
+  padding: 18px;
+}
+
+.chartjs-parameter-list label span {
+  color: var(--color-muted);
+  font-size: 23px;
+  font-weight: 720;
+}
+
+.chartjs-parameter-list input {
+  accent-color: var(--color-accent);
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.chartjs-parameter-list strong {
+  color: var(--color-accent-strong);
+  font-size: 27px;
+  line-height: 1;
+  text-align: right;
+}
+
+.chartjs-model-stats {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chartjs-model-stats div {
+  border-top: var(--rule-width) solid var(--color-rule);
+  display: grid;
+  gap: 8px;
+  padding-top: 18px;
+}
+
+.chartjs-model-stats span {
+  color: var(--color-muted);
+  font-size: 22px;
+  font-weight: 720;
+}
+
+.chartjs-model-stats strong {
+  color: var(--color-ink);
+  font-size: 34px;
+  line-height: 1;
 }
 
 .chartjs-panel h3 {

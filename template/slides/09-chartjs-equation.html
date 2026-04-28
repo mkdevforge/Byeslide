@@ -1,0 +1,234 @@
+<section class="slide">
+  <div class="slide__topline">
+    <span class="eyebrow">Chart.js</span>
+    <div class="caption">Parameterized equation</div>
+  </div>
+  <div class="chartjs-layout chartjs-layout--equation">
+    <div class="chartjs-panel chartjs-panel--main">
+      <div class="chartjs-panel__header">
+        <div>
+          <h2 class="heading">Move the constants and the model responds</h2>
+          <p>A live equation slide lets the presenter explain behavior by changing assumptions in front of the room.</p>
+        </div>
+      </div>
+      <div class="chartjs-equation-charts">
+        <div class="chartjs-canvas-wrap chartjs-canvas-wrap--model">
+          <canvas data-chartjs-model aria-label="Damped oscillator response over time"></canvas>
+        </div>
+        <div class="chartjs-canvas-wrap chartjs-canvas-wrap--phase">
+          <canvas data-chartjs-phase aria-label="Damped oscillator phase portrait"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="chartjs-panel chartjs-panel--control">
+      <h3>Damped oscillator</h3>
+      <div class="chartjs-equation" aria-label="Damped oscillator equation">
+        <span>x(t) =</span>
+        <strong><span data-equation-amplitude>1.20</span>e<sup>-<span data-equation-damping>0.24</span>t</sup> cos(<span data-equation-frequency>2.10</span>t)</strong>
+      </div>
+      <div class="chartjs-parameter-list">
+        <label>
+          <span>Amplitude A</span>
+          <input type="range" min="0.4" max="2.4" value="1.2" step="0.05" data-parameter="amplitude">
+          <strong data-parameter-value="amplitude">1.20</strong>
+        </label>
+        <label>
+          <span>Damping lambda</span>
+          <input type="range" min="0.02" max="0.65" value="0.24" step="0.01" data-parameter="damping">
+          <strong data-parameter-value="damping">0.24</strong>
+        </label>
+        <label>
+          <span>Frequency omega</span>
+          <input type="range" min="0.7" max="4.2" value="2.1" step="0.05" data-parameter="frequency">
+          <strong data-parameter-value="frequency">2.10</strong>
+        </label>
+      </div>
+      <div class="chartjs-model-stats">
+        <div>
+          <span>Half-life</span>
+          <strong data-model-half-life>2.89s</strong>
+        </div>
+        <div>
+          <span>Period</span>
+          <strong data-model-period>2.99s</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const modelCanvas = slide?.querySelector("[data-chartjs-model]");
+      const phaseCanvas = slide?.querySelector("[data-chartjs-phase]");
+      if (!slide || !modelCanvas || !phaseCanvas || !window.Chart || modelCanvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      modelCanvas.dataset.chartReady = "true";
+      phaseCanvas.dataset.chartReady = "true";
+
+      const controls = {
+        amplitude: slide.querySelector("[data-parameter='amplitude']"),
+        damping: slide.querySelector("[data-parameter='damping']"),
+        frequency: slide.querySelector("[data-parameter='frequency']")
+      };
+      const values = {
+        amplitude: slide.querySelector("[data-parameter-value='amplitude']"),
+        damping: slide.querySelector("[data-parameter-value='damping']"),
+        frequency: slide.querySelector("[data-parameter-value='frequency']")
+      };
+      const equation = {
+        amplitude: slide.querySelector("[data-equation-amplitude]"),
+        damping: slide.querySelector("[data-equation-damping]"),
+        frequency: slide.querySelector("[data-equation-frequency]")
+      };
+      const halfLife = slide.querySelector("[data-model-half-life]");
+      const period = slide.querySelector("[data-model-period]");
+      const colors = {
+        blue: "#2f6df6",
+        green: "#16885f",
+        warm: "#d84f3f",
+        rule: "#d8dce2",
+        muted: "#606a73"
+      };
+
+      const modelChart = new Chart(modelCanvas, {
+        type: "line",
+        data: {
+          datasets: [
+            responseDataset("x(t)", colors.blue, 5),
+            responseDataset("+A e-lambda t", colors.green, 3, [8, 8]),
+            responseDataset("-A e-lambda t", colors.warm, 3, [8, 8])
+          ]
+        },
+        options: {
+          animation: { duration: 420 },
+          maintainAspectRatio: false,
+          parsing: false,
+          responsive: true,
+          interaction: { intersect: false, mode: "nearest" },
+          plugins: {
+            legend: {
+              labels: { color: "#15171a", font: { size: 16, weight: "700" }, usePointStyle: true }
+            },
+            tooltip: { backgroundColor: "#111827", bodyFont: { size: 15 }, padding: 12 }
+          },
+          scales: {
+            x: axis("time t", 0, 10),
+            y: axis("displacement x(t)", -2.6, 2.6)
+          }
+        }
+      });
+
+      const phaseChart = new Chart(phaseCanvas, {
+        type: "scatter",
+        data: {
+          datasets: [{
+            label: "phase portrait",
+            data: [],
+            borderColor: colors.blue,
+            backgroundColor: "rgba(47, 109, 246, 0.2)",
+            borderWidth: 3,
+            pointRadius: 0,
+            showLine: true,
+            tension: 0.18
+          }]
+        },
+        options: {
+          animation: { duration: 420 },
+          maintainAspectRatio: false,
+          parsing: false,
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false },
+            title: {
+              color: "#606a73",
+              display: true,
+              font: { size: 17, weight: "700" },
+              padding: { bottom: 8 },
+              text: "phase space: x versus dx/dt"
+            }
+          },
+          scales: {
+            x: axis("x", -2.6, 2.6),
+            y: axis("dx/dt", -6, 6)
+          }
+        }
+      });
+
+      const readParameters = () => ({
+        amplitude: Number(controls.amplitude.value),
+        damping: Number(controls.damping.value),
+        frequency: Number(controls.frequency.value)
+      });
+
+      const update = () => {
+        const params = readParameters();
+        const samples = sampleModel(params);
+        const envelope = samples.map(({ t }) => ({
+          t,
+          upper: params.amplitude * Math.exp(-params.damping * t),
+          lower: -params.amplitude * Math.exp(-params.damping * t)
+        }));
+
+        modelChart.data.datasets[0].data = samples.map(({ t, x }) => ({ x: t, y: x }));
+        modelChart.data.datasets[1].data = envelope.map(({ t, upper }) => ({ x: t, y: upper }));
+        modelChart.data.datasets[2].data = envelope.map(({ t, lower }) => ({ x: t, y: lower }));
+        phaseChart.data.datasets[0].data = samples.map(({ x, velocity }) => ({ x, y: velocity }));
+
+        for (const [name, value] of Object.entries(params)) {
+          values[name].textContent = value.toFixed(2);
+          equation[name].textContent = value.toFixed(2);
+        }
+        halfLife.textContent = `${(Math.log(2) / params.damping).toFixed(2)}s`;
+        period.textContent = `${((2 * Math.PI) / params.frequency).toFixed(2)}s`;
+
+        modelChart.update();
+        phaseChart.update();
+      };
+
+      Object.values(controls).forEach((control) => {
+        control.addEventListener("input", update);
+      });
+      update();
+
+      function responseDataset(label, color, width, dash = []) {
+        return {
+          label,
+          data: [],
+          borderColor: color,
+          borderDash: dash,
+          borderWidth: width,
+          pointRadius: 0,
+          tension: 0.26
+        };
+      }
+
+      function sampleModel({ amplitude, damping, frequency }) {
+        const points = [];
+        for (let index = 0; index <= 140; index += 1) {
+          const t = index / 14;
+          const decay = Math.exp(-damping * t);
+          const x = amplitude * decay * Math.cos(frequency * t);
+          const velocity = amplitude * decay * (-damping * Math.cos(frequency * t) - frequency * Math.sin(frequency * t));
+          points.push({ t, x, velocity });
+        }
+        return points;
+      }
+
+      function axis(title, min, max) {
+        return {
+          min,
+          max,
+          border: { display: false },
+          grid: { color: colors.rule },
+          title: { color: colors.muted, display: true, font: { size: 15, weight: "700" }, text: title },
+          ticks: { color: colors.muted, font: { size: 14, weight: "600" }, maxTicksLimit: 6 }
+        };
+      }
+    })();
+  </script>
+  <aside class="notes">This slide intentionally repeats the Chart.js dependency from slide 8. The equation controls prove that the second slide keeps its own inline setup script and chart state while sharing the external library.</aside>
+</section>
