@@ -10,7 +10,7 @@
   margin: 0;
 }
 
-.slide {
+.reveal .slides section.slide {
   background: var(--color-page);
   color: var(--color-ink);
   display: flex;
@@ -21,7 +21,7 @@
   padding: var(--slide-padding);
 }
 
-.slide--dark {
+.reveal .slides section.slide--dark {
   background: var(--color-dark);
   color: white;
 }
@@ -40,7 +40,7 @@
   text-transform: uppercase;
 }
 
-.slide--dark .eyebrow {
+.reveal .slides section.slide--dark .eyebrow {
   color: #8fb0ff;
 }
 
@@ -59,8 +59,8 @@
   max-width: 34ch;
 }
 
-.slide--dark .subtitle,
-.slide--dark .caption {
+.reveal .slides section.slide--dark .subtitle,
+.reveal .slides section.slide--dark .caption {
   color: #c9d2dc;
 }
 

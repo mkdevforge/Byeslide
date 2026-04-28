@@ -13,6 +13,7 @@ Preview retries nearby ports when the requested port is occupied and prints the 
 
 Modes:
 - Live deck: `dist/index.html`
+- Speaker view: press `S` from the live deck.
 - Print view: `dist/index.html?view=print`
 - Scroll view: `dist/index.html?view=scroll`
 
