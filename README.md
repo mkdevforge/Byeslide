@@ -7,7 +7,7 @@ The default starter uses semantic CSS classes instead of Tailwind utilities. Tha
 ## Install
 
 ```sh
-npm install
+pnpm install
 ```
 
 During development, run the local CLI directly:
@@ -19,11 +19,11 @@ node src/cli.js --help
 ## Create a Deck
 
 ```sh
-npx byeslide init my-deck
+pnpm dlx byeslide init my-deck
 cd my-deck
-npm install
-npm run build
-npm run preview
+pnpm install
+pnpm build
+pnpm preview
 ```
 
 The generated deck structure is:

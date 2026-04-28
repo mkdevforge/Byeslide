@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Agent-first HTML presentation authoring on Reveal.js.",
   "license": "MIT",
+  "packageManager": "pnpm@10.33.2",
   "bin": {
     "byeslide": "./src/cli.js"
   },

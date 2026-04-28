@@ -3,12 +3,12 @@
 This deck is authored as HTML fragments in `slides/` and built into a Reveal.js deck at `dist/index.html`.
 
 ```sh
-npm install
-npm run install:browsers
-npm run build
-npm run preview
-npm run check
-npm run pdf
+pnpm install
+pnpm install:browsers
+pnpm build
+pnpm preview
+pnpm check
+pnpm pdf
 ```
 
 Preview serves the deck from `127.0.0.1:4173` by default. If that port is already in use, Byeslide prints the fallback URL it selected.

@@ -93,7 +93,7 @@ function loadPlaywright() {
   try {
     return require("playwright");
   } catch (error) {
-    throw new Error("Playwright is required for this command. Run npm install in the Byeslide package or generated deck.");
+    throw new Error("Playwright is required for this command. Run pnpm install in the Byeslide package or generated deck.");
   }
 }
 
