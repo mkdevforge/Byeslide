@@ -61,7 +61,7 @@ async function buildDeck(deckDir = process.cwd(), options = {}) {
     config,
     revealOptions: revealOptions(config),
     slides: slides.join("\n\n"),
-    slideScripts: dedupeScripts(slideScripts).join("\n"),
+    slideScripts: prepareSlideScripts(slideScripts).join("\n"),
     css: cssBlocks.join("\n\n"),
     plugins,
     dev: Boolean(options.dev)
@@ -86,7 +86,7 @@ function normalizeSlideHtml(raw, source) {
 
 function normalizeSlide(raw, source) {
   const html = stripFullDocument(raw.replace(/^\uFEFF/, "")).trim();
-  const extracted = extractSlideScripts(html);
+  const extracted = extractSlideScripts(html, source);
   const slideHtml = extracted.html.trim();
   if (!slideHtml) {
     return {
@@ -108,10 +108,12 @@ function normalizeSlide(raw, source) {
   };
 }
 
-function extractSlideScripts(html) {
+function extractSlideScripts(html, source = "") {
   const scripts = [];
+  let scriptIndex = 0;
   const withoutScripts = html.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, (script) => {
-    scripts.push(script.trim());
+    scripts.push(annotateSlideScript(script.trim(), source, scriptIndex));
+    scriptIndex += 1;
     return "";
   });
 
@@ -121,8 +123,43 @@ function extractSlideScripts(html) {
   };
 }
 
-function dedupeScripts(scripts) {
-  return Array.from(new Set(scripts.filter(Boolean)));
+function annotateSlideScript(script, source, index) {
+  let next = script;
+  if (!hasHtmlAttribute(next, "data-byeslide-script-index")) {
+    next = addScriptAttribute(next, "data-byeslide-script-index", String(index));
+  }
+  if (source && !hasHtmlAttribute(next, "data-byeslide-source")) {
+    next = addScriptAttribute(next, "data-byeslide-source", source);
+  }
+  return next;
+}
+
+function addScriptAttribute(script, name, value) {
+  return script.replace(/^<script\b/i, `<script ${name}="${escapeAttribute(value)}"`);
+}
+
+function prepareSlideScripts(scripts) {
+  const seenExternalScripts = new Set();
+  const prepared = [];
+
+  for (const script of scripts.filter(Boolean)) {
+    const src = getHtmlAttribute(script, "src");
+    if (!src || hasHtmlAttribute(script, "data-byeslide-repeat")) {
+      prepared.push(script);
+      continue;
+    }
+
+    const type = getHtmlAttribute(script, "type");
+    const key = `${type}\0${src}`;
+    if (seenExternalScripts.has(key)) {
+      continue;
+    }
+
+    seenExternalScripts.add(key);
+    prepared.push(script);
+  }
+
+  return prepared;
 }
 
 function stripFullDocument(html) {
@@ -146,6 +183,34 @@ function addSourceAttribute(html, source) {
     /^<section\b/i,
     `<section data-byeslide-source="${escapeAttribute(source)}"`
   );
+}
+
+function getHtmlAttribute(html, name) {
+  const openingTag = getOpeningTag(html);
+  const pattern = new RegExp(
+    "\\s" + escapeRegExp(name) + "(?:\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s\"'=<>`]+))|(?=\\s|/?>))",
+    "i"
+  );
+  const match = openingTag.match(pattern);
+  if (!match) {
+    return "";
+  }
+
+  return match[1] ?? match[2] ?? match[3] ?? "";
+}
+
+function hasHtmlAttribute(html, name) {
+  const openingTag = getOpeningTag(html);
+  const pattern = new RegExp("\\s" + escapeRegExp(name) + "(?:\\s|=|/?>)", "i");
+  return pattern.test(openingTag);
+}
+
+function getOpeningTag(html) {
+  return html.match(/^<[^>]+>/)?.[0] || html;
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 async function copyRevealRuntime(outDir) {
@@ -244,6 +309,7 @@ ${indent(slides, 8)}
     </div>
     <script src="./vendor/reveal/reveal.js"></script>
     ${pluginScripts}
+    ${renderByeslideRuntime()}
     <script>
       (() => {
         const params = new URLSearchParams(window.location.search);
@@ -266,6 +332,31 @@ ${indent(slides, 8)}
   </body>
 </html>
 `;
+}
+
+function renderByeslideRuntime() {
+  return `<script>
+      (() => {
+        const api = {
+          slideForSource(source) {
+            if (!source) {
+              return null;
+            }
+            return Array.from(document.querySelectorAll("[data-byeslide-source]"))
+              .find((slide) => slide.getAttribute("data-byeslide-source") === source) || null;
+          },
+          slideForScript(script = document.currentScript) {
+            if (!script) {
+              return null;
+            }
+            const localSlide = script.closest("section[data-byeslide-source]");
+            return localSlide || api.slideForSource(script.dataset.byeslideSource);
+          }
+        };
+
+        window.Byeslide = Object.assign(window.Byeslide || {}, api);
+      })();
+    </script>`;
 }
 
 function indent(value, spaces) {
@@ -302,6 +393,7 @@ module.exports = {
   copyDeckAssets,
   extractSlideScripts,
   normalizeSlideHtml,
+  prepareSlideScripts,
   renderIndex,
   stripFullDocument
 };

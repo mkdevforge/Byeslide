@@ -1,0 +1,61 @@
+<section class="slide">
+  <div class="slide__topline">
+    <span class="eyebrow">Chart.js</span>
+    <div class="caption">Interactive scenario</div>
+  </div>
+  <div class="chartjs-layout chartjs-layout--balanced">
+    <div class="chartjs-panel chartjs-panel--main">
+      <div class="chartjs-panel__header">
+        <div>
+          <h2 class="heading">Tune a scenario live</h2>
+          <p>Bind slide controls to a Chart.js instance.</p>
+        </div>
+      </div>
+      <div class="chartjs-canvas-wrap chartjs-canvas-wrap--donut">
+        <canvas data-chartjs-scenario aria-label="Interactive Chart.js doughnut chart"></canvas>
+      </div>
+    </div>
+    <div class="chartjs-panel chartjs-panel--control">
+      <h3>Scenario mix</h3>
+      <div class="chartjs-slider-block">
+        <label for="chartjs-scenario-range">Primary share</label>
+        <div class="chartjs-range-row">
+          <input id="chartjs-scenario-range" type="range" min="25" max="85" value="60" step="1" data-chartjs-slider>
+          <strong data-chartjs-slider-value>60%</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-chartjs-scenario]");
+      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      canvas.dataset.chartReady = "true";
+      const slider = slide.querySelector("[data-chartjs-slider]");
+      const value = slide.querySelector("[data-chartjs-slider-value]");
+      const chart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+          labels: ["Primary", "Secondary", "Manual"],
+          datasets: [{ data: [60, 26, 14], backgroundColor: ["#2f6df6", "#16885f", "#d84f3f"] }]
+        },
+        options: { cutout: "58%", maintainAspectRatio: false, responsive: true }
+      });
+
+      slider.addEventListener("input", () => {
+        const primary = Number(slider.value);
+        const secondary = Math.round((100 - primary) * 0.65);
+        const manual = 100 - primary - secondary;
+        chart.data.datasets[0].data = [primary, secondary, manual];
+        chart.update();
+        value.textContent = `${primary}%`;
+      });
+    })();
+  </script>
+  <aside class="notes">Use this when the slide needs one live control tied to a chart.</aside>
+</section>

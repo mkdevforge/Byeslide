@@ -497,6 +497,184 @@
   width: 12px;
 }
 
+.chartjs-layout {
+  display: grid;
+  flex: 1;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(380px, 0.68fr);
+  min-height: 0;
+}
+
+.chartjs-layout--balanced {
+  grid-template-columns: minmax(0, 0.98fr) minmax(420px, 0.82fr);
+}
+
+.chartjs-panel {
+  background: var(--color-surface);
+  border: var(--rule-width) solid var(--color-rule);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 0;
+  padding: 30px;
+}
+
+.chartjs-panel--main {
+  padding: 32px;
+}
+
+.chartjs-panel--control {
+  justify-content: center;
+}
+
+.chartjs-panel__header {
+  align-items: start;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.chartjs-panel__header p {
+  color: var(--color-muted);
+  font-size: 24px;
+  line-height: 1.22;
+  margin-top: 14px;
+  max-width: 46ch;
+}
+
+.chartjs-panel .heading {
+  font-size: 50px;
+  line-height: 1.04;
+  max-width: 22ch;
+}
+
+.chartjs-control-row {
+  display: flex;
+  gap: 10px;
+}
+
+.chartjs-button {
+  background: #fbfcff;
+  border: var(--rule-width) solid var(--color-rule);
+  border-radius: var(--radius);
+  color: var(--color-ink);
+  cursor: pointer;
+  font: 720 20px/1 var(--font-sans);
+  padding: 16px 18px;
+}
+
+.chartjs-button[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.chartjs-canvas-wrap {
+  flex: 1;
+  min-height: 390px;
+  position: relative;
+}
+
+.chartjs-canvas-wrap--donut {
+  min-height: 500px;
+}
+
+.chartjs-canvas-wrap canvas {
+  height: 100% !important;
+  inset: 0;
+  position: absolute;
+  width: 100% !important;
+}
+
+.chartjs-panel h3 {
+  font-size: 38px;
+  line-height: 1.1;
+}
+
+.chartjs-metric {
+  border-bottom: var(--rule-width) solid var(--color-rule);
+  border-top: var(--rule-width) solid var(--color-rule);
+  display: grid;
+  gap: 12px;
+  padding: 32px 0;
+}
+
+.chartjs-metric strong {
+  color: var(--color-accent-strong);
+  font-size: 78px;
+  line-height: 1;
+}
+
+.chartjs-metric span {
+  color: var(--color-muted);
+  font-size: 27px;
+  line-height: 1.2;
+}
+
+.chartjs-notes {
+  color: var(--color-muted);
+  display: grid;
+  font-size: 25px;
+  gap: 18px;
+  line-height: 1.22;
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.chartjs-slider-block {
+  display: grid;
+  gap: 18px;
+}
+
+.chartjs-slider-block label {
+  color: var(--color-muted);
+  font-size: 25px;
+  font-weight: 720;
+}
+
+.chartjs-range-row {
+  align-items: center;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) 92px;
+}
+
+.chartjs-range-row input {
+  accent-color: var(--color-accent);
+  width: 100%;
+}
+
+.chartjs-range-row strong {
+  color: var(--color-accent-strong);
+  font-size: 38px;
+  line-height: 1;
+  text-align: right;
+}
+
+.chartjs-split-list {
+  border-top: var(--rule-width) solid var(--color-rule);
+  display: grid;
+  gap: 22px;
+  padding-top: 28px;
+}
+
+.chartjs-split-list div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chartjs-split-list span {
+  color: var(--color-muted);
+  font-size: 26px;
+}
+
+.chartjs-split-list strong {
+  color: var(--color-ink);
+  font-size: 34px;
+}
+
 .video-layout {
   align-items: center;
   display: grid;

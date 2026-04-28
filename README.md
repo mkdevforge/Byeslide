@@ -71,3 +71,5 @@ byeslide install-browsers
 4. Run `byeslide build` and `byeslide check`.
 
 Slide files may be fragments or full HTML documents. Fragments are the default and are wrapped in Reveal `<section>` elements during build.
+
+Slide files may also include browser-side dependencies and setup scripts. External `src` scripts are moved after Reveal initialization and repeated dependency tags are deduped; inline scripts are preserved per slide. Use `window.Byeslide.slideForScript(document.currentScript)` inside inline slide setup code when it needs to query the slide it came from. The starter deck includes Three.js and two Chart.js slides that demonstrate this model.

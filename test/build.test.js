@@ -3,7 +3,13 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
-const { buildDeck, extractSlideScripts, normalizeSlideHtml, stripFullDocument } = require("../src/build");
+const {
+  buildDeck,
+  extractSlideScripts,
+  normalizeSlideHtml,
+  prepareSlideScripts,
+  stripFullDocument
+} = require("../src/build");
 
 test("normalizes slide fragments into Reveal sections", () => {
   const html = normalizeSlideHtml("<h1>Hello</h1>", "slides/01.html");
@@ -22,9 +28,34 @@ test("extracts body content from full HTML documents", () => {
 });
 
 test("extracts slide scripts from Reveal slide markup", () => {
-  const result = extractSlideScripts("<section><h1>Demo</h1><script type=\"module\" src=\"./assets/demo.js\"></script></section>");
+  const result = extractSlideScripts(
+    "<section><h1>Demo</h1><script type=\"module\" src=\"./assets/demo.js\"></script></section>",
+    "slides/03-demo.html"
+  );
   assert.equal(result.html, "<section><h1>Demo</h1></section>");
-  assert.deepEqual(result.scripts, ["<script type=\"module\" src=\"./assets/demo.js\"></script>"]);
+  assert.deepEqual(result.scripts, [
+    "<script data-byeslide-source=\"slides/03-demo.html\" data-byeslide-script-index=\"0\" type=\"module\" src=\"./assets/demo.js\"></script>"
+  ]);
+});
+
+test("prepareSlideScripts keeps repeated inline setup scripts", () => {
+  const scripts = [
+    "<script data-byeslide-source=\"slides/01.html\" data-byeslide-script-index=\"0\">init()</script>",
+    "<script data-byeslide-source=\"slides/02.html\" data-byeslide-script-index=\"0\">init()</script>"
+  ];
+
+  assert.deepEqual(prepareSlideScripts(scripts), scripts);
+});
+
+test("prepareSlideScripts dedupes repeated external dependencies only", () => {
+  const scripts = [
+    "<script data-byeslide-source=\"slides/01.html\" data-byeslide-script-index=\"0\" src=\"./assets/vendor/chart.umd.js\"></script>",
+    "<script data-byeslide-source=\"slides/01.html\" data-byeslide-script-index=\"1\">initOne()</script>",
+    "<script data-byeslide-source=\"slides/02.html\" data-byeslide-script-index=\"0\" src=\"./assets/vendor/chart.umd.js\"></script>",
+    "<script data-byeslide-source=\"slides/02.html\" data-byeslide-script-index=\"1\">initTwo()</script>"
+  ];
+
+  assert.deepEqual(prepareSlideScripts(scripts), [scripts[0], scripts[1], scripts[3]]);
 });
 
 test("buildDeck writes a Reveal-compatible deck", async () => {
@@ -53,9 +84,10 @@ test("buildDeck moves slide-owned scripts outside Reveal slides", async () => {
   const index = await fs.readFile(result.indexPath, "utf8");
   const slideStart = index.indexOf("data-byeslide-source=\"slides/03-script.html\"");
   const slideEnd = index.indexOf("</section>", slideStart);
-  const scriptIndex = index.indexOf("<script type=\"module\" src=\"./assets/demo.js\"></script>");
+  const scriptIndex = index.indexOf("<script data-byeslide-source=\"slides/03-script.html\" data-byeslide-script-index=\"0\" type=\"module\" src=\"./assets/demo.js\"></script>");
 
   assert.ok(slideStart >= 0);
+  assert.match(index, /window\.Byeslide = Object\.assign/);
   assert.ok(scriptIndex > slideEnd);
 });
 

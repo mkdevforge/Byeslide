@@ -1,0 +1,62 @@
+<section class="slide">
+  <div class="slide__topline">
+    <span class="eyebrow">Chart.js</span>
+    <div class="caption">Interactive trend</div>
+  </div>
+  <div class="chartjs-layout">
+    <div class="chartjs-panel chartjs-panel--main">
+      <div class="chartjs-panel__header">
+        <div>
+          <h2 class="heading">Switch between chart views</h2>
+          <p>Use slide-local setup code for live chart state and controls.</p>
+        </div>
+        <div class="chartjs-control-row" aria-label="Chart data view">
+          <button class="chartjs-button" type="button" data-chartjs-mode="one">One</button>
+          <button class="chartjs-button" type="button" data-chartjs-mode="two">Two</button>
+        </div>
+      </div>
+      <div class="chartjs-canvas-wrap">
+        <canvas data-chartjs-trend aria-label="Interactive Chart.js line chart"></canvas>
+      </div>
+    </div>
+    <div class="chartjs-panel">
+      <h3>Live signal</h3>
+      <div class="chartjs-metric">
+        <strong data-chartjs-headline>+00%</strong>
+        <span data-chartjs-headline-label>metric label</span>
+      </div>
+      <ol class="chartjs-notes">
+        <li>Replace the labels and data in the inline script.</li>
+        <li>Keep the Chart.js dependency in the slide file.</li>
+      </ol>
+    </div>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-chartjs-trend]");
+      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      canvas.dataset.chartReady = "true";
+      new Chart(canvas, {
+        type: "line",
+        data: {
+          labels: ["A", "B", "C", "D"],
+          datasets: [{
+            label: "Metric",
+            data: [12, 24, 18, 32],
+            borderColor: "#2f6df6",
+            backgroundColor: "rgba(47, 109, 246, 0.14)",
+            fill: true,
+            tension: 0.36
+          }]
+        },
+        options: { maintainAspectRatio: false, responsive: true }
+      });
+    })();
+  </script>
+  <aside class="notes">Describe the chart source and what the audience should conclude.</aside>
+</section>

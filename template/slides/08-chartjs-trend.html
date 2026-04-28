@@ -1,0 +1,154 @@
+<section class="slide">
+  <div class="slide__topline">
+    <span class="eyebrow">Chart.js</span>
+    <div class="caption">Interactive trend slide</div>
+  </div>
+  <div class="chartjs-layout">
+    <div class="chartjs-panel chartjs-panel--main">
+      <div class="chartjs-panel__header">
+        <div>
+          <h2 class="heading">Switch the story without rebuilding the slide</h2>
+          <p>Chart state lives in the slide, so the presenter can reveal different cuts of the same data live.</p>
+        </div>
+        <div class="chartjs-control-row" aria-label="Chart data view">
+          <button class="chartjs-button" type="button" data-chartjs-mode="velocity">Velocity</button>
+          <button class="chartjs-button" type="button" data-chartjs-mode="quality">Quality</button>
+          <button class="chartjs-button" type="button" data-chartjs-mode="reach">Reach</button>
+        </div>
+      </div>
+      <div class="chartjs-canvas-wrap">
+        <canvas data-chartjs-trend aria-label="Interactive Chart.js line chart"></canvas>
+      </div>
+    </div>
+    <div class="chartjs-panel">
+      <h3>Live signal</h3>
+      <div class="chartjs-metric">
+        <strong data-chartjs-headline>+38%</strong>
+        <span data-chartjs-headline-label>cycle time gained</span>
+      </div>
+      <ol class="chartjs-notes">
+        <li>Every control scopes itself to this slide.</li>
+        <li>The Chart.js runtime is loaded from <code>assets/vendor/</code>.</li>
+        <li>The inline setup script can find its source slide after build.</li>
+      </ol>
+    </div>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-chartjs-trend]");
+      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      canvas.dataset.chartReady = "true";
+      const headline = slide.querySelector("[data-chartjs-headline]");
+      const headlineLabel = slide.querySelector("[data-chartjs-headline-label]");
+      const buttons = Array.from(slide.querySelectorAll("[data-chartjs-mode]"));
+      const palette = {
+        blue: "#2f6df6",
+        green: "#16885f",
+        warm: "#d84f3f",
+        violet: "#6b5cff",
+        muted: "#87919a"
+      };
+      const views = {
+        velocity: {
+          label: "Draft to ready",
+          headline: "+38%",
+          note: "cycle time gained",
+          color: palette.blue,
+          fill: "rgba(47, 109, 246, 0.14)",
+          data: [18, 22, 29, 37, 43, 49]
+        },
+        quality: {
+          label: "Checks passed",
+          headline: "96%",
+          note: "deck confidence",
+          color: palette.green,
+          fill: "rgba(22, 136, 95, 0.14)",
+          data: [54, 61, 70, 79, 88, 96]
+        },
+        reach: {
+          label: "Audience retention",
+          headline: "+24%",
+          note: "attention lift",
+          color: palette.violet,
+          fill: "rgba(107, 92, 255, 0.14)",
+          data: [42, 46, 51, 58, 63, 66]
+        }
+      };
+
+      const chart = new Chart(canvas, {
+        type: "line",
+        data: {
+          labels: ["Outline", "Draft", "Visuals", "Review", "Rehearse", "Present"],
+          datasets: [{
+            label: views.velocity.label,
+            data: views.velocity.data,
+            borderColor: views.velocity.color,
+            backgroundColor: views.velocity.fill,
+            borderWidth: 5,
+            fill: true,
+            pointBackgroundColor: "#ffffff",
+            pointBorderColor: views.velocity.color,
+            pointBorderWidth: 4,
+            pointRadius: 7,
+            tension: 0.36
+          }]
+        },
+        options: {
+          animation: { duration: 650 },
+          maintainAspectRatio: false,
+          responsive: true,
+          interaction: { intersect: false, mode: "index" },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#111827",
+              titleFont: { size: 18, weight: "700" },
+              bodyFont: { size: 16 },
+              padding: 14
+            }
+          },
+          scales: {
+            x: {
+              border: { display: false },
+              grid: { display: false },
+              ticks: { color: palette.muted, font: { size: 18, weight: "600" } }
+            },
+            y: {
+              border: { display: false },
+              grid: { color: "#d8dce2" },
+              suggestedMax: 100,
+              ticks: { color: palette.muted, font: { size: 18, weight: "600" } }
+            }
+          }
+        }
+      });
+
+      const setView = (mode) => {
+        const view = views[mode] || views.velocity;
+        const dataset = chart.data.datasets[0];
+        dataset.label = view.label;
+        dataset.data = view.data;
+        dataset.borderColor = view.color;
+        dataset.backgroundColor = view.fill;
+        dataset.pointBorderColor = view.color;
+        chart.update();
+        headline.textContent = view.headline;
+        headlineLabel.textContent = view.note;
+        buttons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.chartjsMode === mode));
+        });
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => setView(button.dataset.chartjsMode));
+      });
+      setView("velocity");
+    })();
+  </script>
+  <aside class="notes">Use this slide to show that a dependency and inline setup can live directly in the slide. Click the controls during preview to prove the chart is active, not a static image.</aside>
+</section>
