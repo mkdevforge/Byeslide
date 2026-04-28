@@ -125,17 +125,43 @@ function extractSlideScripts(html, source = "") {
 
 function annotateSlideScript(script, source, index) {
   let next = script;
+  const scriptId = createScriptId(source, index);
+  if (!hasHtmlAttribute(next, "data-byeslide-script-id")) {
+    next = addScriptAttribute(next, "data-byeslide-script-id", scriptId);
+  }
   if (!hasHtmlAttribute(next, "data-byeslide-script-index")) {
     next = addScriptAttribute(next, "data-byeslide-script-index", String(index));
   }
   if (source && !hasHtmlAttribute(next, "data-byeslide-source")) {
     next = addScriptAttribute(next, "data-byeslide-source", source);
   }
+  if (isInlineModuleScript(next)) {
+    next = injectModuleSlideBinding(next, scriptId);
+  }
   return next;
 }
 
 function addScriptAttribute(script, name, value) {
   return script.replace(/^<script\b/i, `<script ${name}="${escapeAttribute(value)}"`);
+}
+
+function createScriptId(source, index) {
+  return `byeslide-${Buffer.from(source || "inline").toString("base64url")}-${index}`;
+}
+
+function isInlineModuleScript(script) {
+  return getHtmlAttribute(script, "type").toLowerCase() === "module"
+    && !getHtmlAttribute(script, "src");
+}
+
+function injectModuleSlideBinding(script, scriptId) {
+  return script.replace(/^(<script\b[^>]*>)([\s\S]*?)(<\/script\s*>)$/i, (_match, open, body, close) => {
+    const prelude = [
+      `import.meta.byeslideScript = window.Byeslide?.scriptForId(${safeJson(scriptId)});`,
+      "import.meta.byeslideSlide = window.Byeslide?.slideForScript(import.meta);"
+    ].join("\n");
+    return `${open}\n${prelude}\n${body.trimStart()}${close}`;
+  });
 }
 
 function prepareSlideScripts(scripts) {
@@ -338,6 +364,13 @@ function renderByeslideRuntime() {
   return `<script>
       (() => {
         const api = {
+          scriptForId(id) {
+            if (!id) {
+              return null;
+            }
+            return Array.from(document.querySelectorAll("script[data-byeslide-script-id]"))
+              .find((script) => script.dataset.byeslideScriptId === String(id)) || null;
+          },
           slideForSource(source) {
             if (!source) {
               return null;
@@ -346,7 +379,19 @@ function renderByeslideRuntime() {
               .find((slide) => slide.getAttribute("data-byeslide-source") === source) || null;
           },
           slideForScript(script = document.currentScript) {
+            if (script?.byeslideSlide) {
+              return script.byeslideSlide;
+            }
+            if (script?.byeslideScript) {
+              return api.slideForScript(script.byeslideScript);
+            }
+            if (typeof script === "string") {
+              return api.slideForScript(api.scriptForId(script)) || api.slideForSource(script);
+            }
             if (!script) {
+              return null;
+            }
+            if (typeof script.closest !== "function") {
               return null;
             }
             const localSlide = script.closest("section[data-byeslide-source]");

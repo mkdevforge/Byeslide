@@ -34,8 +34,20 @@ test("extracts slide scripts from Reveal slide markup", () => {
   );
   assert.equal(result.html, "<section><h1>Demo</h1></section>");
   assert.deepEqual(result.scripts, [
-    "<script data-byeslide-source=\"slides/03-demo.html\" data-byeslide-script-index=\"0\" type=\"module\" src=\"./assets/demo.js\"></script>"
+    "<script data-byeslide-source=\"slides/03-demo.html\" data-byeslide-script-index=\"0\" data-byeslide-script-id=\"byeslide-c2xpZGVzLzAzLWRlbW8uaHRtbA-0\" type=\"module\" src=\"./assets/demo.js\"></script>"
   ]);
+});
+
+test("extracts inline module scripts with import.meta slide bindings", () => {
+  const result = extractSlideScripts(
+    "<section><script type=\"module\">const slide = window.Byeslide.slideForScript(import.meta);</script></section>",
+    "slides/03-demo.html"
+  );
+
+  assert.equal(result.html, "<section></section>");
+  assert.match(result.scripts[0], /data-byeslide-script-id="byeslide-c2xpZGVzLzAzLWRlbW8uaHRtbA-0"/);
+  assert.match(result.scripts[0], /import\.meta\.byeslideScript = window\.Byeslide\?\.scriptForId\("byeslide-c2xpZGVzLzAzLWRlbW8uaHRtbA-0"\);/);
+  assert.match(result.scripts[0], /import\.meta\.byeslideSlide = window\.Byeslide\?\.slideForScript\(import\.meta\);/);
 });
 
 test("prepareSlideScripts keeps repeated inline setup scripts", () => {
@@ -84,10 +96,11 @@ test("buildDeck moves slide-owned scripts outside Reveal slides", async () => {
   const index = await fs.readFile(result.indexPath, "utf8");
   const slideStart = index.indexOf("data-byeslide-source=\"slides/03-script.html\"");
   const slideEnd = index.indexOf("</section>", slideStart);
-  const scriptIndex = index.indexOf("<script data-byeslide-source=\"slides/03-script.html\" data-byeslide-script-index=\"0\" type=\"module\" src=\"./assets/demo.js\"></script>");
+  const scriptIndex = index.indexOf("<script data-byeslide-source=\"slides/03-script.html\" data-byeslide-script-index=\"0\" data-byeslide-script-id=\"byeslide-c2xpZGVzLzAzLXNjcmlwdC5odG1s-0\" type=\"module\" src=\"./assets/demo.js\"></script>");
 
   assert.ok(slideStart >= 0);
   assert.match(index, /window\.Byeslide = Object\.assign/);
+  assert.match(index, /scriptForId\(id\)/);
   assert.ok(scriptIndex > slideEnd);
 });
 

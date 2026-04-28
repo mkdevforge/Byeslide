@@ -19,6 +19,6 @@ The preview URL is the audience presentation view. Add presenter notes with `<as
 
 Slide-contained browser dependencies can live under `assets/vendor/` and be imported directly from a slide. The Three.js example imports the local vendor build from `assets/three-demo.js`; the Chart.js examples include `assets/vendor/chart.umd.js` from two different slides.
 
-When a slide includes inline setup scripts, use `window.Byeslide.slideForScript(document.currentScript)` to find the source slide after build. The builder keeps each inline setup script and dedupes repeated external `src` dependencies, so multiple slides can include the same library while still running independent slide-local setup code.
+When a slide includes inline setup scripts, use `window.Byeslide.slideForScript(document.currentScript)` in classic scripts, or `window.Byeslide.slideForScript(import.meta)` / `import.meta.byeslideSlide` in inline module scripts, to find the source slide after build. The builder keeps each inline setup script and dedupes repeated external `src` dependencies, so multiple slides can include the same library while still running independent slide-local setup code. Add `data-byeslide-repeat` to an external setup script when it must run once per slide instead of being deduped as a shared dependency.
 
 Use `patterns/` as the vocabulary for new slides. Copy the closest pattern into `slides/NN-name.html`, replace the content, and keep layout changes local to that slide unless the theme itself needs to change.
