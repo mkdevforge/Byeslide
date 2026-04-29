@@ -264,6 +264,14 @@ pnpm preview</code></pre>
                 </thead>
                 <tbody>
                   <tr>
+                    <td><code>byeslide --version</code></td>
+                    <td>Print the installed Byeslide package version.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide version</code></td>
+                    <td>Print the installed Byeslide package version.</td>
+                  </tr>
+                  <tr>
                     <td><code>byeslide init [dir] [--force]</code></td>
                     <td>Create a new deck from the starter template.</td>
                   </tr>
@@ -309,6 +317,13 @@ pnpm preview</code></pre>
                 <p>
                   If <code>check</code> or <code>pdf</code> cannot find a
                   browser, run <code>byeslide install-browsers</code>.
+                </p>
+              </article>
+              <article class="note-card">
+                <h3>Version metadata</h3>
+                <p>
+                  Built decks include a generator meta tag and expose
+                  <code>window.Byeslide.version</code> for hosted deck debugging.
                 </p>
               </article>
             </div>

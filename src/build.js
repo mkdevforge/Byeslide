@@ -1,6 +1,7 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { createRequire } = require("node:module");
+const packageJson = require("../package.json");
 const { loadConfig, revealOptions } = require("./config");
 const {
   copyDirectory,
@@ -13,6 +14,7 @@ const {
 const { resolvePlugins } = require("./plugins");
 
 const requireFromHere = createRequire(__filename);
+const BYESLIDE_VERSION = packageJson.version;
 
 async function buildDeck(deckDir = process.cwd(), options = {}) {
   const root = path.resolve(deckDir);
@@ -295,6 +297,7 @@ function renderIndex({ config, revealOptions, slides, slideScripts, css, plugins
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Byeslide ${escapeAttribute(BYESLIDE_VERSION)}">
     <title>${escapeHtml(config.title)}</title>
     <meta name="description" content="${escapeAttribute(config.description || "")}">
     <link rel="stylesheet" href="./vendor/reveal/reset.css">
@@ -369,7 +372,7 @@ ${indent(slides, 8)}
     </div>
     <script src="./vendor/reveal/reveal.js"></script>
     ${pluginScripts}
-    ${renderByeslideRuntime({ dev })}
+    ${renderByeslideRuntime({ dev, version: BYESLIDE_VERSION })}
     <script>
       (() => {
         const params = new URLSearchParams(window.location.search);
@@ -410,12 +413,13 @@ ${indent(slides, 8)}
 `;
 }
 
-function renderByeslideRuntime({ dev = false } = {}) {
+function renderByeslideRuntime({ dev = false, version = BYESLIDE_VERSION } = {}) {
   return `<script>
       (() => {
         const PDF_ENDPOINT = ${safeJson(dev ? "/__byeslide/pdf" : "")};
 
         const api = {
+          version: ${safeJson(version)},
           exitPrintView() {
             exitPrintView();
           },

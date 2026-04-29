@@ -387,8 +387,7 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.feature-grid.two,
-.note-grid {
+.feature-grid.two {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 

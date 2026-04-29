@@ -42,6 +42,8 @@ my-deck/
 ## Commands
 
 ```sh
+byeslide --version
+byeslide version
 byeslide init [dir] [--force]
 byeslide build [dir] [--out dist] [--no-clean]
 byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
@@ -52,6 +54,8 @@ byeslide install-browsers [chromium]
 ```
 
 `build` writes a standalone Reveal deck to `dist/index.html` and copies Reveal runtime assets locally. `preview` rebuilds on file changes and injects a live reload hook. `check` opens the deck in Chromium and reports slide overflow against the fixed logical viewport. `pdf` uses the same HTML deck with `?view=print`.
+
+Built decks include a generator meta tag and expose `window.Byeslide.version`, so hosted decks can be traced back to the Byeslide package version that produced them.
 
 `preview` listens on `127.0.0.1:4173` by default. If that port is occupied, it tries the next available ports and prints the actual URL. IPv6 hosts are supported, for example `--host ::1` prints a bracketed URL such as `http://[::1]:4173/`.
 

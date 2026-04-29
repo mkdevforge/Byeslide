@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const path = require("node:path");
+const packageJson = require("../package.json");
 const { buildDeck } = require("./build");
 const { checkDeck, exportPdf, installBrowsers } = require("./browser");
 const { loadConfig } = require("./config");
@@ -11,6 +12,11 @@ const { listHtmlFiles, toPosixPath } = require("./fs-utils");
 async function main(argv = process.argv.slice(2)) {
   const parsed = parseArgs(argv);
   const command = parsed.positionals.shift();
+
+  if (parsed.options.version || command === "version") {
+    printVersion();
+    return 0;
+  }
 
   if (!command || command === "help" || parsed.options.help) {
     printHelp();
@@ -181,10 +187,16 @@ function toCamelCase(value) {
   return value.replace(/-([a-z])/g, (_match, letter) => letter.toUpperCase());
 }
 
+function printVersion() {
+  console.log(packageJson.version);
+}
+
 function printHelp() {
   console.log(`Byeslide
 
 Usage:
+  byeslide --version
+  byeslide version
   byeslide init [dir] [--force]
   byeslide build [dir] [--out dist] [--no-clean]
   byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]

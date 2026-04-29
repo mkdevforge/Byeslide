@@ -4,7 +4,7 @@ const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
 const { initDeck } = require("../src/init");
-const { parseArgs } = require("../src/cli");
+const { main, parseArgs } = require("../src/cli");
 const rootPackage = require("../package.json");
 
 test("initDeck copies the starter template", async () => {
@@ -36,6 +36,20 @@ test("parseArgs supports flags, values, and negated flags", () => {
   assert.equal(parsed.options.out, "public");
   assert.equal(parsed.options.clean, false);
   assert.equal(parsed.options.json, true);
+});
+
+test("main prints the package version", async () => {
+  const messages = [];
+  const originalLog = console.log;
+  console.log = (message) => messages.push(message);
+  try {
+    assert.equal(await main(["--version"]), 0);
+    assert.equal(await main(["version"]), 0);
+  } finally {
+    console.log = originalLog;
+  }
+
+  assert.deepEqual(messages, [rootPackage.version, rootPackage.version]);
 });
 
 async function exists(target) {

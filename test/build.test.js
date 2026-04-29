@@ -3,6 +3,7 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
+const rootPackage = require("../package.json");
 const {
   buildDeck,
   extractSlideScripts,
@@ -77,6 +78,8 @@ test("buildDeck writes a Reveal-compatible deck", async () => {
 
   assert.equal(result.slideFiles.length, 2);
   assert.match(index, /<div class="reveal">/);
+  assert.match(index, new RegExp(`<meta name="generator" content="Byeslide ${escapeRegExp(rootPackage.version)}">`));
+  assert.match(index, new RegExp(`version: "${escapeRegExp(rootPackage.version)}"`));
   assert.match(index, /data-byeslide-source="slides\/01-title\.html"/);
   assert.match(index, /Reveal\.initialize/);
   assert.match(index, /const PDF_ENDPOINT = "";/);
@@ -165,4 +168,8 @@ async function exists(target) {
   } catch {
     return false;
   }
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
