@@ -4,13 +4,18 @@ Byeslide publishes to npm from GitHub Actions.
 
 ## npm Setup
 
-Preferred path after the first publish:
+Use npm trusted publishing. Do not create an npm automation token for this
+workflow.
 
 1. Open the `byeslide` package settings on npm.
 2. Add a trusted publisher for GitHub Actions.
 3. Use organization/user `mkdevforge`, repository `Byeslide`, and workflow file `publish-npm.yml`.
+4. Leave the environment name blank unless the workflow is later moved behind a GitHub deployment environment.
 
-For the first publish, if npm does not let you configure trusted publishing before the package exists, create an npm automation token with publish access and add it to the GitHub repository as `NPM_TOKEN`.
+The workflow has `id-token: write`, uses GitHub-hosted runners, and runs
+`npm publish` without `NODE_AUTH_TOKEN`, so npm authenticates the publish with
+OIDC. Trusted publishing also publishes provenance automatically for public
+packages from public repositories.
 
 ## Publish
 
@@ -18,4 +23,5 @@ For the first publish, if npm does not let you configure trusted publishing befo
 2. Commit the version change.
 3. Create a GitHub release whose tag matches the package version, for example `v0.1.0`.
 
-The `Publish to npm` workflow runs tests, builds the starter template, checks package contents with `npm pack --dry-run`, then runs `npm publish --access public`.
+The `Publish to npm` workflow runs tests, builds the starter template, checks
+package contents with `npm pack --dry-run`, then runs `npm publish --access public`.
