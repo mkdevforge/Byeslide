@@ -24,7 +24,7 @@
           <a href="#start">Quick start</a>
           <a href="#authoring">Authoring</a>
           <a href="#commands">CLI</a>
-          <a href="#hosting">Cloudflare</a>
+          <a href="https://byeslide-example.mkdevforge.com/" target="_blank" rel="noreferrer">Example deck</a>
         </nav>
       </div>
     </header>
@@ -44,6 +44,9 @@
             <div class="hero-actions" aria-label="Primary actions">
               <a class="button primary" href="#start">Start a deck</a>
               <a class="button secondary" href="#commands">View commands</a>
+              <a class="button secondary" href="https://byeslide-example.mkdevforge.com/" target="_blank" rel="noreferrer">
+                Open example deck
+              </a>
             </div>
           </div>
 
@@ -78,7 +81,6 @@
             <a href="#authoring">Authoring model</a>
             <a href="#commands">CLI reference</a>
             <a href="#interactive">Interactive slides</a>
-            <a href="#hosting">Cloudflare hosting</a>
           </nav>
         </aside>
 
@@ -120,6 +122,13 @@
                 <p>
                   Keep Reveal features such as speaker view, fragments,
                   transitions, PDF output, and scroll view.
+                </p>
+              </article>
+              <article class="feature-card">
+                <h3>Hosted example</h3>
+                <p>
+                  See the starter template as a live deck at
+                  <a href="https://byeslide-example.mkdevforge.com/" target="_blank" rel="noreferrer">byeslide-example.mkdevforge.com</a>.
                 </p>
               </article>
             </div>
@@ -353,36 +362,6 @@ pnpm preview</code></pre>
             </p>
           </section>
 
-          <section class="doc-section" id="hosting">
-            <p class="section-label">Cloudflare hosting</p>
-            <h2>Deploy these docs</h2>
-            <p>
-              This documentation site is plain static HTML and CSS. Connect the
-              repository to Cloudflare Pages and use the following settings.
-            </p>
-
-            <dl class="deploy-settings">
-              <div>
-                <dt>Root directory</dt>
-                <dd>Repository root</dd>
-              </div>
-              <div>
-                <dt>Build command</dt>
-                <dd><code>exit 0</code></dd>
-              </div>
-              <div>
-                <dt>Build output directory</dt>
-                <dd><code>docs</code></dd>
-              </div>
-            </dl>
-
-            <p>
-              Cloudflare Pages supports static HTML projects and serves
-              <code>index.html</code> at the site root. See the
-              <a href="https://developers.cloudflare.com/pages/framework-guides/deploy-anything/">Cloudflare Pages static HTML guide</a>
-              for the deployment flow.
-            </p>
-          </section>
         </div>
       </div>
     </main>

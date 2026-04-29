@@ -383,6 +383,10 @@ h3 {
   margin-top: 26px;
 }
 
+.feature-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .feature-grid.two,
 .note-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -447,15 +451,13 @@ h3 {
   font-weight: 820;
 }
 
-.structure-list,
-.deploy-settings {
+.structure-list {
   display: grid;
   gap: 10px;
   margin: 24px 0 0;
 }
 
-.structure-list div,
-.deploy-settings div {
+.structure-list div {
   display: grid;
   grid-template-columns: minmax(160px, 0.28fr) minmax(0, 1fr);
   gap: 18px;
@@ -534,13 +536,8 @@ dd {
   color: var(--ink-soft);
 }
 
-.command-table code,
-.deploy-settings code {
+.command-table code {
   color: var(--ink);
-}
-
-.deploy-settings {
-  max-width: 720px;
 }
 
 .site-footer {
@@ -639,13 +636,11 @@ dd {
   }
 
   .toc nav,
-  .structure-list div,
-  .deploy-settings div {
+  .structure-list div {
     grid-template-columns: 1fr;
   }
 
-  .structure-list div,
-  .deploy-settings div {
+  .structure-list div {
     gap: 4px;
   }
 
