@@ -34,6 +34,13 @@ function createStaticServer(root, options = {}) {
         return;
       }
 
+      if (typeof options.handleRequest === "function") {
+        const handled = await options.handleRequest(request, response, { root: staticRoot });
+        if (handled) {
+          return;
+        }
+      }
+
       await serveFile(staticRoot, requestUrl.pathname, response);
     } catch (error) {
       response.statusCode = 500;

@@ -30,6 +30,39 @@ test("static server falls back when the requested port is occupied", async () =>
   }
 });
 
+test("static server lets custom handlers answer before static files", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-server-handler-"));
+  await fs.writeFile(path.join(root, "index.html"), "ok\n");
+
+  const server = createStaticServer(root, {
+    port: 0,
+    async handleRequest(request, response, context) {
+      const requestUrl = new URL(request.url, "http://localhost");
+      if (requestUrl.pathname !== "/custom") {
+        return false;
+      }
+
+      assert.equal(context.root, path.resolve(root));
+      response.statusCode = 200;
+      response.end("custom\n");
+      return true;
+    }
+  });
+
+  try {
+    const url = await server.start();
+    const customResponse = await fetch(`${url}/custom`);
+    assert.equal(customResponse.status, 200);
+    assert.equal(await customResponse.text(), "custom\n");
+
+    const staticResponse = await fetch(`${url}/index.html`);
+    assert.equal(staticResponse.status, 200);
+    assert.equal(await staticResponse.text(), "ok\n");
+  } finally {
+    await server.close();
+  }
+});
+
 test("static server does not serve files outside the real root", async (t) => {
   const parent = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-server-link-"));
   const root = path.join(parent, "root");

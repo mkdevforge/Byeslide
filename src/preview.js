@@ -1,7 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { exportPdf } = require("./browser");
 const { buildDeck } = require("./build");
-const { isInside } = require("./fs-utils");
+const { isInside, toPosixPath } = require("./fs-utils");
 const { createStaticServer } = require("./static-server");
 
 async function previewDeck(deckDir = process.cwd(), options = {}) {
@@ -10,10 +11,20 @@ async function previewDeck(deckDir = process.cwd(), options = {}) {
     dev: true,
     outDir: options.outDir
   });
+  let pdfExport = null;
+  const exportCurrentPdf = (pdfDeckDir, pdfOptions) => {
+    if (!pdfExport) {
+      pdfExport = exportPdf(pdfDeckDir, pdfOptions).finally(() => {
+        pdfExport = null;
+      });
+    }
+    return pdfExport;
+  };
 
   const server = createStaticServer(result.outDir, {
     host: options.host || "127.0.0.1",
-    port: options.port || 4173
+    port: options.port || 4173,
+    handleRequest: (request, response) => handlePreviewPdfRequest(request, response, () => result, exportCurrentPdf)
   });
   const url = await server.start();
   const watcher = watchDeck(result.deckDir, path.relative(result.deckDir, result.outDir), async () => {
@@ -43,6 +54,69 @@ async function previewDeck(deckDir = process.cwd(), options = {}) {
     process.once("SIGINT", stop);
     process.once("SIGTERM", stop);
   });
+}
+
+async function handlePreviewPdfRequest(request, response, getResult, pdfExporter = exportPdf) {
+  const requestUrl = new URL(request.url, "http://localhost");
+  if (requestUrl.pathname !== "/__byeslide/pdf") {
+    return false;
+  }
+
+  if (request.method !== "POST") {
+    sendJson(response, 405, {
+      ok: false,
+      error: "Use POST to export the preview as PDF."
+    });
+    return true;
+  }
+
+  const current = getResult();
+  try {
+    const outDir = path.relative(current.deckDir, current.outDir);
+    const output = resolvePreviewPdfOutput(current);
+    const result = await pdfExporter(current.deckDir, {
+      outDir,
+      output
+    });
+    const url = previewPdfUrl(result, result.output);
+    sendJson(response, 200, {
+      ok: true,
+      path: toPosixPath(path.relative(result.deckDir, result.output)),
+      url
+    });
+  } catch (error) {
+    sendJson(response, 500, {
+      ok: false,
+      error: firstLine(error.message)
+    });
+  }
+
+  return true;
+}
+
+function resolvePreviewPdfOutput(result) {
+  return path.join(path.relative(result.deckDir, result.outDir), "deck.pdf");
+}
+
+function previewPdfUrl(result, output) {
+  const relative = path.relative(result.outDir, output);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error("PDF output must be inside the preview output directory.");
+  }
+
+  return `/${toPosixPath(relative).split("/").map(encodeURIComponent).join("/")}`;
+}
+
+function sendJson(response, statusCode, body) {
+  const content = JSON.stringify(body);
+  response.statusCode = statusCode;
+  response.setHeader("Content-Type", "application/json; charset=utf-8");
+  response.setHeader("Content-Length", Buffer.byteLength(content));
+  response.end(content);
+}
+
+function firstLine(value) {
+  return String(value).split(/\r?\n/)[0];
 }
 
 function watchDeck(root, outDir, onChange) {
@@ -109,7 +183,10 @@ function shouldIgnoreWatchPath(root, candidate, ignoredOutput) {
 }
 
 module.exports = {
+  handlePreviewPdfRequest,
+  previewPdfUrl,
   previewDeck,
+  resolvePreviewPdfOutput,
   shouldIgnoreWatchPath,
   watchDeck
 };

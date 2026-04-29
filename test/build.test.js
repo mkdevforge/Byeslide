@@ -79,6 +79,9 @@ test("buildDeck writes a Reveal-compatible deck", async () => {
   assert.match(index, /<div class="reveal">/);
   assert.match(index, /data-byeslide-source="slides\/01-title\.html"/);
   assert.match(index, /Reveal\.initialize/);
+  assert.match(index, /const PDF_ENDPOINT = "\/__byeslide\/pdf";/);
+  assert.match(index, /window\.addEventListener\("keydown"/);
+  assert.match(index, /url\.searchParams\.set\("view", "print"\)/);
   assert.ok(await exists(path.join(result.outDir, "vendor", "reveal", "reveal.css")));
   assert.ok(await exists(path.join(result.outDir, "assets", "note.txt")));
 });

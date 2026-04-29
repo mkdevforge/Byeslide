@@ -108,6 +108,10 @@
   gap: 28px;
 }
 
+.reveal .slides section.slide--dark .meta-row {
+  color: #aec3b0;
+}
+
 .meta-row strong {
   color: var(--color-ink);
   font-weight: 720;

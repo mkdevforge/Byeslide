@@ -349,10 +349,23 @@ ${indent(slides, 8)}
           .map((name) => window[name])
           .filter(Boolean);
 
-        Reveal.initialize({
+        const revealReady = Reveal.initialize({
           ...options,
           plugins
         });
+
+        if (params.get("print") === "1") {
+          const cleanUrl = new URL(window.location.href);
+          cleanUrl.searchParams.delete("print");
+          try {
+            window.history.replaceState(null, "", cleanUrl.href);
+          } catch {
+            // Some browsers reject history updates for local file URLs.
+          }
+          Promise.resolve(revealReady).then(() => {
+            window.setTimeout(() => window.print(), 250);
+          });
+        }
       })();
     </script>${slideScripts ? `\n${indent(slideScripts, 4)}` : ""}${devScript}
   </body>
@@ -363,7 +376,15 @@ ${indent(slides, 8)}
 function renderByeslideRuntime() {
   return `<script>
       (() => {
+        const PDF_ENDPOINT = "/__byeslide/pdf";
+
         const api = {
+          async exportPdf() {
+            if (await tryPreviewPdfExport()) {
+              return;
+            }
+            openPrintView();
+          },
           scriptForId(id) {
             if (!id) {
               return null;
@@ -400,6 +421,86 @@ function renderByeslideRuntime() {
         };
 
         window.Byeslide = Object.assign(window.Byeslide || {}, api);
+
+        window.addEventListener("keydown", (event) => {
+          if (!isPdfShortcut(event)) {
+            return;
+          }
+
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          api.exportPdf().catch(openPrintView);
+        }, true);
+
+        async function tryPreviewPdfExport() {
+          if (window.location.protocol === "file:") {
+            return false;
+          }
+
+          try {
+            const response = await fetch(PDF_ENDPOINT, {
+              method: "POST",
+              headers: {
+                "Accept": "application/json"
+              }
+            });
+            if (!response.ok) {
+              return false;
+            }
+            const payload = await response.json();
+            if (!payload?.url) {
+              return false;
+            }
+            downloadPdf(payload.url, pdfFilename(payload));
+            return true;
+          } catch {
+            return false;
+          }
+        }
+
+        function openPrintView() {
+          const url = new URL(window.location.href);
+          if (url.searchParams.get("view") === "print") {
+            window.print();
+            return;
+          }
+
+          url.searchParams.set("view", "print");
+          url.searchParams.set("print", "1");
+          window.location.assign(url.href);
+        }
+
+        function downloadPdf(url, filename) {
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = filename;
+          link.rel = "noopener";
+          document.body.append(link);
+          link.click();
+          link.remove();
+        }
+
+        function pdfFilename(payload) {
+          const source = payload.path || payload.url || "deck.pdf";
+          return source.split("/").filter(Boolean).pop() || "deck.pdf";
+        }
+
+        function isPdfShortcut(event) {
+          if (event.defaultPrevented || event.repeat || event.ctrlKey || event.altKey || event.metaKey) {
+            return false;
+          }
+          if (String(event.key).toLowerCase() !== "p") {
+            return false;
+          }
+          const target = event.target;
+          if (!target) {
+            return true;
+          }
+          if (target.isContentEditable) {
+            return false;
+          }
+          return !["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
+        }
       })();
     </script>`;
 }
