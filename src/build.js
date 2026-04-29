@@ -324,6 +324,40 @@ function renderIndex({ config, revealOptions, slides, slideScripts, css, plugins
         height: 100%;
       }
 
+      html.reveal-print,
+      html.reveal-print body,
+      html.reveal-print .reveal-viewport,
+      html.reveal-print .reveal,
+      html.reveal-print .slides,
+      html.reveal-print .pdf-page,
+      html.reveal-print .reveal .slides section[data-byeslide-source] {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      html.reveal-print body,
+      html.reveal-print .reveal-viewport {
+        background: transparent;
+        margin: 0;
+        padding: 0;
+      }
+
+      html.reveal-print .pdf-page {
+        background: transparent;
+        height: var(--byeslide-height) !important;
+        margin: 0 !important;
+        overflow: hidden;
+        width: var(--byeslide-width) !important;
+      }
+
+      html.reveal-print .reveal .slides section[data-byeslide-source] {
+        box-sizing: border-box !important;
+        height: var(--byeslide-height) !important;
+        min-height: var(--byeslide-height) !important;
+        padding: var(--byeslide-slide-padding, 0) !important;
+        width: var(--byeslide-width) !important;
+      }
+
 ${indentCss(css || "/* No deck CSS files were found. */", 6)}
     </style>
   </head>
@@ -343,6 +377,9 @@ ${indent(slides, 8)}
         const requestedView = params.get("view");
         if (requestedView === "scroll" || requestedView === "print") {
           options.view = requestedView;
+          if (requestedView === "print") {
+            options.margin = 0;
+          }
         }
 
         const plugins = ${globalsJson}

@@ -13,6 +13,13 @@ test("starter styles do not apply slide layout to the Reveal root", async () => 
   assert.match(css, /(^|\n)\.reveal \.slides section\.slide\s*\{/);
 });
 
+test("starter slides expose print padding for Reveal print view", async () => {
+  const css = await fs.readFile(path.join(templateRoot, "styles.css"), "utf8");
+
+  assert.match(css, /--byeslide-slide-padding: var\(--slide-padding\);/);
+  assert.match(css, /--byeslide-slide-padding: 0px;/);
+});
+
 test("starter slides include speaker notes", async () => {
   const files = await listHtmlFiles(path.join(templateRoot, "slides"));
 
