@@ -50,7 +50,7 @@ function main() {
   run("npm", ["pack", "--dry-run"]);
   run("git", ["add", "package.json"]);
   run("git", ["commit", "-m", `Release ${nextVersion}`]);
-  run("git", ["tag", `v${nextVersion}`]);
+  run("git", ["tag", "-a", `v${nextVersion}`, "-m", `Release ${nextVersion}`]);
 
   if (noPush) {
     if (dryRun) {
