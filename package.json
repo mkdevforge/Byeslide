@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mkdevforge/Byeslide.git"
+    "url": "https://github.com/mkdevforge/Byeslide.git"
   },
   "homepage": "https://byeslide.mkdevforge.com/",
   "packageManager": "pnpm@10.33.2",
