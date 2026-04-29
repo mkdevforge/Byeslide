@@ -47,11 +47,11 @@
       const headlineLabel = slide.querySelector("[data-chartjs-headline-label]");
       const buttons = Array.from(slide.querySelectorAll("[data-chartjs-mode]"));
       const palette = {
-        blue: "#2f6df6",
-        green: "#16885f",
-        warm: "#d84f3f",
-        violet: "#6b5cff",
-        muted: "#87919a"
+        blue: "#01161e",
+        green: "#598392",
+        warm: "#aec3b0",
+        violet: "#124559",
+        muted: "#124559"
       };
       const views = {
         velocity: {
@@ -59,7 +59,7 @@
           headline: "+38%",
           note: "cycle time gained",
           color: palette.blue,
-          fill: "rgba(47, 109, 246, 0.14)",
+          fill: "rgba(89, 131, 146, 0.18)",
           data: [18, 22, 29, 37, 43, 49]
         },
         quality: {
@@ -67,7 +67,7 @@
           headline: "96%",
           note: "deck confidence",
           color: palette.green,
-          fill: "rgba(22, 136, 95, 0.14)",
+          fill: "rgba(174, 195, 176, 0.22)",
           data: [54, 61, 70, 79, 88, 96]
         },
         reach: {
@@ -75,7 +75,7 @@
           headline: "+24%",
           note: "attention lift",
           color: palette.violet,
-          fill: "rgba(107, 92, 255, 0.14)",
+          fill: "rgba(18, 69, 89, 0.12)",
           data: [42, 46, 51, 58, 63, 66]
         }
       };
@@ -91,7 +91,7 @@
             backgroundColor: views.velocity.fill,
             borderWidth: 5,
             fill: true,
-            pointBackgroundColor: "#ffffff",
+            pointBackgroundColor: "#eff6e0",
             pointBorderColor: views.velocity.color,
             pointBorderWidth: 4,
             pointRadius: 7,
@@ -106,7 +106,7 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: "#111827",
+              backgroundColor: "#01161e",
               titleFont: { size: 18, weight: "700" },
               bodyFont: { size: 16 },
               padding: 14
@@ -120,7 +120,7 @@
             },
             y: {
               border: { display: false },
-              grid: { color: "#d8dce2" },
+              grid: { color: "#598392" },
               suggestedMax: 100,
               ticks: { color: palette.muted, font: { size: 18, weight: "600" } }
             }

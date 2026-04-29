@@ -86,14 +86,14 @@
       const eighty = slide.querySelector("[data-model-eighty]");
       const peak = slide.querySelector("[data-model-peak]");
       const colors = {
-        blue: "#2f6df6",
-        blueFill: "rgba(47, 109, 246, 0.13)",
-        green: "#16885f",
-        greenFill: "rgba(22, 136, 95, 0.15)",
-        warm: "#d84f3f",
-        rule: "#d8dce2",
-        muted: "#606a73",
-        ink: "#15171a"
+        blue: "#01161e",
+        blueFill: "rgba(89, 131, 146, 0.18)",
+        green: "#598392",
+        greenFill: "rgba(174, 195, 176, 0.22)",
+        warm: "#124559",
+        rule: "#598392",
+        muted: "#124559",
+        ink: "#01161e"
       };
       const backgroundPlugin = {
         id: "byeslideLogisticBands",
@@ -104,9 +104,9 @@
           }
           const t0 = chart.options.plugins.byeslideModel?.inflection ?? 5;
           const bands = [
-            { from: 0, to: Math.max(0, t0 - 1.6), color: "rgba(47, 109, 246, 0.06)", label: "early" },
-            { from: Math.max(0, t0 - 1.6), to: Math.min(10, t0 + 1.6), color: "rgba(22, 136, 95, 0.07)", label: "acceleration" },
-            { from: Math.min(10, t0 + 1.6), to: 10, color: "rgba(216, 79, 63, 0.06)", label: "saturation" }
+            { from: 0, to: Math.max(0, t0 - 1.6), color: "rgba(174, 195, 176, 0.24)", label: "early" },
+            { from: Math.max(0, t0 - 1.6), to: Math.min(10, t0 + 1.6), color: "rgba(89, 131, 146, 0.18)", label: "acceleration" },
+            { from: Math.min(10, t0 + 1.6), to: 10, color: "rgba(18, 69, 89, 0.1)", label: "saturation" }
           ];
 
           ctx.save();

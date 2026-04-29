@@ -3,20 +3,20 @@
   --font-serif: Georgia, "Times New Roman", serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
-  --color-ink: #15171a;
-  --color-muted: #606a73;
-  --color-subtle: #87919a;
-  --color-page: #f6f4ee;
-  --color-surface: #ffffff;
-  --color-surface-strong: #f0f5ff;
-  --color-rule: #d8dce2;
-  --color-accent: #2f6df6;
-  --color-accent-strong: #1647b8;
-  --color-warm: #d84f3f;
-  --color-green: #16885f;
-  --color-amber: #d89b20;
-  --color-violet: #6b5cff;
-  --color-dark: #111827;
+  --color-ink: #01161e;
+  --color-muted: #124559;
+  --color-subtle: #598392;
+  --color-page: #eff6e0;
+  --color-surface: #eff6e0;
+  --color-surface-strong: #aec3b0;
+  --color-rule: #124559;
+  --color-accent: #124559;
+  --color-accent-strong: #01161e;
+  --color-warm: #598392;
+  --color-green: #598392;
+  --color-amber: #aec3b0;
+  --color-violet: #124559;
+  --color-dark: #01161e;
 
   --slide-padding: 108px;
   --slide-gap: 48px;

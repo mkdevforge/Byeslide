@@ -19,7 +19,7 @@ function initThreeDemo(canvas) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x080e1f, 9, 24);
+  scene.fog = new THREE.Fog(0x01161e, 9, 24);
 
   const camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.1, 100);
   camera.position.set(0, 1.1, 8.8);
@@ -31,13 +31,13 @@ function initThreeDemo(canvas) {
   const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
   keyLight.position.set(4, 5, 7);
   scene.add(keyLight);
-  scene.add(new THREE.AmbientLight(0x86a8ff, 0.75));
+  scene.add(new THREE.AmbientLight(0xaec3b0, 0.7));
 
   const knot = new THREE.Mesh(
     new THREE.TorusKnotGeometry(1.35, 0.34, 220, 32),
     new THREE.MeshStandardMaterial({
-      color: 0x2f6df6,
-      emissive: 0x071a4f,
+      color: 0x598392,
+      emissive: 0x141426,
       metalness: 0.5,
       roughness: 0.24
     })
@@ -47,7 +47,7 @@ function initThreeDemo(canvas) {
   const wire = new THREE.Mesh(
     new THREE.IcosahedronGeometry(2.55, 2),
     new THREE.MeshBasicMaterial({
-      color: 0x8fb0ff,
+      color: 0xaec3b0,
       opacity: 0.18,
       transparent: true,
       wireframe: true
@@ -56,8 +56,8 @@ function initThreeDemo(canvas) {
   root.add(wire);
 
   const orbitMaterial = new THREE.MeshStandardMaterial({
-    color: 0x16b981,
-    emissive: 0x042c20,
+    color: 0xaec3b0,
+    emissive: 0x332522,
     metalness: 0.2,
     roughness: 0.32
   });
@@ -80,7 +80,7 @@ function initThreeDemo(canvas) {
   const stars = new THREE.Points(
     starGeometry,
     new THREE.PointsMaterial({
-      color: 0xeaf1ff,
+      color: 0xeff6e0,
       opacity: 0.68,
       size: 0.035,
       transparent: true
@@ -88,7 +88,7 @@ function initThreeDemo(canvas) {
   );
   scene.add(stars);
 
-  const grid = new THREE.GridHelper(22, 22, 0x2f6df6, 0x293244);
+  const grid = new THREE.GridHelper(22, 22, 0xaec3b0, 0x01161e);
   grid.position.y = -2.75;
   grid.material.opacity = 0.28;
   grid.material.transparent = true;
