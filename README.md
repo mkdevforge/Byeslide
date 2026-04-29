@@ -2,8 +2,6 @@
 
 Byeslide is an agent-first authoring layer for HTML presentations on top of Reveal.js. Slides stay as one HTML file per slide, design tokens live in CSS custom properties, and the build output is a Reveal-compatible `dist/index.html`.
 
-The default starter uses semantic CSS classes instead of Tailwind utilities. That keeps slide files short enough for agents to edit reliably while still allowing one-off CSS variable overrides on individual slides.
-
 Documentation: https://byeslide.mkdevforge.com/
 
 ## Install
