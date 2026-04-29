@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "description": "Agent-first HTML presentation authoring on Reveal.js.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkdevforge/Byeslide.git"
+  },
+  "homepage": "https://byeslide.mkdevforge.com/",
   "packageManager": "pnpm@10.33.2",
   "bin": {
-    "byeslide": "./src/cli.js"
+    "byeslide": "src/cli.js"
   },
   "files": [
     "src",
