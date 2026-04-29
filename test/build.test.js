@@ -83,6 +83,8 @@ test("buildDeck writes a Reveal-compatible deck", async () => {
   assert.doesNotMatch(index, /\/__byeslide\/pdf/);
   assert.match(index, /window\.addEventListener\("keydown"/);
   assert.match(index, /url\.searchParams\.set\("view", "print"\)/);
+  assert.match(index, /exitPrintView\(\)/);
+  assert.match(index, /event\.key === "Escape"/);
   assert.match(index, /html\.reveal-print \.pdf-page/);
   assert.match(index, /padding: var\(--byeslide-slide-padding, 0\) !important;/);
   assert.match(index, /options\.margin = 0;/);

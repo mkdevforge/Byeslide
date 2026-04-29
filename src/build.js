@@ -416,6 +416,9 @@ function renderByeslideRuntime({ dev = false } = {}) {
         const PDF_ENDPOINT = ${safeJson(dev ? "/__byeslide/pdf" : "")};
 
         const api = {
+          exitPrintView() {
+            exitPrintView();
+          },
           async exportPdf() {
             if (await tryPreviewPdfExport()) {
               return;
@@ -460,6 +463,13 @@ function renderByeslideRuntime({ dev = false } = {}) {
         window.Byeslide = Object.assign(window.Byeslide || {}, api);
 
         window.addEventListener("keydown", (event) => {
+          if (isPrintView() && isPrintExitShortcut(event)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            exitPrintView();
+            return;
+          }
+
           if (!isPdfShortcut(event)) {
             return;
           }
@@ -496,15 +506,26 @@ function renderByeslideRuntime({ dev = false } = {}) {
         }
 
         function openPrintView() {
-          const url = new URL(window.location.href);
-          if (url.searchParams.get("view") === "print") {
-            window.print();
+          if (isPrintView()) {
+            exitPrintView();
             return;
           }
 
+          const url = new URL(window.location.href);
           url.searchParams.set("view", "print");
           url.searchParams.set("print", "1");
           window.location.assign(url.href);
+        }
+
+        function exitPrintView() {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("view");
+          url.searchParams.delete("print");
+          window.location.assign(url.href);
+        }
+
+        function isPrintView() {
+          return new URLSearchParams(window.location.search).get("view") === "print";
         }
 
         function downloadPdf(url, filename) {
@@ -520,6 +541,15 @@ function renderByeslideRuntime({ dev = false } = {}) {
         function pdfFilename(payload) {
           const source = payload.path || payload.url || "deck.pdf";
           return source.split("/").filter(Boolean).pop() || "deck.pdf";
+        }
+
+        function isPrintExitShortcut(event) {
+          return !event.defaultPrevented
+            && !event.repeat
+            && !event.ctrlKey
+            && !event.altKey
+            && !event.metaKey
+            && event.key === "Escape";
         }
 
         function isPdfShortcut(event) {

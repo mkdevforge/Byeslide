@@ -15,7 +15,7 @@ pnpm pdf
 
 Preview serves the deck from `127.0.0.1:4173` by default. If that port is already in use, Byeslide prints the fallback URL it selected.
 
-The preview URL is the audience presentation view. Add presenter notes with `<aside class="notes">` inside a slide, then press `S` in preview to open Reveal's speaker view. Press `P` in preview to write `dist/deck.pdf`, the same output as `pnpm pdf`; outside preview, `P` opens the browser print-to-PDF flow.
+The preview URL is the audience presentation view. Add presenter notes with `<aside class="notes">` inside a slide, then press `S` in preview to open Reveal's speaker view. Press `P` in preview to write `dist/deck.pdf`, the same output as `pnpm pdf`; outside preview, `P` opens the browser print-to-PDF flow. In print view, press `Esc` or `P` again to return to the live deck.
 
 Slide-contained browser dependencies can live under `assets/vendor/` and be imported directly from a slide. The Three.js example imports the local vendor build from `assets/three-demo.js`; the Chart.js examples include `assets/vendor/chart.umd.js` from two different slides.
 

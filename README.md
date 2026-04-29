@@ -55,7 +55,7 @@ byeslide install-browsers [chromium]
 
 `preview` listens on `127.0.0.1:4173` by default. If that port is occupied, it tries the next available ports and prints the actual URL. IPv6 hosts are supported, for example `--host ::1` prints a bracketed URL such as `http://[::1]:4173/`.
 
-The normal preview URL is the audience presentation view. Speaker notes live in `<aside class="notes">` inside each slide and are opened from preview with the Reveal speaker view shortcut, `S`. Pressing `P` in preview writes `dist/deck.pdf`, matching the generated deck's `pnpm pdf` script; in a static build it falls back to the browser's print-to-PDF flow.
+The normal preview URL is the audience presentation view. Speaker notes live in `<aside class="notes">` inside each slide and are opened from preview with the Reveal speaker view shortcut, `S`. Pressing `P` in preview writes `dist/deck.pdf`, matching the generated deck's `pnpm pdf` script; in a static build it falls back to the browser's print-to-PDF flow. In print view, press `Esc` or `P` again to return to the live deck.
 
 If `check` or `pdf` cannot find a browser, run:
 
