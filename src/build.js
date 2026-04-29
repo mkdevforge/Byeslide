@@ -369,7 +369,7 @@ ${indent(slides, 8)}
     </div>
     <script src="./vendor/reveal/reveal.js"></script>
     ${pluginScripts}
-    ${renderByeslideRuntime()}
+    ${renderByeslideRuntime({ dev })}
     <script>
       (() => {
         const params = new URLSearchParams(window.location.search);
@@ -410,10 +410,10 @@ ${indent(slides, 8)}
 `;
 }
 
-function renderByeslideRuntime() {
+function renderByeslideRuntime({ dev = false } = {}) {
   return `<script>
       (() => {
-        const PDF_ENDPOINT = "/__byeslide/pdf";
+        const PDF_ENDPOINT = ${safeJson(dev ? "/__byeslide/pdf" : "")};
 
         const api = {
           async exportPdf() {
@@ -470,7 +470,7 @@ function renderByeslideRuntime() {
         }, true);
 
         async function tryPreviewPdfExport() {
-          if (window.location.protocol === "file:") {
+          if (!PDF_ENDPOINT || window.location.protocol === "file:") {
             return false;
           }
 
