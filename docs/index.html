@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Byeslide is an agent-first authoring layer for HTML presentations on Reveal.js."
+    >
+    <title>Byeslide Docs</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="shell header-shell">
+        <a class="brand" href="#top" aria-label="Byeslide documentation home">
+          <span class="brand-mark" aria-hidden="true">B</span>
+          <span>Byeslide</span>
+        </a>
+
+        <nav class="top-nav" aria-label="Primary navigation">
+          <a href="#start">Quick start</a>
+          <a href="#authoring">Authoring</a>
+          <a href="#commands">CLI</a>
+          <a href="#hosting">Cloudflare</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content">
+      <section class="hero-section" id="top">
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Agent-first HTML presentations</p>
+            <h1>Readable slide source, Reveal.js output.</h1>
+            <p class="lede">
+              Byeslide gives agents and humans a small authoring layer for
+              presentation decks. Slides stay as HTML files, design tokens stay
+              in CSS custom properties, and builds produce a standalone
+              Reveal-compatible deck.
+            </p>
+            <div class="hero-actions" aria-label="Primary actions">
+              <a class="button primary" href="#start">Start a deck</a>
+              <a class="button secondary" href="#commands">View commands</a>
+            </div>
+          </div>
+
+          <div class="deck-visual" aria-label="Byeslide turns slide files and patterns into a Reveal deck">
+            <div class="file-stack" aria-hidden="true">
+              <span class="file-pill">patterns/title.html</span>
+              <span class="file-pill accent">slides/01-title.html</span>
+              <span class="file-pill">theme.css</span>
+            </div>
+            <div class="deck-window" aria-hidden="true">
+              <div class="deck-toolbar">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="deck-slide">
+                <span class="slide-kicker">dist/index.html</span>
+                <strong>Reveal.js deck</strong>
+                <p>Present, host, print, or read in scroll view.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="shell docs-layout">
+        <aside class="toc" aria-label="Documentation sections">
+          <nav>
+            <a href="#overview">Overview</a>
+            <a href="#start">Quick start</a>
+            <a href="#structure">Deck structure</a>
+            <a href="#authoring">Authoring model</a>
+            <a href="#commands">CLI reference</a>
+            <a href="#interactive">Interactive slides</a>
+            <a href="#hosting">Cloudflare hosting</a>
+          </nav>
+        </aside>
+
+        <div class="docs-content">
+          <section class="doc-section" id="overview">
+            <p class="section-label">Overview</p>
+            <h2>What Byeslide is for</h2>
+            <p>
+              Byeslide is for decks that should remain easy to edit as source.
+              Instead of burying layout inside a binary file, each slide lives
+              in <code>slides/</code> as HTML. Shared visual decisions live in
+              <code>theme.css</code> and <code>styles.css</code>, while reusable
+              slide vocabulary lives in <code>patterns/</code>.
+            </p>
+            <p>
+              The runtime is Reveal.js. Byeslide does not replace it. The build
+              step assembles a Reveal-compatible <code>dist/index.html</code>,
+              copies the local runtime assets, and leaves you with a deck that
+              can be opened, hosted, presented, or exported.
+            </p>
+
+            <div class="feature-grid">
+              <article class="feature-card">
+                <h3>Short slide files</h3>
+                <p>
+                  Semantic CSS classes keep slide markup compact enough for
+                  agents to modify reliably.
+                </p>
+              </article>
+              <article class="feature-card">
+                <h3>Pattern-first workflow</h3>
+                <p>
+                  Copy a nearby pattern, replace the content, then run build
+                  and check before presenting.
+                </p>
+              </article>
+              <article class="feature-card">
+                <h3>Reveal output</h3>
+                <p>
+                  Keep Reveal features such as speaker view, fragments,
+                  transitions, PDF output, and scroll view.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="doc-section" id="start">
+            <p class="section-label">Quick start</p>
+            <h2>Create a deck</h2>
+            <p>
+              Use the published CLI to create a new deck, install its
+              dependencies, build the Reveal output, and start the preview
+              server.
+            </p>
+
+            <pre class="code-block"><code>pnpm dlx byeslide init my-deck
+cd my-deck
+pnpm install
+pnpm build
+pnpm preview</code></pre>
+
+            <div class="steps">
+              <article>
+                <span class="step-number">1</span>
+                <h3>Initialize</h3>
+                <p>
+                  <code>byeslide init</code> copies the starter structure into
+                  your deck directory.
+                </p>
+              </article>
+              <article>
+                <span class="step-number">2</span>
+                <h3>Author</h3>
+                <p>
+                  Work in <code>slides/</code>, <code>patterns/</code>,
+                  <code>theme.css</code>, and <code>styles.css</code>.
+                </p>
+              </article>
+              <article>
+                <span class="step-number">3</span>
+                <h3>Check</h3>
+                <p>
+                  Run <code>pnpm check</code> to catch slide overflow in
+                  Chromium before sharing the deck.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="doc-section" id="structure">
+            <p class="section-label">Deck structure</p>
+            <h2>Generated project layout</h2>
+            <p>
+              A deck is a normal folder. The source files stay editable and the
+              generated <code>dist/</code> folder contains the standalone Reveal
+              deck.
+            </p>
+
+            <pre class="code-block"><code>my-deck/
+  deck.config.js
+  theme.css
+  styles.css
+  patterns/
+  slides/
+  assets/
+  dist/</code></pre>
+
+            <dl class="structure-list">
+              <div>
+                <dt><code>slides/</code></dt>
+                <dd>Ordered slide HTML files, usually named like <code>01-title.html</code>.</dd>
+              </div>
+              <div>
+                <dt><code>patterns/</code></dt>
+                <dd>Reusable source examples for common layouts and interactions.</dd>
+              </div>
+              <div>
+                <dt><code>assets/</code></dt>
+                <dd>Images, videos, local vendor scripts, and slide-specific media.</dd>
+              </div>
+              <div>
+                <dt><code>theme.css</code> and <code>styles.css</code></dt>
+                <dd>Design tokens, shared components, and deck-level styling.</dd>
+              </div>
+              <div>
+                <dt><code>dist/</code></dt>
+                <dd>Build output containing <code>index.html</code> and local runtime assets.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="doc-section" id="authoring">
+            <p class="section-label">Authoring model</p>
+            <h2>Write slides by adapting patterns</h2>
+            <p>
+              The recommended workflow is deliberately narrow. Read the
+              patterns, copy the closest one into <code>slides/</code>, replace the
+              content, keep structural edits small, then validate the deck.
+            </p>
+
+            <ol class="workflow-list">
+              <li>Read <code>patterns/</code> and choose the closest slide pattern.</li>
+              <li>Copy the markup into <code>slides/NN-name.html</code>.</li>
+              <li>Replace the content and make only the layout edits you need.</li>
+              <li>Run <code>byeslide build</code> and <code>byeslide check</code>.</li>
+            </ol>
+
+            <div class="callout">
+              <h3>Fragments are the default</h3>
+              <p>
+                Slide files may be fragments or full HTML documents. Fragments
+                are the default path and are wrapped in Reveal
+                <code>section</code> elements during build.
+              </p>
+            </div>
+          </section>
+
+          <section class="doc-section" id="commands">
+            <p class="section-label">CLI reference</p>
+            <h2>Commands</h2>
+            <p>
+              These are the current commands exposed by the
+              <code>byeslide</code> CLI. Deck scripts in the starter template
+              call the same commands.
+            </p>
+
+            <div class="command-table-wrap">
+              <table class="command-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>byeslide init [dir] [--force]</code></td>
+                    <td>Create a new deck from the starter template.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide build [dir] [--out dist] [--no-clean]</code></td>
+                    <td>Write a standalone Reveal deck to the output directory.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]</code></td>
+                    <td>Rebuild on changes and serve the deck with live reload.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide check [dir] [--json] [--out dist] [--no-clean]</code></td>
+                    <td>Open Chromium and report slide overflow.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide pdf [dir] [--output dist/deck.pdf] [--out dist] [--no-clean]</code></td>
+                    <td>Export the Reveal print view to PDF.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide patterns [dir]</code></td>
+                    <td>List available slide patterns for the deck.</td>
+                  </tr>
+                  <tr>
+                    <td><code>byeslide install-browsers [chromium]</code></td>
+                    <td>Install the browser runtime used by check and PDF export.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="note-grid">
+              <article class="note-card">
+                <h3>Preview ports</h3>
+                <p>
+                  Preview listens on <code>127.0.0.1:4173</code> by default. If
+                  that port is occupied, Byeslide tries the next available ports
+                  and prints the selected URL.
+                </p>
+              </article>
+              <article class="note-card">
+                <h3>Browser setup</h3>
+                <p>
+                  If <code>check</code> or <code>pdf</code> cannot find a
+                  browser, run <code>byeslide install-browsers</code>.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="doc-section" id="interactive">
+            <p class="section-label">Interactive slides</p>
+            <h2>Scripts, notes, and exports</h2>
+            <p>
+              Slides can include browser-side dependencies and setup scripts.
+              External <code>src</code> scripts are moved after Reveal
+              initialization and repeated dependency tags are deduped. Inline
+              scripts are preserved per slide.
+            </p>
+
+            <pre class="code-block"><code>&lt;aside class="notes"&gt;
+  Mention the main takeaway before showing the chart.
+&lt;/aside&gt;</code></pre>
+
+            <div class="feature-grid two">
+              <article class="feature-card">
+                <h3>Slide-local setup</h3>
+                <p>
+                  Use
+                  <code>window.Byeslide.slideForScript(document.currentScript)</code>
+                  in classic scripts, or
+                  <code>window.Byeslide.slideForScript(import.meta)</code> in
+                  inline module scripts.
+                </p>
+              </article>
+              <article class="feature-card">
+                <h3>Shared dependencies</h3>
+                <p>
+                  Put browser dependencies under <code>assets/vendor/</code>.
+                  Add <code>data-byeslide-repeat</code> when an external setup
+                  script must run once per slide.
+                </p>
+              </article>
+            </div>
+
+            <p>
+              The starter deck includes Three.js and Chart.js examples that
+              demonstrate local vendor assets, slide-specific setup code, and
+              repeated dependencies across multiple slides.
+            </p>
+            <p>
+              Speaker notes live in <code>&lt;aside class="notes"&gt;</code> and
+              open from preview with Reveal's <code>S</code> shortcut. Pressing
+              <code>P</code> in preview writes <code>dist/deck.pdf</code>; in a
+              static build it falls back to the browser print-to-PDF flow.
+            </p>
+          </section>
+
+          <section class="doc-section" id="hosting">
+            <p class="section-label">Cloudflare hosting</p>
+            <h2>Deploy these docs</h2>
+            <p>
+              This documentation site is plain static HTML and CSS. Connect the
+              repository to Cloudflare Pages and use the following settings.
+            </p>
+
+            <dl class="deploy-settings">
+              <div>
+                <dt>Root directory</dt>
+                <dd>Repository root</dd>
+              </div>
+              <div>
+                <dt>Build command</dt>
+                <dd><code>exit 0</code></dd>
+              </div>
+              <div>
+                <dt>Build output directory</dt>
+                <dd><code>docs</code></dd>
+              </div>
+            </dl>
+
+            <p>
+              Cloudflare Pages supports static HTML projects and serves
+              <code>index.html</code> at the site root. See the
+              <a href="https://developers.cloudflare.com/pages/framework-guides/deploy-anything/">Cloudflare Pages static HTML guide</a>
+              for the deployment flow.
+            </p>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-shell">
+        <span>Byeslide</span>
+        <span>Agent-first HTML presentations on Reveal.js.</span>
+      </div>
+    </footer>
+  </body>
+</html>
