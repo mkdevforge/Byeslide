@@ -1,0 +1,62 @@
+<section class="slide">
+  <div class="chart-head">
+    <h2 class="heading">A chart that answers one question</h2>
+    <p class="lead">Say the answer here, in words.</p>
+  </div>
+  <div class="chart-wrap">
+    <canvas data-pattern-chart aria-label="Describe what the chart shows"></canvas>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-pattern-chart]");
+      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+        return;
+      }
+      canvas.dataset.chartReady = "true";
+
+      // Read colors and fonts from theme.css so the chart follows the theme.
+      const style = getComputedStyle(document.documentElement);
+      const token = (name) => style.getPropertyValue(name).trim();
+
+      // Halftone fill: a dot grid in one ink.
+      const halftone = (color) => {
+        const tile = document.createElement("canvas");
+        tile.width = 14;
+        tile.height = 14;
+        const ctx = tile.getContext("2d");
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(7, 7, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+        return ctx.createPattern(tile, "repeat");
+      };
+
+      const font = { family: token("--font-sans"), size: 22 };
+      new Chart(canvas, {
+        type: "bar",
+        data: {
+          labels: ["Q1", "Q2", "Q3", "Q4"],
+          datasets: [{
+            label: "Metric",
+            data: [12, 19, 15, 27],
+            backgroundColor: halftone(token("--ink-1")),
+            borderColor: token("--ink-1"),
+            borderWidth: 4
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: token("--color-text"), font } },
+            y: { border: { display: false }, ticks: { color: token("--color-text-soft"), font } }
+          }
+        }
+      });
+    })();
+  </script>
+  <aside class="notes">Name the data source and date. Replace the labels and data in the script.</aside>
+</section>

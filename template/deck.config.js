@@ -1,6 +1,6 @@
 module.exports = {
-  title: "Byeslide Starter",
-  description: "A starter Reveal.js deck authored as one HTML file per slide.",
+  title: "Byeslide",
+  description: "The Byeslide starter deck: presentations written as HTML, one file per slide.",
   width: 1920,
   height: 1080,
   margin: 0.04,
@@ -10,8 +10,14 @@ module.exports = {
   controls: true,
   progress: true,
   hash: true,
-  slideNumber: "c/t",
+  slideNumber: false,
   transition: "slide",
   backgroundTransition: "fade",
-  plugins: ["notes", "highlight", "search", "zoom"]
+  plugins: ["notes", "highlight", "search", "zoom"],
+  reveal: {
+    // Slides are flex columns (see styles.css). Reveal sets this display value on visible slides.
+    display: "flex",
+    // One PDF page per slide, with every fragment shown.
+    pdfSeparateFragments: false
+  }
 };

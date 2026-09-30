@@ -1,0 +1,44 @@
+<section class="slide">
+  <div class="split split--center" style="--split-left: 0.6fr; --split-right: 1.4fr;">
+    <div class="column">
+      <h2 class="heading">Content, theme and runtime stay apart</h2>
+      <p class="body-copy soft">Like the plates in a print shop: each one carries a single layer, and the build prints them in register.</p>
+    </div>
+    <div class="separations">
+      <div class="separations__stage">
+        <div class="plate plate--content">
+          <div class="plate-art">
+            <span class="plate-text">Quarterly review</span>
+            <b style="left: 64px; top: 262px; width: 420px; height: 16px;"></b>
+            <b style="left: 64px; top: 298px; width: 380px; height: 16px;"></b>
+            <b style="left: 64px; top: 334px; width: 400px; height: 16px;"></b>
+            <b style="left: 632px; top: 300px; width: 40px; height: 110px;"></b>
+            <b style="left: 692px; top: 250px; width: 40px; height: 160px;"></b>
+            <b style="left: 752px; top: 190px; width: 40px; height: 220px;"></b>
+          </div>
+        </div>
+        <div class="plate plate--theme">
+          <div class="plate-art">
+            <b style="left: 580px; top: 0; width: 300px; height: 495px;"></b>
+            <b style="left: 64px; top: 212px; width: 150px; height: 14px;"></b>
+          </div>
+        </div>
+        <div class="plate plate--runtime">
+          <div class="plate-art">
+            <b style="left: 0; top: 481px; width: 540px; height: 14px;"></b>
+            <b style="left: 60px; top: 132px; width: 300px; height: 58px;"></b>
+            <i style="left: 804px; top: 420px; width: 44px; height: 44px; border-radius: 50%;"></i>
+          </div>
+        </div>
+      </div>
+      <div class="plate-labels">
+        <p class="plate-label plate-label--runtime"><strong>Runtime</strong>Reveal.js: controls, progress, speaker view</p>
+        <p class="plate-label plate-label--theme"><strong>Theme</strong><code>theme.css</code> and <code>styles.css</code></p>
+        <p class="plate-label plate-label--content"><strong>Content</strong><code>slides/05-separations.html</code></p>
+      </div>
+      <span class="fragment" data-step="split"></span>
+      <span class="fragment" data-step="register"></span>
+    </div>
+  </div>
+  <aside class="notes">Click once to pull the slide apart into its three plates: blue is the content from this slide's file, pink is the theme, yellow is what Reveal adds at runtime. Click again to print them back in register. Technique: two empty fragments drive the whole animation through CSS :has(), with no JavaScript.</aside>
+</section>

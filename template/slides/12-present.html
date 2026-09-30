@@ -1,0 +1,17 @@
+<section class="slide">
+  <div class="split split--center" style="--split-left: 0.7fr; --split-right: 1.3fr;">
+    <div class="column">
+      <h2 class="heading">Present from the browser</h2>
+      <p class="body-copy soft">These keys work right now. In Teams, share this window and keep the speaker view on your own screen.</p>
+    </div>
+    <div class="keys">
+      <div class="key fragment ink-in"><kbd>S</kbd><p><strong>Speaker view</strong>Notes, timer and the next slide</p></div>
+      <div class="key fragment ink-in" style="--key-ink: var(--ink-1);"><kbd>F</kbd><p><strong>Full screen</strong>Press Esc to leave</p></div>
+      <div class="key fragment ink-in" style="--key-ink: var(--ink-3);"><kbd>Esc</kbd><p><strong>Overview</strong>Every slide at once</p></div>
+      <div class="key fragment ink-in" style="--key-ink: var(--ink-3);"><kbd>Alt</kbd><p><strong>Zoom</strong>Alt and click on any detail</p></div>
+      <div class="key fragment ink-in"><kbd>P</kbd><p><strong>PDF</strong>In preview, writes <code>dist/deck.pdf</code></p></div>
+      <div class="key fragment ink-in" style="--key-ink: var(--ink-1);"><kbd class="kbd-url">?view=scroll</kbd><p><strong>Scroll view</strong>Read it as one long page</p></div>
+    </div>
+  </div>
+  <aside class="notes">Try them live: press S now to open this speaker view, Esc for the overview, Alt and click to zoom into a key. P in preview writes the PDF; in a static build it opens the print dialog. Scroll view is a URL parameter, not a key: open index.html?view=scroll. Technique: a custom fragment style, ink-in, defined in styles.css.</aside>
+</section>

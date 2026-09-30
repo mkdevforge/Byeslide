@@ -1,0 +1,12 @@
+<section class="slide" data-background-color="var(--ink-3)">
+  <div class="reg-marks" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="split" style="--split-left: 1fr; --split-right: 1fr;">
+    <div class="column column--loose">
+      <h2 class="title">Start a deck</h2>
+      <p class="lead">You get this deck. Replace it one slide at a time, or ask an agent to.</p>
+    </div>
+    <pre class="terminal"><span class="cmd fragment typed" style="--chars: 32;">pnpm dlx byeslide init my-deck</span><span class="out fragment">Initialized Byeslide deck in ~/my-deck</span><span class="cmd fragment typed" style="--chars: 12;">cd my-deck</span><span class="cmd fragment typed" style="--chars: 14;">pnpm install</span><span class="cmd fragment typed" style="--chars: 14;">pnpm preview</span><span class="out fragment">Preview: http://127.0.0.1:4173/index.html</span></pre>
+  </div>
+  <h1 class="display overprint closing-mark" data-text="Byeslide">Byeslide</h1>
+  <aside class="notes">Four commands, one per click. init copies exactly this deck, with its patterns, theme and agent skills, so the first edit is to replace slides you do not need. Technique: a typed fragment style in styles.css that reveals each command one character at a time, and a slide background set with data-background-color.</aside>
+</section>

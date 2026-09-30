@@ -1,0 +1,9 @@
+<section class="slide slide--bleed" data-background-color="var(--color-text)">
+  <canvas class="three-scene" data-sheets aria-label="The slide files of this deck, as sheets of paper that fly into one stack and apart again"></canvas>
+  <div class="three-overlay">
+    <h2 class="heading" style="color: var(--color-paper);">Every slide is its own file</h2>
+    <p class="body-copy" style="color: color-mix(in srgb, var(--color-paper) 78%, transparent);" data-sheet-count>The build stacks the files in <code>slides/</code> into one page.</p>
+  </div>
+  <script type="module" src="./assets/sheets-scene.js"></script>
+  <aside class="notes">Each sheet is one real file from this deck; the names are read from the built page. The stack is the build: slides/ goes in, one dist/index.html comes out. Move the mouse over the slide to tilt the camera. Technique: a Three.js module imported from assets/, with the library kept in assets/vendor/ so the slide works offline.</aside>
+</section>

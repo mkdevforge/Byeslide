@@ -201,12 +201,17 @@ pnpm preview</code></pre>
   deck.config.js
   theme.css
   styles.css
+  content/
   patterns/
   slides/
   assets/
   dist/</code></pre>
 
             <dl class="structure-list">
+              <div>
+                <dt><code>content/</code></dt>
+                <dd>One Markdown file per slide with its words and speaker notes, such as <code>01-title.md</code>. Edit these and ask an agent to update the slides.</dd>
+              </div>
               <div>
                 <dt><code>slides/</code></dt>
                 <dd>Ordered slide HTML files, usually named like <code>01-title.html</code>.</dd>
@@ -303,6 +308,10 @@ pnpm preview</code></pre>
                     <td>Export the Reveal print view to PDF.</td>
                   </tr>
                   <tr>
+                    <td><code>byeslide bundle [dir] [--output dist/&lt;title&gt;.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]</code></td>
+                    <td>Write the whole deck into one HTML file that opens offline.</td>
+                  </tr>
+                  <tr>
                     <td><code>byeslide patterns [dir]</code></td>
                     <td>List available slide patterns for the deck.</td>
                   </tr>
@@ -376,9 +385,9 @@ pnpm preview</code></pre>
             </div>
 
             <p>
-              The starter deck includes Three.js and Chart.js examples that
-              demonstrate local vendor assets, slide-specific setup code, and
-              repeated dependencies across multiple slides.
+              The starter deck includes a Three.js scene and a Chart.js model
+              that demonstrate local vendor assets and slide-specific setup
+              code.
             </p>
             <p>
               Speaker notes live in <code>&lt;aside class="notes"&gt;</code> and

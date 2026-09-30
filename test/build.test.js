@@ -124,6 +124,19 @@ test("buildDeck moves slide-owned scripts outside Reveal slides", async () => {
   assert.ok(scriptIndex > slideEnd);
 });
 
+test("buildDeck keeps preformatted text and slide scripts byte for byte", async () => {
+  const deckDir = await makeDeck();
+  const listing = "<pre class=\"listing\">line one\n  indented line\nline three</pre>";
+  const script = "<script>\n  const text = `first\nsecond`;\n</script>";
+  await fs.writeFile(path.join(deckDir, "slides", "03-pre.html"), `<section class="slide">\n  ${listing}\n  ${script}\n</section>\n`);
+
+  const result = await buildDeck(deckDir);
+  const index = await fs.readFile(result.indexPath, "utf8");
+
+  assert.ok(index.includes(listing));
+  assert.ok(index.includes("const text = `first\nsecond`;"));
+});
+
 test("buildDeck refuses to write outside the deck root", async () => {
   const deckDir = await makeDeck();
   const outside = path.join(path.dirname(deckDir), "outside-dist");

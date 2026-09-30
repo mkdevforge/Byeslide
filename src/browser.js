@@ -178,6 +178,14 @@ function formatDiagnostics(diagnostics) {
 async function measureSlides(page) {
   return page.evaluate(async () => {
     const waitFrame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    // Measure each slide at rest: no slide transitions, no auto-animate, and CSS
+    // animations and transitions jump to their end state.
+    window.Reveal.configure({ autoAnimate: false, backgroundTransition: "none", transition: "none" });
+    const settle = document.createElement("style");
+    settle.textContent = "*, *::before, *::after { animation-delay: 0s !important; animation-duration: 0s !important; transition-delay: 0s !important; transition-duration: 0s !important; }";
+    document.head.append(settle);
+
     const slides = window.Reveal.getSlides();
     const results = [];
 

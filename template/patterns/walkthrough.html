@@ -1,0 +1,26 @@
+<section class="slide">
+  <h2 class="heading">Open a list one item at a time</h2>
+  <div class="split split--center">
+    <ul class="points">
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="0">First item</li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="1">Second item</li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="2">Third item</li>
+    </ul>
+    <!-- r-stack puts the callouts in the same place; each one shows with its item. -->
+    <div class="r-stack callouts">
+      <div class="callout fragment fade-in-then-out" data-fragment-index="0" style="--callout-ink: var(--ink-1);">
+        <p class="subheading">First item</p>
+        <p class="body-copy">The detail for the first item.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="1" style="--callout-ink: var(--ink-2);">
+        <p class="subheading">Second item</p>
+        <p class="body-copy">The detail for the second item.</p>
+      </div>
+      <div class="callout fragment" data-fragment-index="2" style="--callout-ink: var(--ink-3);">
+        <p class="subheading">Third item</p>
+        <p class="body-copy">The detail for the third item.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Match each item's data-fragment-index to its callout.</aside>
+</section>

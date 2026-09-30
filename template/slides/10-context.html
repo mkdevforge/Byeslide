@@ -1,0 +1,163 @@
+<section class="slide">
+  <div class="chart-head">
+    <h2 class="heading">To edit one slide, read one slide</h2>
+    <p class="lead" data-context-readout>At 13 slides, an agent reads 60 lines instead of 559.</p>
+  </div>
+  <div class="chart-wrap">
+    <canvas data-context-chart aria-label="Lines an agent reads to edit one slide, for a one-file deck and for Byeslide, as the deck grows"></canvas>
+  </div>
+  <div class="chart-controls">
+    <label class="range">
+      <span>Slides in the deck</span>
+      <input type="range" min="2" max="60" step="1" value="13" data-context-slides>
+      <output data-context-slides-value>13</output>
+    </label>
+    <label class="range">
+      <span>Lines per slide</span>
+      <input type="range" min="10" max="150" step="1" value="43" data-context-lines>
+      <output data-context-lines-value>43</output>
+    </label>
+    <p class="small soft">One-file deck: every slide. Byeslide: one slide file and the pattern it came from (17 lines).</p>
+  </div>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-context-chart]");
+      if (!slide || !canvas || !window.Chart || canvas.dataset.chartReady === "true") {
+        return;
+      }
+      canvas.dataset.chartReady = "true";
+
+      // Starting values are this deck's own averages: lines per file in slides/ and in patterns/.
+      const PATTERN_LINES = 17;
+      const MAX_SLIDES = 60;
+      const slidesInput = slide.querySelector("[data-context-slides]");
+      const linesInput = slide.querySelector("[data-context-lines]");
+      const slidesValue = slide.querySelector("[data-context-slides-value]");
+      const linesValue = slide.querySelector("[data-context-lines-value]");
+      const readout = slide.querySelector("[data-context-readout]");
+
+      const css = () => {
+        const style = getComputedStyle(document.documentElement);
+        const read = (name) => style.getPropertyValue(name).trim();
+        return { text: read("--color-text"), soft: read("--color-text-soft"), paper: read("--color-paper"), ink1: read("--ink-1"), ink2: read("--ink-2"), ink3: read("--ink-3"), sans: read("--font-sans"), mono: read("--font-mono") };
+      };
+
+      // Halftone fill: a dot grid in one ink, like a riso screen.
+      const halftone = (color, size, radius) => {
+        const tile = document.createElement("canvas");
+        tile.width = size;
+        tile.height = size;
+        const ctx = tile.getContext("2d");
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, radius, 0, Math.PI * 2);
+        ctx.fill();
+        return ctx.createPattern(tile, "repeat");
+      };
+
+      const markerPlugin = {
+        id: "deckMarker",
+        afterDatasetsDraw(chart) {
+          const { ctx, chartArea, scales } = chart;
+          const n = Number(slidesInput.value);
+          const x = scales.x.getPixelForValue(n);
+          const colors = css();
+          ctx.save();
+          ctx.strokeStyle = colors.text;
+          ctx.lineWidth = 3;
+          ctx.setLineDash([10, 8]);
+          ctx.beginPath();
+          ctx.moveTo(x, chartArea.top);
+          ctx.lineTo(x, chartArea.bottom);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          const L = Number(linesInput.value);
+          [[n * L, colors.ink2], [L + PATTERN_LINES, colors.ink1]].forEach(([value, color]) => {
+            const y = scales.y.getPixelForValue(value);
+            ctx.fillStyle = colors.paper;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(x, y, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+          });
+          ctx.restore();
+        }
+      };
+
+      const chart = new Chart(canvas, {
+        type: "line",
+        plugins: [markerPlugin],
+        data: {
+          datasets: [
+            { label: "One-file deck", data: [], borderWidth: 6, fill: "origin", pointRadius: 0, tension: 0 },
+            { label: "Byeslide", data: [], borderWidth: 6, fill: "origin", pointRadius: 0, tension: 0 }
+          ]
+        },
+        options: {
+          animation: { duration: 500 },
+          maintainAspectRatio: false,
+          parsing: false,
+          responsive: true,
+          interaction: { intersect: false, mode: "nearest", axis: "x" },
+          plugins: {
+            legend: { position: "top", align: "end", labels: { boxWidth: 28, boxHeight: 28, padding: 28 } },
+            tooltip: { callbacks: { title: (items) => `${items[0].parsed.x} slides`, label: (item) => `${item.dataset.label}: ${Math.round(item.parsed.y)} lines` } }
+          },
+          scales: {
+            x: { type: "linear", min: 1, max: MAX_SLIDES, border: { display: false }, grid: { display: false }, title: { display: true, text: "slides in the deck" } },
+            y: { type: "linear", min: 0, border: { display: false }, title: { display: true, text: "lines read" } }
+          }
+        }
+      });
+
+      function paint() {
+        const colors = css();
+        const family = colors.sans || "sans-serif";
+        chart.options.font = { family };
+        Object.assign(chart.options.plugins.legend.labels, { color: colors.text, font: { family, size: 24, weight: "600" } });
+        Object.assign(chart.options.plugins.tooltip, { backgroundColor: colors.text, titleFont: { family, size: 20 }, bodyFont: { family, size: 20 }, padding: 16 });
+        for (const axis of [chart.options.scales.x, chart.options.scales.y]) {
+          axis.ticks = { color: colors.soft, font: { family, size: 20 } };
+          axis.title.color = colors.soft;
+          axis.title.font = { family, size: 22, weight: "600" };
+        }
+        chart.options.scales.y.grid = { color: `${colors.text}22` };
+        const [single, byeslide] = chart.data.datasets;
+        single.borderColor = colors.ink2;
+        single.backgroundColor = halftone(colors.ink2, 14, 3.4);
+        byeslide.borderColor = colors.ink1;
+        byeslide.backgroundColor = halftone(colors.ink1, 14, 5);
+      }
+
+      function update() {
+        const n = Number(slidesInput.value);
+        const L = Number(linesInput.value);
+        slidesValue.textContent = n;
+        linesValue.textContent = L;
+        const xs = Array.from({ length: MAX_SLIDES }, (_, index) => index + 1);
+        chart.data.datasets[0].data = xs.map((x) => ({ x, y: x * L }));
+        chart.data.datasets[1].data = xs.map((x) => ({ x, y: L + PATTERN_LINES }));
+        const single = n * L;
+        const focused = L + PATTERN_LINES;
+        readout.textContent = single > focused
+          ? `At ${n} slides, an agent reads ${focused} lines instead of ${single}.`
+          : `At ${n} slides, the whole deck is still small: ${single} lines.`;
+        chart.update();
+      }
+
+      slidesInput.addEventListener("input", update);
+      linesInput.addEventListener("input", update);
+      document.addEventListener("byeslide:inks", () => {
+        paint();
+        chart.update();
+      });
+      paint();
+      update();
+    })();
+  </script>
+  <aside class="notes">This is a model, and the formulas are on the slide: a one-file deck means reading every slide, Byeslide means reading one slide file and its pattern. The starting values are this deck's own averages. Drag the deck size to your team's typical deck. Technique: range inputs driving a Chart.js chart, with halftone fills made from a canvas pattern.</aside>
+</section>
