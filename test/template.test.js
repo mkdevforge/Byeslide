@@ -20,6 +20,20 @@ test("starter slides expose print padding for Reveal print view", async () => {
   assert.match(css, /--byeslide-slide-padding: 0px;/);
 });
 
+test("every starter slide has a content file with speaker notes", async () => {
+  const slides = await listHtmlFiles(path.join(templateRoot, "slides"));
+
+  for (const slide of slides) {
+    const name = path.basename(slide, ".html");
+    const content = await fs.readFile(path.join(templateRoot, "content", `${name}.md`), "utf8");
+    assert.match(content, /^# /m, `content/${name}.md needs a heading`);
+    assert.match(content, /^## Speaker notes$/m, `content/${name}.md needs a Speaker notes section`);
+  }
+
+  const contentFiles = (await fs.readdir(path.join(templateRoot, "content"))).filter((file) => file.endsWith(".md"));
+  assert.equal(contentFiles.length, slides.length);
+});
+
 test("starter slides include speaker notes", async () => {
   const files = await listHtmlFiles(path.join(templateRoot, "slides"));
 

@@ -1,0 +1,24 @@
+<section class="slide" data-auto-animate>
+  <div class="split split--center" style="--split-left: 0.78fr; --split-right: 1.22fr;">
+    <div class="column">
+      <h2 class="heading" data-id="compare-heading">One title, inside a .pptx</h2>
+      <p class="body-copy" data-id="compare-note">PowerPoint stores where the title sits as an offset and a size, counted in EMU: 914,400 to the inch. To move the title, you change the numbers.</p>
+    </div>
+    <pre class="listing" data-id="compare-listing"><span class="t-tag">&lt;p:sp&gt;</span>
+  <span class="t-tag">&lt;p:nvSpPr&gt;</span>
+    <span class="t-tag">&lt;p:cNvPr</span> <span class="t-attr">id=</span><span class="t-value">"2"</span> <span class="t-attr">name=</span><span class="t-value">"Title 1"</span><span class="t-tag">/&gt;</span>
+    <span class="t-tag">&lt;p:nvPr&gt;&lt;p:ph</span> <span class="t-attr">type=</span><span class="t-value">"title"</span><span class="t-tag">/&gt;&lt;/p:nvPr&gt;</span>
+  <span class="t-tag">&lt;/p:nvSpPr&gt;</span>
+  <span class="t-tag">&lt;p:spPr&gt;&lt;a:xfrm&gt;</span>
+    <span class="marker"><span class="t-tag">&lt;a:off</span> <span class="t-attr">x=</span><span class="t-value">"838200"</span> <span class="t-attr">y=</span><span class="t-value">"365125"</span><span class="t-tag">/&gt;</span></span>
+    <span class="marker"><span class="t-tag">&lt;a:ext</span> <span class="t-attr">cx=</span><span class="t-value">"10515600"</span> <span class="t-attr">cy=</span><span class="t-value">"1325563"</span><span class="t-tag">/&gt;</span></span>
+  <span class="t-tag">&lt;/a:xfrm&gt;&lt;/p:spPr&gt;</span>
+  <span class="t-tag">&lt;p:txBody&gt;</span>
+    <span class="t-tag">&lt;a:bodyPr/&gt;&lt;a:p&gt;&lt;a:r&gt;</span>
+      <span class="t-tag">&lt;a:t&gt;</span><span class="t-content" data-id="compare-words">Quarterly review</span><span class="t-tag">&lt;/a:t&gt;</span>
+    <span class="t-tag">&lt;/a:r&gt;&lt;/a:p&gt;</span>
+  <span class="t-tag">&lt;/p:txBody&gt;</span>
+<span class="t-tag">&lt;/p:sp&gt;</span></pre>
+  </div>
+  <aside class="notes">This is a trimmed excerpt of slide1.xml from a real .pptx: one title placeholder. Point at the marked lines. The title's place on the page is stored as numbers, so any edit to the layout is arithmetic on those numbers. The next slide uses Reveal's auto-animate: the words move and everything else changes around them.</aside>
+</section>

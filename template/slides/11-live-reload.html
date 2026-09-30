@@ -1,0 +1,14 @@
+<section class="slide">
+  <div class="split split--center" style="--split-left: 1.45fr; --split-right: 0.55fr;">
+    <div class="media-frame">
+      <video autoplay muted loop playsinline preload="auto" data-autoplay poster="./assets/live-reload.jpg">
+        <source src="./assets/live-reload.webm" type="video/webm">
+      </video>
+    </div>
+    <div class="column">
+      <h2 class="subheading">Save the file, the preview reloads</h2>
+      <p class="body-copy soft">Recorded from <code>byeslide preview</code>. A script edits a slide file, and the browser rebuilds and reloads on its own.</p>
+    </div>
+  </div>
+  <aside class="notes">This clip is a real recording of the preview server: the edits are writes to a slide file, and the reload is the preview's own file watcher. When an agent edits, you watch the deck change in the browser. Technique: a local video in assets/ with autoplay, muted and loop; Reveal starts and pauses it with the slide.</aside>
+</section>

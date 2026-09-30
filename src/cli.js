@@ -3,6 +3,7 @@
 const path = require("node:path");
 const packageJson = require("../package.json");
 const { buildDeck } = require("./build");
+const { bundleDeck, formatBytes } = require("./bundle");
 const { checkDeck, exportPdf, installBrowsers } = require("./browser");
 const { loadConfig } = require("./config");
 const { initDeck } = require("./init");
@@ -34,6 +35,8 @@ async function main(argv = process.argv.slice(2)) {
       return runCheck(parsed);
     case "pdf":
       return runPdf(parsed);
+    case "bundle":
+      return runBundle(parsed);
     case "patterns":
       return runPatterns(parsed);
     case "install-browsers":
@@ -103,6 +106,30 @@ async function runPdf(parsed) {
   return 0;
 }
 
+async function runBundle(parsed) {
+  const deckDir = parsed.positionals[0] || process.cwd();
+  const result = await bundleDeck(deckDir, {
+    clean: parsed.options.clean !== false,
+    linkLargeMedia: Boolean(parsed.options.linkLargeMedia),
+    maxAssetMb: parsed.options.maxAssetMb,
+    outDir: parsed.options.out,
+    output: parsed.options.output
+  });
+
+  for (const warning of result.warnings) {
+    console.warn(`Warning: ${warning}`);
+  }
+  console.log(`Wrote ${path.relative(result.deckDir, result.output) || result.output} (${formatBytes(result.size)})`);
+  if (result.assets.length > 0) {
+    console.log("Largest inlined files:");
+    const width = Math.max(...result.assets.map((asset) => asset.file.length));
+    for (const asset of result.assets) {
+      console.log(`  ${asset.file.padEnd(width)}  ${formatBytes(asset.bytes)}`);
+    }
+  }
+  return 0;
+}
+
 async function runPatterns(parsed) {
   const deckDir = path.resolve(parsed.positionals[0] || process.cwd());
   const config = await loadConfig(deckDir);
@@ -144,6 +171,9 @@ function printCheckResult(result) {
   }
 }
 
+// Flags that never take a value, so "--json deck" keeps "deck" as the deck directory.
+const BOOLEAN_OPTIONS = new Set(["force", "help", "json", "linkLargeMedia", "version"]);
+
 function parseArgs(args) {
   const options = {};
   const positionals = [];
@@ -165,6 +195,10 @@ function parseArgs(args) {
     const key = toCamelCase(rawKey);
     if (inlineValue !== undefined) {
       options[key] = inlineValue;
+      continue;
+    }
+    if (BOOLEAN_OPTIONS.has(key)) {
+      options[key] = true;
       continue;
     }
 
@@ -202,6 +236,7 @@ Usage:
   byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
   byeslide check [dir] [--json] [--out dist] [--no-clean]
   byeslide pdf [dir] [--output dist/deck.pdf] [--out dist] [--no-clean]
+  byeslide bundle [dir] [--output dist/<title>.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]
   byeslide patterns [dir]
   byeslide install-browsers [chromium]
 `);

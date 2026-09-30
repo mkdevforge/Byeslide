@@ -1,23 +1,14 @@
 <section class="slide">
-  <div class="slide__topline">
-    <span class="eyebrow">Media</span>
-    <div class="caption">Embedded video</div>
-  </div>
-  <div class="video-layout">
-    <div class="video-frame">
-      <video autoplay muted loop playsinline controls preload="auto" data-autoplay poster="./assets/demo-loop.svg">
-        <source src="./assets/demo-loop.webm" type="video/webm">
+  <div class="split split--center" style="--split-left: 1.45fr; --split-right: 0.55fr;">
+    <div class="media-frame">
+      <video autoplay muted loop playsinline preload="auto" data-autoplay poster="./assets/live-reload.jpg">
+        <source src="./assets/live-reload.webm" type="video/webm">
       </video>
     </div>
-    <div class="video-card">
-      <h3>Frame the clip before playing it</h3>
-      <p>Use this side panel for the reason the audience should watch, what to notice, and what happens after the video.</p>
-      <ul class="insight-list">
-        <li>Keep the video or embed URL in the slide file.</li>
-        <li>Use notes for timing and setup.</li>
-        <li>Swap in a YouTube iframe or product-demo clip when needed.</li>
-      </ul>
+    <div class="column">
+      <h2 class="subheading">Say what to watch for</h2>
+      <p class="body-copy soft">Then play the clip. Keep it under a minute.</p>
     </div>
   </div>
-  <aside class="notes">Replace the embed URL and include any setup or fallback instructions here.</aside>
+  <aside class="notes">Put the clip in assets/ so the deck works offline. Reveal plays it when the slide opens and pauses it when you leave.</aside>
 </section>

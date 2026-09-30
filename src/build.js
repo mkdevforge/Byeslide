@@ -367,7 +367,7 @@ ${indentCss(css || "/* No deck CSS files were found. */", 6)}
   <body>
     <div class="reveal">
       <div class="slides">
-${indent(slides, 8)}
+${slides}
       </div>
     </div>
     <script src="./vendor/reveal/reveal.js"></script>
@@ -407,7 +407,7 @@ ${indent(slides, 8)}
           });
         }
       })();
-    </script>${slideScripts ? `\n${indent(slideScripts, 4)}` : ""}${devScript}
+    </script>${slideScripts ? `\n${slideScripts}` : ""}${devScript}
   </body>
 </html>
 `;

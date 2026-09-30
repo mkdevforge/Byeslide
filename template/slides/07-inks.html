@@ -1,0 +1,57 @@
+<section class="slide">
+  <div class="split" style="--split-left: 1fr; --split-right: 1fr;">
+    <div class="column column--loose">
+      <h2 class="heading">Change three values, recolor every slide</h2>
+      <pre class="listing"><span class="t-attr">/* theme.css */</span>
+<span class="t-tag">:root</span> {
+  <i class="swatch" style="--swatch: var(--ink-1);"></i><span class="t-attr">--ink-1:</span> <span class="t-value" data-ink-value>#0078bf</span>;
+  <i class="swatch" style="--swatch: var(--ink-2);"></i><span class="t-attr">--ink-2:</span> <span class="t-value" data-ink-value>#ff48b0</span>;
+  <i class="swatch" style="--swatch: var(--ink-3);"></i><span class="t-attr">--ink-3:</span> <span class="t-value" data-ink-value>#ffe800</span>;
+}</pre>
+    </div>
+    <div class="column">
+      <p class="body-copy soft">Pick a set. The change is live, so the title, the diagrams and the 3D sheets change too.</p>
+      <div class="ink-sets">
+        <button class="ink-set" type="button" aria-pressed="true" data-inks="#0078bf #ff48b0 #ffe800" style="--a: #0078bf; --b: #ff48b0; --c: #ffe800;">
+          <span class="ink-dots" aria-hidden="true"><i></i><i></i><i></i></span>Blue, pink, yellow
+        </button>
+        <button class="ink-set" type="button" aria-pressed="false" data-inks="#00838a #ff6c2f #ffb511" style="--a: #00838a; --b: #ff6c2f; --c: #ffb511;">
+          <span class="ink-dots" aria-hidden="true"><i></i><i></i><i></i></span>Teal, orange, sunflower
+        </button>
+        <button class="ink-set" type="button" aria-pressed="false" data-inks="#765ba7 #f15060 #82d8d5" style="--a: #765ba7; --b: #f15060; --c: #82d8d5;">
+          <span class="ink-dots" aria-hidden="true"><i></i><i></i><i></i></span>Purple, red, mint
+        </button>
+        <button class="ink-set" type="button" aria-pressed="false" data-inks="#3d5588 #ff7477 #5ec8e5" style="--a: #3d5588; --b: #ff7477; --c: #5ec8e5;">
+          <span class="ink-dots" aria-hidden="true"><i></i><i></i><i></i></span>Navy, coral, aqua
+        </button>
+      </div>
+      <div class="colorbar push-down" aria-hidden="true">
+        <span class="ink-1"></span><span class="ink-12"></span><span class="ink-2"></span><span class="ink-23"></span><span class="ink-3"></span><span class="ink-13"></span><span class="ink-123"></span>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      if (!slide) {
+        return;
+      }
+
+      const buttons = Array.from(slide.querySelectorAll("[data-inks]"));
+      const values = Array.from(slide.querySelectorAll("[data-ink-value]"));
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const inks = button.dataset.inks.split(" ");
+          inks.forEach((ink, index) => {
+            document.documentElement.style.setProperty(`--ink-${index + 1}`, ink);
+            values[index].textContent = ink;
+          });
+          buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+          document.dispatchEvent(new CustomEvent("byeslide:inks", { detail: { inks } }));
+        });
+      });
+    })();
+  </script>
+  <aside class="notes">Click a set. It sets the same three custom properties that theme.css declares, so every slide recolors at once: go back to the title to show it. The 3D sheets listen for a byeslide:inks event and repaint. Reloading the page restores the theme from theme.css. Technique: a slide-local script that finds its slide with Byeslide.slideForScript.</aside>
+</section>

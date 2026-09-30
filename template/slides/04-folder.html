@@ -1,0 +1,50 @@
+<section class="slide">
+  <h2 class="heading">A deck is a folder you can read</h2>
+  <div class="split split--center" style="--split-left: 0.9fr; --split-right: 1.1fr;">
+    <ul class="tree">
+      <li class="tree__root"><span class="tree__dir">my-deck/</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="0"><span>deck.config.js</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="1"><span>theme.css</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="2"><span>styles.css</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="3"><span class="tree__dir">patterns/</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="4"><span class="tree__dir">slides/</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="5"><span class="tree__dir">assets/</span></li>
+      <li class="fragment fade-in-then-semi-out" data-fragment-index="6"><span class="tree__dir">dist/</span></li>
+    </ul>
+    <div class="r-stack callouts">
+      <div class="callout fragment fade-out" data-fragment-index="0">
+        <p class="subheading">Seven entries, one job each</p>
+        <p class="body-copy soft">Press next to open them one at a time.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="0" style="--callout-ink: var(--ink-1);">
+        <p class="subheading">Settings</p>
+        <p class="body-copy">Title, slide size, transitions and the Reveal plugins to load.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="1" style="--callout-ink: var(--ink-2);">
+        <p class="subheading">Design tokens</p>
+        <p class="body-copy">Fonts, inks and sizes as CSS custom properties. Change a value and every slide follows.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="2" style="--callout-ink: var(--ink-2);">
+        <p class="subheading">Layout classes</p>
+        <p class="body-copy">The classes slides share, like <code>.split</code> and <code>.listing</code>.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="3" style="--callout-ink: var(--ink-3);">
+        <p class="subheading">Example slides</p>
+        <p class="body-copy">To start a new slide, copy the closest pattern and replace its content.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="4" style="--callout-ink: var(--ink-1);">
+        <p class="subheading">One file per slide</p>
+        <p class="body-copy">File names set the order. Each file holds its own notes and scripts.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="5" style="--callout-ink: var(--ink-3);">
+        <p class="subheading">Everything the slides load</p>
+        <p class="body-copy">Fonts, images, video and libraries stay with the deck, so it runs offline.</p>
+      </div>
+      <div class="callout fragment" data-fragment-index="6" style="--callout-ink: var(--ink-2);">
+        <p class="subheading">Build output</p>
+        <p class="body-copy"><code>byeslide build</code> writes <code>dist/index.html</code> and the Reveal runtime. Nobody edits it by hand.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Walk the folder one entry per click. The point: nothing is hidden in a binary, and each file has one job, so a change lands in one place. Technique: fragments with matching data-fragment-index values, and Reveal's r-stack to show one callout at a time in the same spot.</aside>
+</section>

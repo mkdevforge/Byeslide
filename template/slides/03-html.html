@@ -1,0 +1,12 @@
+<section class="slide" data-auto-animate>
+  <div class="split split--center" style="--split-left: 0.78fr; --split-right: 1.22fr;">
+    <div class="column">
+      <h2 class="heading" data-id="compare-heading">The same title, as a Byeslide slide</h2>
+      <p class="body-copy" data-id="compare-note">The slide file holds the words. Position, size and type come from <code>styles.css</code>, written once for every slide.</p>
+    </div>
+    <pre class="listing" data-id="compare-listing"><span class="t-tag">&lt;section</span> <span class="t-attr">class=</span><span class="t-value">"slide"</span><span class="t-tag">&gt;</span>
+  <span class="t-tag">&lt;h1</span> <span class="t-attr">class=</span><span class="t-value">"title"</span><span class="t-tag">&gt;</span><span class="t-content" data-id="compare-words">Quarterly review</span><span class="t-tag">&lt;/h1&gt;</span>
+<span class="t-tag">&lt;/section&gt;</span></pre>
+  </div>
+  <aside class="notes">Same words, three lines. The layout lives in styles.css and theme.css, so an agent or a person can change the words without touching coordinates. Technique: two slides with data-auto-animate, and matching data-id attributes on the parts that should move.</aside>
+</section>

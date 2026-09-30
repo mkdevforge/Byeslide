@@ -7,6 +7,7 @@
     "preview": "byeslide preview",
     "check": "byeslide check",
     "pdf": "byeslide pdf --output dist/deck.pdf",
+    "bundle": "byeslide bundle",
     "install:browsers": "byeslide install-browsers"
   },
   "devDependencies": {

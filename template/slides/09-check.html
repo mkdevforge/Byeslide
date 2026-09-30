@@ -1,0 +1,100 @@
+<section class="slide">
+  <div class="split" style="--split-left: 0.95fr; --split-right: 1.05fr;">
+    <div class="column">
+      <h2 class="heading">Text that doesn't fit gets caught</h2>
+      <p class="body-copy soft"><code>byeslide check</code> opens each slide in Chromium and measures it. This page runs the same measurement live: type into it or add a sentence.</p>
+      <pre class="terminal" data-check-output></pre>
+    </div>
+    <div>
+      <div class="check-stage">
+        <div class="check-page" data-check-page>
+          <h3 contenteditable="true" spellcheck="false">Pilot plan</h3>
+          <p contenteditable="true" spellcheck="false" data-check-body>Two teams start in March. We check in every week and decide in May whether to widen the pilot.</p>
+        </div>
+        <div class="check-spill" data-check-spill><span></span></div>
+      </div>
+      <div class="check-actions">
+        <button class="button" type="button" data-check-add>Add a sentence</button>
+        <button class="button" type="button" data-check-reset>Reset</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const page = slide?.querySelector("[data-check-page]");
+      if (!slide || !page) {
+        return;
+      }
+
+      const body = slide.querySelector("[data-check-body]");
+      const title = page.querySelector("h3");
+      const spill = slide.querySelector("[data-check-spill]");
+      const output = slide.querySelector("[data-check-output]");
+      const original = { title: title.textContent, body: body.textContent };
+      const extra = [
+        "Each team names one owner who reports blockers on Mondays.",
+        "Budget stays inside the current tooling line until May.",
+        "If both teams hit their targets, a third team joins in June.",
+        "Risks and open questions live in the shared tracker.",
+        "We present the results at the all-hands in the last week of May."
+      ];
+      let added = 0;
+
+      // Same test as `byeslide check`: content taller or wider than the page overflows,
+      // and an offender is any element whose box leaves the page.
+      function measure() {
+        const overflowY = Math.max(0, page.scrollHeight - page.clientHeight);
+        const overflowX = Math.max(0, page.scrollWidth - page.clientWidth);
+        const scale = page.getBoundingClientRect().height / page.offsetHeight || 1;
+        const pageRect = page.getBoundingClientRect();
+        const offenders = Array.from(page.querySelectorAll("*"))
+          .filter((element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.bottom > pageRect.bottom + scale || rect.right > pageRect.right + scale;
+          })
+          .map((element) => element.tagName.toLowerCase());
+
+        spill.style.height = `${Math.min(overflowY, 200)}px`;
+        spill.classList.toggle("is-over", overflowY > 1);
+        spill.querySelector("span").textContent = overflowY > 0 ? `+${overflowY}px` : "";
+
+        const source = escapeHtml(slide.getAttribute("data-byeslide-source") || "this slide");
+        const index = window.Reveal?.getIndices?.(slide)?.h ?? 0;
+        const lines = ['<span class="cmd">byeslide check</span>'];
+        if (overflowY > 1 || overflowX > 1 || offenders.length > 0) {
+          const axes = [overflowX > 1 ? "x" : null, overflowY > 1 ? "y" : null].filter(Boolean).join("/");
+          lines.push('<span class="bad">Overflow detected:</span>');
+          lines.push(`<span class="out">- ${source} (#${index + 1})${axes ? ` axis=${axes}` : ""}</span>`);
+          if (offenders.length > 0) {
+            lines.push(`<span class="out">  offenders: ${[...new Set(offenders)].join(", ")}</span>`);
+          }
+        } else {
+          lines.push('<span class="ok">No overflow detected.</span>');
+        }
+        output.innerHTML = lines.join("");
+      }
+
+      function escapeHtml(value) {
+        return value.replace(/[&<>"]/g, (character) => `&#${character.charCodeAt(0)};`);
+      }
+
+      slide.querySelector("[data-check-add]").addEventListener("click", () => {
+        body.textContent = `${body.textContent} ${extra[added % extra.length]}`;
+        added += 1;
+        measure();
+      });
+      slide.querySelector("[data-check-reset]").addEventListener("click", () => {
+        title.textContent = original.title;
+        body.textContent = original.body;
+        added = 0;
+        measure();
+      });
+      page.addEventListener("input", measure);
+      new ResizeObserver(measure).observe(page);
+      window.Reveal?.on?.("ready", measure);
+      measure();
+    })();
+  </script>
+  <aside class="notes">Click "Add a sentence" twice: the text runs past the page, the hatched band shows by how much, and the output matches what byeslide check prints for a deck. You can also click into the page and type. Agents run check after each edit, so overflow is found before anyone presents. Technique: contenteditable and buttons inside a slide; Reveal ignores keys while you type.</aside>
+</section>

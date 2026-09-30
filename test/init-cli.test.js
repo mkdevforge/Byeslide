@@ -14,6 +14,8 @@ test("initDeck copies the starter template", async () => {
   assert.equal(result.deckDir, target);
   assert.ok(await exists(path.join(target, "deck.config.js")));
   assert.ok(await exists(path.join(target, "patterns", "title.html")));
+  assert.ok(await exists(path.join(target, "content", "01-title.md")));
+  assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-content", "SKILL.md")));
   assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-author", "SKILL.md")));
 
   const deckPackage = JSON.parse(await fs.readFile(path.join(target, "package.json"), "utf8"));
@@ -36,6 +38,17 @@ test("parseArgs supports flags, values, and negated flags", () => {
   assert.equal(parsed.options.out, "public");
   assert.equal(parsed.options.clean, false);
   assert.equal(parsed.options.json, true);
+});
+
+test("parseArgs does not let boolean flags take the deck directory", () => {
+  const parsed = parseArgs(["bundle", "--link-large-media", "my-deck", "--max-asset-mb", "50"]);
+  assert.deepEqual(parsed.positionals, ["bundle", "my-deck"]);
+  assert.equal(parsed.options.linkLargeMedia, true);
+  assert.equal(parsed.options.maxAssetMb, "50");
+
+  const check = parseArgs(["check", "--json", "my-deck"]);
+  assert.deepEqual(check.positionals, ["check", "my-deck"]);
+  assert.equal(check.options.json, true);
 });
 
 test("main prints the package version", async () => {

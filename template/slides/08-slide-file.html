@@ -1,0 +1,44 @@
+<section class="slide">
+  <h2 class="heading">A slide file, top to bottom</h2>
+  <div class="split split--center" style="--split-left: 1.3fr; --split-right: 0.7fr;">
+    <pre class="code" style="--text-code: 22px;"><code class="language-html" data-trim data-line-numbers="|1-2,14|3-6|7-12|13" data-fragment-index="0">
+&lt;section class="slide"&gt;
+  &lt;h2 class="heading"&gt;Pilot starts in March&lt;/h2&gt;
+  &lt;ul class="points"&gt;
+    &lt;li class="fragment"&gt;Two teams onboard&lt;/li&gt;
+    &lt;li class="fragment"&gt;Weekly check-ins&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;canvas data-chart&gt;&lt;/canvas&gt;
+  &lt;script src="./assets/vendor/chart.umd.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    const slide = Byeslide.slideForScript(document.currentScript);
+    new Chart(slide.querySelector("[data-chart]"), config);
+  &lt;/script&gt;
+  &lt;aside class="notes"&gt;Pause for questions.&lt;/aside&gt;
+&lt;/section&gt;
+    </code></pre>
+    <div class="r-stack step-notes">
+      <div class="callout fragment fade-out" data-fragment-index="0" style="--callout-ink: var(--ink-3);">
+        <p class="subheading">Everything the slide needs</p>
+        <p class="body-copy">Content, steps, a chart and notes, in one file.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="0" style="--callout-ink: var(--ink-1);">
+        <p class="subheading">A section</p>
+        <p class="body-copy">Classes come from <code>styles.css</code>, so the file holds no layout.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="1" style="--callout-ink: var(--ink-2);">
+        <p class="subheading">Fragments</p>
+        <p class="body-copy">Each one appears on the next click.</p>
+      </div>
+      <div class="callout fragment fade-in-then-out" data-fragment-index="2" style="--callout-ink: var(--ink-1);">
+        <p class="subheading">Its own scripts</p>
+        <p class="body-copy">Load a library and set up the slide. <code>slideForScript</code> finds the slide the script came from.</p>
+      </div>
+      <div class="callout fragment" data-fragment-index="3" style="--callout-ink: var(--ink-2);">
+        <p class="subheading">Speaker notes</p>
+        <p class="body-copy">Press <kbd>S</kbd> to read them in the speaker view.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Step through the file: each click highlights one part and changes the note on the right. This is also what an agent reads when it edits a slide: one short file. Technique: the highlight plugin's data-line-numbers steps, synced to the notes with data-fragment-index.</aside>
+</section>
