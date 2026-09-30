@@ -1,6 +1,6 @@
 # To edit one slide, read one slide
 
-At 13 slides, an agent reads 60 lines instead of 559.
+At 14 slides, an agent reads 61 lines instead of 616.
 
 A chart of lines read to edit one slide, as the deck grows from 1 to 60 slides:
 
@@ -9,10 +9,10 @@ A chart of lines read to edit one slide, as the deck grows from 1 to 60 slides:
 
 Controls:
 
-- **Slides in the deck**: 2 to 60, starts at 13.
-- **Lines per slide**: 10 to 150, starts at 43.
+- **Slides in the deck**: 2 to 60, starts at 14.
+- **Lines per slide**: 10 to 150, starts at 44.
 
-The starting values are this deck's own averages: 43 lines per file in `slides/`, 17 per file in `patterns/`. The sentence at the top updates with the controls.
+The starting values are this deck's own averages: 44 lines per file in `slides/`, 17 per file in `patterns/`. The sentence at the top updates with the controls.
 
 ## Speaker notes
 

@@ -3,408 +3,453 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta
-      name="description"
-      content="Byeslide is an agent-first authoring layer for HTML presentations on Reveal.js."
-    >
-    <title>Byeslide Docs</title>
+    <title>Byeslide: presentations written as HTML, made for AI agents</title>
+    <meta name="description" content="Byeslide keeps a presentation as one HTML file per slide, a theme in CSS, and Reveal.js on stage. Agents edit small files; you present, print, or send the deck as one HTML file.">
+    <meta property="og:title" content="Byeslide">
+    <meta property="og:description" content="Presentations written as HTML, made for AI agents to edit.">
+    <meta property="og:image" content="https://byeslide.mkdevforge.com/assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:url" content="https://byeslide.mkdevforge.com/">
+    <meta name="theme-color" content="#f5f6f2">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="assets/fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="styles.css">
+    <script src="site.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
 
     <header class="site-header">
-      <div class="shell header-shell">
-        <a class="brand" href="#top" aria-label="Byeslide documentation home">
-          <span class="brand-mark" aria-hidden="true">B</span>
-          <span>Byeslide</span>
+      <div class="page header-row">
+        <a class="brand" href="#top" aria-label="Byeslide home">
+          <span class="overprint" data-text="Byeslide">Byeslide</span>
         </a>
-
-        <nav class="top-nav" aria-label="Primary navigation">
-          <a href="#start">Quick start</a>
-          <a href="#authoring">Authoring</a>
-          <a href="#commands">CLI</a>
-          <a href="https://byeslide-example.mkdevforge.com/" target="_blank" rel="noreferrer">Example deck</a>
-          <a href="https://github.com/mkdevforge/byeslide" target="_blank" rel="noreferrer">GitHub</a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="#how">How it works</a>
+          <a href="#starter">Starter deck</a>
+          <a href="#docs">Docs</a>
+          <a href="https://byeslide-example.mkdevforge.com/">Example deck</a>
+          <a href="https://github.com/mkdevforge/byeslide">GitHub</a>
         </nav>
       </div>
     </header>
 
     <main id="content">
-      <section class="hero-section" id="top">
-        <div class="shell hero-grid">
-          <div class="hero-copy">
-            <p class="eyebrow">Agent-first HTML presentations</p>
-            <h1>Readable slide source, Reveal.js output.</h1>
-            <p class="lede">
-              Byeslide gives agents and humans a small authoring layer for
-              presentation decks. Slides stay as HTML files, design tokens stay
-              in CSS custom properties, and builds produce a standalone
-              Reveal-compatible deck.
-            </p>
-            <div class="hero-actions" aria-label="Primary actions">
-              <a class="button primary" href="#start">Start a deck</a>
-              <a class="button secondary" href="#commands">View commands</a>
-              <a class="button secondary" href="https://byeslide-example.mkdevforge.com/" target="_blank" rel="noreferrer">
-                Open example deck
-              </a>
-              <a class="button secondary" href="https://github.com/mkdevforge/byeslide" target="_blank" rel="noreferrer">
-                View on GitHub
-              </a>
+      <!-- Hero ------------------------------------------------------------ -->
+      <section class="hero" id="top">
+        <div class="page hero-sheet">
+          <div class="reg-marks" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+          <div class="hero-top">
+            <div class="hero-copy">
+              <p class="hero-lead">Presentations written as HTML, made for AI agents to edit.</p>
+              <p class="hero-sub">One file per slide, a theme in CSS, and Reveal.js to present it. When the talk is over, send the whole deck as one HTML file.</p>
+
+              <div class="hero-actions">
+                <div class="command" data-copy-root>
+                  <code data-copy-text>pnpm dlx byeslide init my-deck</code>
+                  <button class="command__copy" type="button" data-copy>Copy</button>
+                </div>
+                <a class="hero-link" href="https://byeslide-example.mkdevforge.com/">Open the example deck</a>
+              </div>
+            </div>
+
+            <div class="hero-inks">
+              <div class="colorbar" aria-hidden="true">
+                <span class="ink-1"></span><span class="ink-12"></span><span class="ink-2"></span><span class="ink-23"></span><span class="ink-3"></span><span class="ink-13"></span><span class="ink-123"></span>
+              </div>
+              <div class="ink-picker" role="group" aria-label="Recolor this page">
+                <span class="ink-picker__label">Inks</span>
+                <button type="button" class="ink-set" aria-pressed="true" data-inks="#0078bf #ff48b0 #ffe800" style="--a: #0078bf; --b: #ff48b0; --c: #ffe800;" aria-label="Blue, pink and yellow"><i></i><i></i><i></i></button>
+                <button type="button" class="ink-set" aria-pressed="false" data-inks="#00838a #ff6c2f #ffb511" style="--a: #00838a; --b: #ff6c2f; --c: #ffb511;" aria-label="Teal, orange and sunflower"><i></i><i></i><i></i></button>
+                <button type="button" class="ink-set" aria-pressed="false" data-inks="#765ba7 #f15060 #82d8d5" style="--a: #765ba7; --b: #f15060; --c: #82d8d5;" aria-label="Purple, red and mint"><i></i><i></i><i></i></button>
+                <button type="button" class="ink-set" aria-pressed="false" data-inks="#3d5588 #ff7477 #5ec8e5" style="--a: #3d5588; --b: #ff7477; --c: #5ec8e5;" aria-label="Navy, coral and aqua"><i></i><i></i><i></i></button>
+              </div>
             </div>
           </div>
 
-          <div class="deck-visual" aria-label="Byeslide turns slide files and patterns into a Reveal deck">
-            <div class="file-stack" aria-hidden="true">
-              <span class="file-pill">patterns/title.html</span>
-              <span class="file-pill accent">slides/01-title.html</span>
-              <span class="file-pill">theme.css</span>
+          <h1 class="wordmark overprint" data-text="Byeslide">Byeslide</h1>
+
+          <p class="hero-meta">Open source under the MIT license. Published on <a href="https://www.npmjs.com/package/byeslide">npm</a>.</p>
+        </div>
+      </section>
+
+      <!-- Plates ---------------------------------------------------------- -->
+      <section class="plates" id="how" data-plates aria-labelledby="plates-title">
+        <div class="plates__sticky">
+          <div class="page plates__grid">
+            <div class="plates__copy">
+              <h2 class="section-title" id="plates-title">One slide, three plates</h2>
+              <p class="section-intro">A print shop makes a page from separate plates, one per ink. Byeslide keeps a slide's content, theme and runtime apart the same way, so each change lands in one file.</p>
+
+              <ol class="plate-steps">
+                <li class="plate-step" data-step-item="1" style="--step-ink: var(--ink-1);">
+                  <h3>Content</h3>
+                  <p><code>content/01-title.md</code> holds the words and speaker notes. <code>slides/01-title.html</code> puts them on the slide.</p>
+                </li>
+                <li class="plate-step" data-step-item="2" style="--step-ink: var(--ink-2);">
+                  <h3>Theme</h3>
+                  <p>Inks, fonts and sizes are CSS custom properties in <code>theme.css</code>. Layout classes live in <code>styles.css</code>.</p>
+                </li>
+                <li class="plate-step" data-step-item="3" style="--step-ink: var(--ink-3);">
+                  <h3>Runtime</h3>
+                  <p>Reveal.js presents the deck: transitions, fragments, the speaker view and the print view.</p>
+                </li>
+                <li class="plate-step" data-step-item="4" style="--step-ink: var(--text);">
+                  <h3>Build</h3>
+                  <p><code>byeslide build</code> prints the three in register, as <code>dist/index.html</code>.</p>
+                </li>
+              </ol>
             </div>
-            <div class="deck-window" aria-hidden="true">
-              <div class="deck-toolbar">
-                <span></span>
-                <span></span>
-                <span></span>
+
+            <div class="plates__stage-wrap" aria-hidden="true">
+              <div class="plates__stage">
+                <div class="plate plate--content">
+                  <div class="mini-slide">
+                    <p class="mini-lead">Presentations written as HTML. One file per slide, a theme in CSS, and Reveal.js to present it.</p>
+                    <p class="mini-mark">Byeslide</p>
+                  </div>
+                </div>
+                <div class="plate plate--theme">
+                  <div class="mini-slide">
+                    <p class="mini-mark">Byeslide</p>
+                    <div class="mini-colorbar"><i></i><i></i><i></i><i></i></div>
+                    <div class="mini-reg"><i></i><i></i><i></i><i></i></div>
+                  </div>
+                </div>
+                <div class="plate plate--runtime">
+                  <div class="mini-slide">
+                    <i class="mini-progress"></i>
+                    <i class="mini-arrow"></i>
+                    <i class="mini-key">S</i>
+                  </div>
+                </div>
+                <div class="plates__print">
+                  <div class="mini-slide">
+                    <p class="mini-lead">Presentations written as HTML. One file per slide, a theme in CSS, and Reveal.js to present it.</p>
+                    <p class="mini-mark overprint" data-text="Byeslide">Byeslide</p>
+                    <div class="mini-colorbar"><i></i><i></i><i></i><i></i></div>
+                    <div class="mini-reg"><i></i><i></i><i></i><i></i></div>
+                    <i class="mini-progress"></i>
+                    <i class="mini-arrow"></i>
+                    <i class="mini-key">S</i>
+                  </div>
+                </div>
               </div>
-              <div class="deck-slide">
-                <span class="slide-kicker">dist/index.html</span>
-                <strong>Reveal.js deck</strong>
-                <p>Present, host, print, or read in scroll view.</p>
+              <div class="plate-tags">
+                <span class="plate-tag plate-tag--runtime">Runtime</span>
+                <span class="plate-tag plate-tag--theme">Theme</span>
+                <span class="plate-tag plate-tag--content">Content</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div class="shell docs-layout">
-        <aside class="toc" aria-label="Documentation sections">
-          <nav>
-            <a href="#overview">Overview</a>
-            <a href="#start">Quick start</a>
-            <a href="#structure">Deck structure</a>
-            <a href="#authoring">Authoring model</a>
-            <a href="#commands">CLI reference</a>
-            <a href="#interactive">Interactive slides</a>
-          </nav>
-        </aside>
+      <!-- Agents ---------------------------------------------------------- -->
+      <section class="agents" aria-labelledby="agents-title">
+        <div class="page">
+          <div class="section-head">
+            <h2 class="section-title" id="agents-title">An agent edits one small file</h2>
+            <p class="section-intro">A .pptx stores every position as a number. A Byeslide slide stores its words and structure, and the look comes from shared CSS. An agent changes a slide without doing layout arithmetic.</p>
+          </div>
 
-        <div class="docs-content">
-          <section class="doc-section" id="overview">
-            <p class="section-label">Overview</p>
-            <h2>What Byeslide is for</h2>
-            <p>
-              Byeslide is for decks that should remain easy to edit as source.
-              Instead of burying layout inside a binary file, each slide lives
-              in <code>slides/</code> as HTML. Shared visual decisions live in
-              <code>theme.css</code> and <code>styles.css</code>, while reusable
-              slide vocabulary lives in <code>patterns/</code>.
-            </p>
-            <p>
-              The runtime is Reveal.js. Byeslide does not replace it. The build
-              step assembles a Reveal-compatible <code>dist/index.html</code>,
-              copies the local runtime assets, and leaves you with a deck that
-              can be opened, hosted, presented, or exported.
-            </p>
-
-            <div class="feature-grid">
-              <article class="feature-card">
-                <h3>Short slide files</h3>
-                <p>
-                  Semantic CSS classes keep slide markup compact enough for
-                  agents to modify reliably.
-                </p>
-              </article>
-              <article class="feature-card">
-                <h3>Pattern-first workflow</h3>
-                <p>
-                  Copy a nearby pattern, replace the content, then run build
-                  and check before presenting.
-                </p>
-              </article>
-              <article class="feature-card">
-                <h3>Reveal output</h3>
-                <p>
-                  Keep Reveal features such as speaker view, fragments,
-                  transitions, PDF output, and scroll view.
-                </p>
-              </article>
-              <article class="feature-card">
-                <h3>Hosted example</h3>
-                <p>
-                  See the starter template as a live deck at
-                  <a href="https://byeslide-example.mkdevforge.com/" target="_blank" rel="noreferrer">byeslide-example.mkdevforge.com</a>.
-                </p>
-              </article>
-              <article class="feature-card">
-                <h3>Source repository</h3>
-                <p>
-                  Browse the code, starter template, and release workflow at
-                  <a href="https://github.com/mkdevforge/byeslide" target="_blank" rel="noreferrer">github.com/mkdevforge/byeslide</a>.
-                </p>
-              </article>
-            </div>
-          </section>
-
-          <section class="doc-section" id="start">
-            <p class="section-label">Quick start</p>
-            <h2>Create a deck</h2>
-            <p>
-              Use the published CLI to create a new deck, install its
-              dependencies, build the Reveal output, and start the preview
-              server.
-            </p>
-
-            <pre class="code-block"><code>pnpm dlx byeslide init my-deck
-cd my-deck
-pnpm install
-pnpm build
-pnpm preview</code></pre>
-
-            <div class="steps">
-              <article>
-                <span class="step-number">1</span>
-                <h3>Initialize</h3>
-                <p>
-                  <code>byeslide init</code> copies the starter structure into
-                  your deck directory.
-                </p>
-              </article>
-              <article>
-                <span class="step-number">2</span>
-                <h3>Author</h3>
-                <p>
-                  Work in <code>slides/</code>, <code>patterns/</code>,
-                  <code>theme.css</code>, and <code>styles.css</code>.
-                </p>
-              </article>
-              <article>
-                <span class="step-number">3</span>
-                <h3>Check</h3>
-                <p>
-                  Run <code>pnpm check</code> to catch slide overflow in
-                  Chromium before sharing the deck.
-                </p>
-              </article>
-            </div>
-          </section>
-
-          <section class="doc-section" id="structure">
-            <p class="section-label">Deck structure</p>
-            <h2>Generated project layout</h2>
-            <p>
-              A deck is a normal folder. The source files stay editable and the
-              generated <code>dist/</code> folder contains the standalone Reveal
-              deck.
-            </p>
-
-            <pre class="code-block"><code>my-deck/
-  deck.config.js
-  theme.css
-  styles.css
-  content/
-  patterns/
-  slides/
-  assets/
-  dist/</code></pre>
-
-            <dl class="structure-list">
-              <div>
-                <dt><code>content/</code></dt>
-                <dd>One Markdown file per slide with its words and speaker notes, such as <code>01-title.md</code>. Edit these and ask an agent to update the slides.</dd>
+          <ol class="flow">
+            <li class="flow__step">
+              <div class="flow__text">
+                <h3>Write the words</h3>
+                <p>Each slide has a Markdown file in <code>content/</code> with its words and speaker notes. It says nothing about the look, so anyone on the team can edit it.</p>
               </div>
-              <div>
-                <dt><code>slides/</code></dt>
-                <dd>Ordered slide HTML files, usually named like <code>01-title.html</code>.</dd>
+              <pre class="sheet-code" aria-label="content/04-folder.md"><span class="sheet-code__file">content/04-folder.md</span><span class="c-h"># A deck is a folder you can read</span>
+
+Seven entries, one job each.
+
+- <span class="c-code">`theme.css`</span>, <span class="c-b">**Design tokens**</span>:
+  fonts, inks and sizes.
+- <span class="c-code">`slides/`</span>, <span class="c-b">**One file per slide**</span>:
+  file names set the order.
+
+<span class="c-h">## Speaker notes</span>
+
+Walk the folder one entry per click.</pre>
+            </li>
+            <li class="flow__step">
+              <div class="flow__text">
+                <h3>Ask an agent to update the slide</h3>
+                <p>The agent reads the content file and the closest pattern, then edits one slide file. Skills in <code>.codex/skills/</code> tell it where to look.</p>
               </div>
-              <div>
-                <dt><code>patterns/</code></dt>
-                <dd>Reusable source examples for common layouts and interactions.</dd>
+              <pre class="sheet-code" aria-label="slides/04-folder.html"><span class="sheet-code__file">slides/04-folder.html</span><span class="c-tag">&lt;section</span> <span class="c-attr">class=</span><span class="c-val">"slide"</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;h2</span> <span class="c-attr">class=</span><span class="c-val">"heading"</span><span class="c-tag">&gt;</span>A deck is a folder
+    you can read<span class="c-tag">&lt;/h2&gt;</span>
+  <span class="c-tag">&lt;ul</span> <span class="c-attr">class=</span><span class="c-val">"tree"</span><span class="c-tag">&gt;</span>
+    <span class="c-tag">&lt;li</span> <span class="c-attr">class=</span><span class="c-val">"fragment"</span><span class="c-tag">&gt;</span>theme.css<span class="c-tag">&lt;/li&gt;</span>
+    <span class="c-tag">&lt;li</span> <span class="c-attr">class=</span><span class="c-val">"fragment"</span><span class="c-tag">&gt;</span>slides/<span class="c-tag">&lt;/li&gt;</span>
+  <span class="c-tag">&lt;/ul&gt;</span>
+  <span class="c-tag">&lt;aside</span> <span class="c-attr">class=</span><span class="c-val">"notes"</span><span class="c-tag">&gt;</span>Walk the
+    folder one entry per click.<span class="c-tag">&lt;/aside&gt;</span>
+<span class="c-tag">&lt;/section&gt;</span></pre>
+            </li>
+            <li class="flow__step">
+              <div class="flow__text">
+                <h3>Check before you present</h3>
+                <p><code>byeslide check</code> opens every slide in Chromium and reports text that does not fit, with the file it came from.</p>
               </div>
-              <div>
-                <dt><code>assets/</code></dt>
-                <dd>Images, videos, local vendor scripts, and slide-specific media.</dd>
-              </div>
-              <div>
-                <dt><code>theme.css</code> and <code>styles.css</code></dt>
-                <dd>Design tokens, shared components, and deck-level styling.</dd>
-              </div>
-              <div>
-                <dt><code>dist/</code></dt>
-                <dd>Build output containing <code>index.html</code> and local runtime assets.</dd>
-              </div>
-            </dl>
-          </section>
+              <pre class="sheet-code sheet-code--terminal" aria-label="Terminal output of byeslide check"><span class="c-prompt">$</span> byeslide check
+<span class="c-bad">Overflow detected:</span>
+- slides/09-check.html (#9) axis=y
+  offenders: p
 
-          <section class="doc-section" id="authoring">
-            <p class="section-label">Authoring model</p>
-            <h2>Write slides by adapting patterns</h2>
-            <p>
-              The recommended workflow is deliberately narrow. Read the
-              patterns, copy the closest one into <code>slides/</code>, replace the
-              content, keep structural edits small, then validate the deck.
-            </p>
-
-            <ol class="workflow-list">
-              <li>Read <code>patterns/</code> and choose the closest slide pattern.</li>
-              <li>Copy the markup into <code>slides/NN-name.html</code>.</li>
-              <li>Replace the content and make only the layout edits you need.</li>
-              <li>Run <code>byeslide build</code> and <code>byeslide check</code>.</li>
-            </ol>
-
-            <div class="callout">
-              <h3>Fragments are the default</h3>
-              <p>
-                Slide files may be fragments or full HTML documents. Fragments
-                are the default path and are wrapped in Reveal
-                <code>section</code> elements during build.
-              </p>
-            </div>
-          </section>
-
-          <section class="doc-section" id="commands">
-            <p class="section-label">CLI reference</p>
-            <h2>Commands</h2>
-            <p>
-              These are the current commands exposed by the
-              <code>byeslide</code> CLI. Deck scripts in the starter template
-              call the same commands.
-            </p>
-
-            <div class="command-table-wrap">
-              <table class="command-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Command</th>
-                    <th scope="col">Purpose</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><code>byeslide --version</code></td>
-                    <td>Print the installed Byeslide package version.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide version</code></td>
-                    <td>Print the installed Byeslide package version.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide init [dir] [--force]</code></td>
-                    <td>Create a new deck from the starter template.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide build [dir] [--out dist] [--no-clean]</code></td>
-                    <td>Write a standalone Reveal deck to the output directory.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]</code></td>
-                    <td>Rebuild on changes and serve the deck with live reload.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide check [dir] [--json] [--out dist] [--no-clean]</code></td>
-                    <td>Open Chromium and report slide overflow.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide pdf [dir] [--output dist/deck.pdf] [--out dist] [--no-clean]</code></td>
-                    <td>Export the Reveal print view to PDF.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide bundle [dir] [--output dist/&lt;title&gt;.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]</code></td>
-                    <td>Write the whole deck into one HTML file that opens offline.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide patterns [dir]</code></td>
-                    <td>List available slide patterns for the deck.</td>
-                  </tr>
-                  <tr>
-                    <td><code>byeslide install-browsers [chromium]</code></td>
-                    <td>Install the browser runtime used by check and PDF export.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="note-grid">
-              <article class="note-card">
-                <h3>Preview ports</h3>
-                <p>
-                  Preview listens on <code>127.0.0.1:4173</code> by default. If
-                  that port is occupied, Byeslide tries the next available ports
-                  and prints the selected URL.
-                </p>
-              </article>
-              <article class="note-card">
-                <h3>Browser setup</h3>
-                <p>
-                  If <code>check</code> or <code>pdf</code> cannot find a
-                  browser, run <code>byeslide install-browsers</code>.
-                </p>
-              </article>
-              <article class="note-card">
-                <h3>Version metadata</h3>
-                <p>
-                  Built decks include a generator meta tag and expose
-                  <code>window.Byeslide.version</code> for hosted deck debugging.
-                </p>
-              </article>
-            </div>
-          </section>
-
-          <section class="doc-section" id="interactive">
-            <p class="section-label">Interactive slides</p>
-            <h2>Scripts, notes, and exports</h2>
-            <p>
-              Slides can include browser-side dependencies and setup scripts.
-              External <code>src</code> scripts are moved after Reveal
-              initialization and repeated dependency tags are deduped. Inline
-              scripts are preserved per slide.
-            </p>
-
-            <pre class="code-block"><code>&lt;aside class="notes"&gt;
-  Mention the main takeaway before showing the chart.
-&lt;/aside&gt;</code></pre>
-
-            <div class="feature-grid two">
-              <article class="feature-card">
-                <h3>Slide-local setup</h3>
-                <p>
-                  Use
-                  <code>window.Byeslide.slideForScript(document.currentScript)</code>
-                  in classic scripts, or
-                  <code>window.Byeslide.slideForScript(import.meta)</code> in
-                  inline module scripts.
-                </p>
-              </article>
-              <article class="feature-card">
-                <h3>Shared dependencies</h3>
-                <p>
-                  Put browser dependencies under <code>assets/vendor/</code>.
-                  Add <code>data-byeslide-repeat</code> when an external setup
-                  script must run once per slide.
-                </p>
-              </article>
-            </div>
-
-            <p>
-              The starter deck includes a Three.js scene and a Chart.js model
-              that demonstrate local vendor assets and slide-specific setup
-              code.
-            </p>
-            <p>
-              Speaker notes live in <code>&lt;aside class="notes"&gt;</code> and
-              open from preview with Reveal's <code>S</code> shortcut. Pressing
-              <code>P</code> in preview writes <code>dist/deck.pdf</code>; in a
-              static build it falls back to the browser print-to-PDF flow.
-            </p>
-          </section>
-
+<span class="c-prompt">$</span> byeslide check
+<span class="c-ok">No overflow detected across 14 slides.</span></pre>
+            </li>
+          </ol>
         </div>
-      </div>
+      </section>
+
+      <!-- Share ----------------------------------------------------------- -->
+      <section class="share" aria-labelledby="share-title">
+        <div class="page">
+          <div class="section-head">
+            <h2 class="section-title" id="share-title">Present it, print it, or send it as one file</h2>
+          </div>
+
+          <div class="share__grid">
+            <article class="share__item">
+              <h3>Present</h3>
+              <p>Open the deck in a browser. Press <kbd>S</kbd> for the speaker view with notes, a timer and the next slide.</p>
+            </article>
+            <article class="share__item">
+              <h3>Print</h3>
+              <p><code>byeslide pdf</code> writes a PDF of the deck for people who want a static copy to print or annotate.</p>
+            </article>
+            <article class="share__item share__item--bundle">
+              <h3>Send one file</h3>
+              <p><code>byeslide bundle</code> puts the whole deck into one HTML file. Put it on Teams or SharePoint: people download it, open it in Edge or Chrome, and video, 3D, fragments and speaker notes work offline.</p>
+            </article>
+          </div>
+
+          <figure class="bundle-figure">
+            <div class="bundle-figure__files" data-file-grid aria-hidden="true"></div>
+            <div class="bundle-figure__arrow" aria-hidden="true"></div>
+            <div class="bundle-figure__one" aria-hidden="true">
+              <span class="bundle-figure__name">byeslide.html</span>
+            </div>
+            <figcaption>The starter deck: 59 files in <code>dist/</code>, one 3.6 MB file after <code>byeslide bundle</code>.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Starter deck ---------------------------------------------------- -->
+      <section class="starter" id="starter" aria-labelledby="starter-title">
+        <div class="page">
+          <div class="section-head">
+            <h2 class="section-title" id="starter-title">The starter deck</h2>
+            <p class="section-intro"><code>byeslide init</code> gives you these 14 slides. Each one presents part of Byeslide and shows a technique you can copy. Open a slide to see it live.</p>
+          </div>
+
+          <ol class="gallery">
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/0"><img src="assets/slides/01-title.webp" alt="Title slide with the overprinted Byeslide wordmark" width="1280" height="720" loading="lazy"><span class="gallery__what">Overprinted title</span><span class="gallery__file">01-title.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/1"><img src="assets/slides/02-pptx.webp" alt="An excerpt of PowerPoint XML for one title" width="1280" height="720" loading="lazy"><span class="gallery__what">Auto-animate, part one</span><span class="gallery__file">02-pptx.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/2"><img src="assets/slides/03-html.webp" alt="The same title as three lines of HTML" width="1280" height="720" loading="lazy"><span class="gallery__what">Auto-animate, part two</span><span class="gallery__file">03-html.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/3"><img src="assets/slides/04-folder.webp" alt="A deck folder tree with one entry highlighted and its callout" width="1280" height="720" loading="lazy"><span class="gallery__what">Fragments with callouts</span><span class="gallery__file">04-folder.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/4"><img src="assets/slides/05-separations.webp" alt="A slide pulled apart into three plates in 3D" width="1280" height="720" loading="lazy"><span class="gallery__what">CSS 3D driven by fragments</span><span class="gallery__file">05-separations.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/5"><img src="assets/slides/06-sheets.webp" alt="Paper sheets named after slide files floating over navy" width="1280" height="720" loading="lazy"><span class="gallery__what">Three.js scene</span><span class="gallery__file">06-sheets.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/6"><img src="assets/slides/07-inks.webp" alt="Ink set buttons next to the theme tokens they change" width="1280" height="720" loading="lazy"><span class="gallery__what">Live theme change</span><span class="gallery__file">07-inks.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/7"><img src="assets/slides/08-slide-file.webp" alt="A slide file with its script lines highlighted" width="1280" height="720" loading="lazy"><span class="gallery__what">Code walkthrough</span><span class="gallery__file">08-slide-file.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/8"><img src="assets/slides/09-check.webp" alt="An editable page that overflows, with the check output" width="1280" height="720" loading="lazy"><span class="gallery__what">Live overflow check</span><span class="gallery__file">09-check.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/9"><img src="assets/slides/10-context.webp" alt="A chart of lines read per edit as a deck grows" width="1280" height="720" loading="lazy"><span class="gallery__what">Chart.js with sliders</span><span class="gallery__file">10-context.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/10"><img src="assets/slides/11-live-reload.webp" alt="A screen recording of the preview reloading after an edit" width="1280" height="720" loading="lazy"><span class="gallery__what">Local video</span><span class="gallery__file">11-live-reload.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/11"><img src="assets/slides/12-present.webp" alt="Keyboard keys for presenting from the browser" width="1280" height="720" loading="lazy"><span class="gallery__what">Custom fragment style</span><span class="gallery__file">12-present.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/12"><img src="assets/slides/13-bundle.webp" alt="Many small file tiles next to the one HTML file they turn into" width="1280" height="720" loading="lazy"><span class="gallery__what">Many elements, one fragment</span><span class="gallery__file">13-bundle.html</span></a></li>
+            <li><a class="gallery__item" href="https://byeslide-example.mkdevforge.com/#/13"><img src="assets/slides/14-start.webp" alt="The commands to start a deck on a yellow slide" width="1280" height="720" loading="lazy"><span class="gallery__what">Typed terminal lines</span><span class="gallery__file">14-start.html</span></a></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Quick start ------------------------------------------------------ -->
+      <section class="start" id="start" aria-labelledby="start-title">
+        <div class="page start__grid">
+          <div class="start__copy">
+            <h2 class="start__title" id="start-title">Start a deck</h2>
+            <p>You get the starter deck. Replace it one slide at a time, or ask an agent to.</p>
+            <p class="start__note">Needs Node.js 22 or later and pnpm. Run <code>pnpm install:browsers</code> once before <code>pnpm check</code> or <code>pnpm pdf</code>.</p>
+          </div>
+          <div class="terminal" data-copy-root>
+            <button class="terminal__copy" type="button" data-copy>Copy</button>
+<pre data-copy-text><span class="t-cmd">pnpm dlx byeslide init my-deck</span>
+<span class="t-cmd">cd my-deck</span>
+<span class="t-cmd">pnpm install</span>
+<span class="t-cmd">pnpm preview</span></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Docs -------------------------------------------------------------- -->
+      <section class="docs" id="docs" aria-labelledby="docs-title">
+        <div class="page docs__grid">
+          <nav class="toc" aria-label="Documentation">
+            <p class="toc__title" id="docs-title">Docs</p>
+            <ol>
+              <li><a href="#structure">Deck structure</a></li>
+              <li><a href="#content-folder">Content files</a></li>
+              <li><a href="#authoring">Writing slides</a></li>
+              <li><a href="#scripts">Scripts in slides</a></li>
+              <li><a href="#config">deck.config.js</a></li>
+              <li><a href="#commands">Commands</a></li>
+              <li><a href="#presenting">Presenting and PDF</a></li>
+              <li><a href="#bundle">One-file bundle</a></li>
+              <li><a href="#skills">Agent skills</a></li>
+              <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ol>
+          </nav>
+
+          <div class="doc">
+            <section class="doc__section" id="structure">
+              <h2>Deck structure</h2>
+              <p>A deck is a normal folder. You edit the source files. The build writes the presentation to <code>dist/</code>.</p>
+<pre class="doc-code"><code>my-deck/
+  deck.config.js    title, size, plugins
+  theme.css         design tokens
+  styles.css        layout classes
+  content/          words and notes, one Markdown file per slide
+  patterns/         example slides to copy
+  slides/           one HTML file per slide
+  assets/           fonts, images, video, scripts
+  dist/             build output</code></pre>
+              <p>File names set the slide order: <code>slides/01-title.html</code> comes before <code>slides/02-agenda.html</code>. Never edit <code>dist/</code> by hand. The next build replaces it.</p>
+            </section>
+
+            <section class="doc__section" id="content-folder">
+              <h2>Content files</h2>
+              <p><code>content/NN-name.md</code> holds the words, data and speaker notes for <code>slides/NN-name.html</code>. People who do not write HTML edit these files, then ask an agent to update the slides.</p>
+<pre class="doc-code"><code># Pilot plan
+
+Two teams start in March. We decide in May whether to widen the pilot.
+
+## Speaker notes
+
+Pause here for questions.</code></pre>
+              <p>A content file describes what the audience sees and hears, not how it looks. The look comes from <code>theme.css</code>, <code>styles.css</code> and the slide file.</p>
+            </section>
+
+            <section class="doc__section" id="authoring">
+              <h2>Writing slides</h2>
+              <ol class="doc-steps">
+                <li>Write or update the slide's words in <code>content/NN-name.md</code>.</li>
+                <li>Pick the closest file in <code>patterns/</code>.</li>
+                <li>Copy it to <code>slides/NN-name.html</code> and replace the content.</li>
+                <li>Run <code>pnpm build</code>, then <code>pnpm check</code>.</li>
+              </ol>
+              <p>A slide file is an HTML fragment or a single <code>&lt;section&gt;</code>. The build wraps fragments in a Reveal <code>&lt;section&gt;</code>. Full HTML documents also work: the build uses their <code>&lt;body&gt;</code>.</p>
+              <p>Put speaker notes in <code>&lt;aside class="notes"&gt;</code> inside the slide. Use Reveal features as usual: <code>class="fragment"</code>, <code>data-auto-animate</code>, <code>data-background-color</code>, and the rest.</p>
+            </section>
+
+            <section class="doc__section" id="scripts">
+              <h2>Scripts in slides</h2>
+              <p>A slide can load a library and run its own setup code. The build moves slide scripts after Reveal starts. It keeps every inline script, and it loads a shared external script only once.</p>
+<pre class="doc-code"><code>&lt;canvas data-chart&gt;&lt;/canvas&gt;
+&lt;script src="./assets/vendor/chart.umd.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const slide = Byeslide.slideForScript(document.currentScript);
+  new Chart(slide.querySelector("[data-chart]"), config);
+&lt;/script&gt;</code></pre>
+              <p>In an inline module script, use <code>Byeslide.slideForScript(import.meta)</code> or <code>import.meta.byeslideSlide</code>. Add <code>data-byeslide-repeat</code> to an external script that must run once for each slide that includes it. Keep libraries in <code>assets/vendor/</code> so the deck works offline.</p>
+            </section>
+
+            <section class="doc__section" id="config">
+              <h2>deck.config.js</h2>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th scope="col">Option</th><th scope="col">Default</th><th scope="col">Use</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>title</code>, <code>description</code></td><td><code>"Untitled Byeslide Deck"</code>, <code>""</code></td><td>Page title and meta description. <code>bundle</code> and <code>pdf</code> name their files after the title.</td></tr>
+                    <tr><td><code>width</code>, <code>height</code></td><td><code>1920</code>, <code>1080</code></td><td>The fixed logical slide size. <code>check</code> measures against it.</td></tr>
+                    <tr><td><code>theme</code>, <code>styles</code></td><td><code>"theme.css"</code>, <code>"styles.css"</code></td><td>CSS files for the deck. Each can be a list.</td></tr>
+                    <tr><td><code>plugins</code></td><td><code>["notes", "highlight", "search", "zoom"]</code></td><td>Reveal plugins. <code>markdown</code> and <code>math</code> also work by name.</td></tr>
+                    <tr><td><code>transition</code>, <code>backgroundTransition</code></td><td><code>"slide"</code>, <code>"fade"</code></td><td>Reveal transitions.</td></tr>
+                    <tr><td><code>controls</code>, <code>progress</code>, <code>hash</code>, <code>slideNumber</code>, <code>center</code></td><td><code>true</code>, <code>true</code>, <code>true</code>, <code>false</code>, <code>false</code></td><td>Reveal options with the same names.</td></tr>
+                    <tr><td><code>margin</code>, <code>minScale</code>, <code>maxScale</code></td><td><code>0.04</code>, <code>0.2</code>, <code>2</code></td><td>How Reveal scales the slide to the window.</td></tr>
+                    <tr><td><code>outDir</code>, <code>slidesDir</code>, <code>patternsDir</code>, <code>assetsDir</code></td><td><code>"dist"</code>, <code>"slides"</code>, <code>"patterns"</code>, <code>"assets"</code></td><td>Folder names.</td></tr>
+                    <tr><td><code>reveal</code></td><td><code>{}</code></td><td>Any other Reveal option, passed as it is. The starter uses <code>display: "flex"</code>.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc__section" id="commands">
+              <h2>Commands</h2>
+              <dl class="command-list">
+                <div><dt><code>byeslide init <span class="nw">[dir]</span> <span class="nw">[--force]</span></code></dt><dd>Creates a deck from the starter. <code>--force</code> writes into a folder that is not empty.</dd></div>
+                <div><dt><code>byeslide build <span class="nw">[dir]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Writes the deck to <code>dist/index.html</code> with a local copy of Reveal.js and your assets.</dd></div>
+                <div><dt><code>byeslide preview <span class="nw">[dir]</span> <span class="nw">[--host 127.0.0.1]</span> <span class="nw">[--port 4173]</span> <span class="nw">[--out dist]</span></code></dt><dd>Serves the deck, rebuilds on every change and reloads the browser.</dd></div>
+                <div><dt><code>byeslide check <span class="nw">[dir]</span> <span class="nw">[--json]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Opens each slide in Chromium and reports content that does not fit.</dd></div>
+                <div><dt><code>byeslide pdf <span class="nw">[dir]</span> <span class="nw">[--output dist/&lt;title&gt;.pdf]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Exports the print view to PDF.</dd></div>
+                <div><dt><code>byeslide bundle <span class="nw">[dir]</span> <span class="nw">[--output dist/&lt;title&gt;.html]</span> <span class="nw">[--max-asset-mb 20]</span> <span class="nw">[--link-large-media]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Writes the whole deck into one HTML file that opens offline.</dd></div>
+                <div><dt><code>byeslide patterns <span class="nw">[dir]</span></code></dt><dd>Lists the pattern files.</dd></div>
+                <div><dt><code>byeslide install-browsers <span class="nw">[chromium]</span></code></dt><dd>Installs the Chromium that <code>check</code> and <code>pdf</code> use.</dd></div>
+                <div><dt><code>byeslide --version</code></dt><dd>Prints the installed version.</dd></div>
+              </dl>
+              <p>A deck installs Byeslide as a dev dependency, so inside a deck run these commands as <code>pnpm exec byeslide</code>, or use the scripts in the starter's <code>package.json</code>: <code>pnpm build</code>, <code>pnpm preview</code>, <code>pnpm check</code>, <code>pnpm pdf</code> and <code>pnpm bundle</code>. <code>pnpm pdf</code> writes <code>dist/deck.pdf</code>.</p>
+            </section>
+
+            <section class="doc__section" id="presenting">
+              <h2>Presenting and PDF</h2>
+              <ul class="key-list">
+                <li><kbd>S</kbd> Opens the speaker view: notes, a timer, the current slide and the next slide.</li>
+                <li><kbd>F</kbd> Full screen. <kbd>Esc</kbd> shows all slides at once.</li>
+                <li><kbd>P</kbd> In preview, writes <code>dist/deck.pdf</code>. In a static build, it opens the browser's print dialog.</li>
+                <li><kbd>Alt</kbd> and click zooms into a detail. On Linux, use <kbd>Ctrl</kbd> and click.</li>
+              </ul>
+              <p>Add <code>?view=scroll</code> to the deck's URL to read it as one long page, or <code>?view=print</code> for the print layout. To present in Teams, share the deck window and keep the speaker view on your own screen.</p>
+            </section>
+
+            <section class="doc__section" id="bundle">
+              <h2>One-file bundle</h2>
+              <p><code>byeslide bundle</code> builds the deck, then puts every file it uses into one HTML file: stylesheets, fonts, images, scripts, ES modules, video, audio, and local iframes. The file opens from a download folder with no server and no network.</p>
+              <ul class="doc-list">
+                <li>Media above <code>--max-asset-mb</code> (20 MB for each file by default) stops the command. The message names the file. Raise the limit, or use <code>--link-large-media</code> to keep a link to the file and send it along.</li>
+                <li>Every megabyte of video adds about 1.33 MB to the HTML file.</li>
+                <li>Files that a script loads while the deck runs, such as <code>fetch("assets/data.json")</code>, are not in the bundle. The command warns with the file and line.</li>
+                <li>Anything loaded from <code>https://</code> still needs a network. The command warns about each one in HTML, CSS and module imports.</li>
+              </ul>
+              <p>Use <code>bundle</code> when people should get the live presentation. Use <code>pdf</code> when they need a document to print or annotate.</p>
+            </section>
+
+            <section class="doc__section" id="skills">
+              <h2>Agent skills</h2>
+              <p>Each deck has short instructions for AI agents in <code>.codex/skills/</code>. They point the agent at the right files instead of repeating what the files say.</p>
+              <dl class="doc-dl">
+                <div><dt><code>byeslide-content</code></dt><dd>Updates slides from the files in <code>content/</code>, and keeps both in sync.</dd></div>
+                <div><dt><code>byeslide-author</code></dt><dd>Creates and edits slides from patterns.</dd></div>
+                <div><dt><code>byeslide-theme</code></dt><dd>Changes the look through the tokens in <code>theme.css</code>. Each new deck should get its own look.</dd></div>
+                <div><dt><code>byeslide-build</code></dt><dd>Builds, previews, checks and exports the deck.</dd></div>
+              </dl>
+            </section>
+
+            <section class="doc__section" id="troubleshooting">
+              <h2>Troubleshooting</h2>
+              <dl class="doc-dl">
+                <div><dt><code>check</code> or <code>pdf</code> cannot find a browser</dt><dd>Run <code>byeslide install-browsers</code>.</dd></div>
+                <div><dt>Port 4173 is in use</dt><dd><code>preview</code> tries the next ports and prints the address it uses.</dd></div>
+                <div><dt>Which version built this deck?</dt><dd>Built decks have a <code>generator</code> meta tag, and <code>window.Byeslide.version</code> returns the version.</dd></div>
+              </dl>
+            </section>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
-      <div class="shell footer-shell">
-        <span>Byeslide</span>
-        <span>Agent-first HTML presentations on Reveal.js.</span>
+      <div class="page footer-row">
+        <span class="overprint footer-mark" data-text="Byeslide">Byeslide</span>
+        <p>MIT license. Built on <a href="https://revealjs.com/">Reveal.js</a>.</p>
+        <nav aria-label="Footer">
+          <a href="https://github.com/mkdevforge/byeslide">GitHub</a>
+          <a href="https://www.npmjs.com/package/byeslide">npm</a>
+          <a href="https://byeslide-example.mkdevforge.com/">Example deck</a>
+        </nav>
       </div>
     </footer>
   </body>

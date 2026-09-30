@@ -22,7 +22,7 @@ Preview serves the deck from `127.0.0.1:4173` by default. If that port is alread
 
 ## The starter deck
 
-The 13 slides present Byeslide, and each one shows a technique you can copy:
+The 14 slides present Byeslide, and each one shows a technique you can copy:
 
 | Slide | Technique |
 | --- | --- |
@@ -37,7 +37,8 @@ The 13 slides present Byeslide, and each one shows a technique you can copy:
 | `10-context` | Chart.js with range inputs and halftone fills |
 | `11-live-reload` | Local video |
 | `12-present` | Custom fragment style (`ink-in`) |
-| `13-start` | Typed terminal lines and a colored slide background |
+| `13-bundle` | One fragment moves many elements, each aimed by a slide script |
+| `14-start` | Typed terminal lines and a colored slide background |
 
 The folio at the bottom left of each slide prints the file it was built from. Remove the folio block in `styles.css` for a real talk.
 

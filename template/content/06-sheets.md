@@ -1,6 +1,6 @@
 # Every slide is its own file
 
-This deck has 13 files in `slides/`. The build stacks them into one `dist/index.html`.
+This deck has 14 files in `slides/`. The build stacks them into one `dist/index.html`.
 
 The number of files is counted from the deck when it runs.
 

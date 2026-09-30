@@ -1,3 +1,8 @@
+---
+name: byeslide-content
+description: Update the slides of this Byeslide deck from the Markdown files in content/. Use when files in content/ changed, or when asked to update the slides from the content.
+---
+
 # Byeslide Content
 
 Use when files in `content/` changed, or when asked to update the slides from the content.
@@ -11,7 +16,7 @@ Workflow:
 - A new content file means a new slide: copy the closest pattern into `slides/` with the same `NN-name`.
 - A deleted content file: ask before deleting the slide.
 - When you edit a slide directly, update its content file too, so both stay in sync.
-- Run `byeslide build` and `byeslide check` when done.
+- Run `pnpm build` and `pnpm check` when done.
 
 Do not:
 - Add colors, fonts or layout instructions to content files.

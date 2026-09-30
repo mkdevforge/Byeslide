@@ -34,6 +34,19 @@ test("every starter slide has a content file with speaker notes", async () => {
   assert.equal(contentFiles.length, slides.length);
 });
 
+test("every starter agent skill has a name and description header", async () => {
+  const skillsDir = path.join(templateRoot, ".codex", "skills");
+  const skills = await fs.readdir(skillsDir);
+
+  assert.ok(skills.length > 0);
+  for (const skill of skills) {
+    const text = await fs.readFile(path.join(skillsDir, skill, "SKILL.md"), "utf8");
+    const header = text.match(/^---\r?\nname: (.+)\r?\ndescription: (.+)\r?\n---\r?\n/);
+    assert.ok(header, `${skill}/SKILL.md needs a name and description header`);
+    assert.equal(header[1], skill);
+  }
+});
+
 test("starter slides include speaker notes", async () => {
   const files = await listHtmlFiles(path.join(templateRoot, "slides"));
 

@@ -5,7 +5,7 @@ These keys work right now. In Teams, share this window and keep the speaker view
 - **S**, Speaker view: notes, timer and the next slide
 - **F**, Full screen: press Esc to leave
 - **Esc**, Overview: every slide at once
-- **Alt**, Zoom: Alt and click on any detail
+- **Alt**, Zoom: Alt and click on any detail, Ctrl on Linux
 - **P**, PDF: in preview, writes `dist/deck.pdf`
 - **?view=scroll**, Scroll view: read it as one long page
 

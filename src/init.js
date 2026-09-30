@@ -21,11 +21,21 @@ async function initDeck(target = ".", options = {}) {
       return entry.name === "node_modules" || entry.name === "dist";
     }
   });
+  await restoreGitignore(root);
   await stampPackageVersion(root);
 
   return {
     deckDir: root
   };
+}
+
+// npm leaves .gitignore files out of published packages, so the template
+// stores it as "gitignore" and init gives it its real name.
+async function restoreGitignore(deckDir) {
+  const stored = path.join(deckDir, "gitignore");
+  if (await pathExists(stored)) {
+    await fs.rename(stored, path.join(deckDir, ".gitignore"));
+  }
 }
 
 async function stampPackageVersion(deckDir) {

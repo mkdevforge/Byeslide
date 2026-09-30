@@ -1,6 +1,13 @@
+---
+name: byeslide-build
+description: Build, preview, check and export this Byeslide deck. Use for the preview server, overflow checks, PDF export and the one-file bundle.
+---
+
 # Byeslide Build
 
 Use for preview, validation, and export.
+
+Byeslide is a dev dependency of the deck. Run the commands inside the deck as `pnpm exec byeslide ...`, or use the scripts in `package.json`: `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm pdf` and `pnpm bundle`.
 
 Commands:
 - `byeslide build --out dist` writes `dist/index.html`.

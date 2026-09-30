@@ -235,7 +235,7 @@ Usage:
   byeslide build [dir] [--out dist] [--no-clean]
   byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
   byeslide check [dir] [--json] [--out dist] [--no-clean]
-  byeslide pdf [dir] [--output dist/deck.pdf] [--out dist] [--no-clean]
+  byeslide pdf [dir] [--output dist/<title>.pdf] [--out dist] [--no-clean]
   byeslide bundle [dir] [--output dist/<title>.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]
   byeslide patterns [dir]
   byeslide install-browsers [chromium]

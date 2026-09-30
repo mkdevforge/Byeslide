@@ -15,11 +15,19 @@ test("initDeck copies the starter template", async () => {
   assert.ok(await exists(path.join(target, "deck.config.js")));
   assert.ok(await exists(path.join(target, "patterns", "title.html")));
   assert.ok(await exists(path.join(target, "content", "01-title.md")));
+  assert.match(await fs.readFile(path.join(target, ".gitignore"), "utf8"), /^dist\/$/m);
+  assert.equal(await exists(path.join(target, "gitignore")), false);
   assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-content", "SKILL.md")));
   assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-author", "SKILL.md")));
 
   const deckPackage = JSON.parse(await fs.readFile(path.join(target, "package.json"), "utf8"));
   assert.equal(deckPackage.devDependencies.byeslide, rootPackage.version);
+});
+
+test("the template stores its gitignore under a name that npm publishes", async () => {
+  const templateRoot = path.resolve(__dirname, "..", "template");
+  assert.ok(await exists(path.join(templateRoot, "gitignore")));
+  assert.equal(await exists(path.join(templateRoot, ".gitignore")), false);
 });
 
 test("initDeck refuses a non-empty directory without force", async () => {
