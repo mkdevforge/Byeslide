@@ -51,7 +51,7 @@ byeslide init [dir] [--force]
 byeslide build [dir] [--out dist] [--no-clean]
 byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
 byeslide check [dir] [--json] [--out dist] [--no-clean]
-byeslide pdf [dir] [--output dist/deck.pdf] [--out dist] [--no-clean]
+byeslide pdf [dir] [--output dist/<title>.pdf] [--out dist] [--no-clean]
 byeslide bundle [dir] [--output dist/<title>.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]
 byeslide patterns [dir]
 byeslide install-browsers [chromium]
@@ -81,7 +81,7 @@ What goes into the file:
 
 Video makes the file big: every megabyte of video adds about 1.33 MB to the HTML.
 
-Limits: files that scripts load while the deck runs, such as `fetch("assets/data.json")` or `new URL("./x.png", import.meta.url)`, are not bundled; `bundle` warns with the file and line. Anything loaded from `http(s)://` still needs a network, and `bundle` warns about each such reference. The command prints the file size and the largest inlined files.
+Limits: files that scripts load while the deck runs, such as `fetch("assets/data.json")` or `new URL("./x.png", import.meta.url)`, are not bundled; `bundle` warns with the file and line. Anything loaded from `http(s)://` still needs a network, and `bundle` warns about each such reference in HTML, CSS and module imports. The command prints the file size and the largest inlined files.
 
 If `check` or `pdf` cannot find a browser, run:
 

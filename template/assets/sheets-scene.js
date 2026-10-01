@@ -1,7 +1,7 @@
 import * as THREE from "./vendor/three.module.min.js";
 
-// Every slide file of this deck becomes a sheet of paper. The sheets drift
-// apart, then fly into one stack (the build), then drift apart again.
+// Every slide file of this deck becomes a sheet of paper. The sheets float
+// as a fan in reading order, fly into one stack (the build), then fan out again.
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const SHEET_WIDTH = 1.6;
@@ -13,9 +13,20 @@ const RELEASE_AT = 9;
 const HOLD_TIME = 7;
 const CYCLE = 13;
 
+// The fan: a hand of cards that radiates from a pivot below it. Every sheet
+// shares one tilt and differs only in how far it turns within its own plane,
+// so the sheets stay parallel and never cut through each other. Later sheets
+// sit in front, so each sheet shows a wedge with its number and file name.
+const FAN_PIVOT = new THREE.Vector3(2.25, -1.95, -0.3);
+const FAN_RADIUS = 3.3;
+const FAN_SPREAD = 0.82;
+const FAN_DEPTH_STEP = 0.1;
+const FAN_TILT = new THREE.Euler(-0.26, 0.22, 0);
+const SHADOW_OFFSET = 0.05;
+
 await Promise.all([
-  document.fonts.load('800 160px "Bricolage Grotesque"'),
-  document.fonts.load('500 30px "Martian Mono"')
+  document.fonts.load('800 200px "Bricolage Grotesque"'),
+  document.fonts.load('500 26px "Martian Mono"')
 ]).catch(() => {});
 
 document.querySelectorAll("[data-sheets]").forEach(initSheets);
@@ -47,28 +58,23 @@ function initSheets(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, context, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 16 / 9, 0.1, 100);
   const cameraBase = new THREE.Vector3(0.4, 1.4, 7.2);
   const lookAt = new THREE.Vector3(1.5, -0.05, 0);
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x3a4680, 1.25));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.9);
+  // Lights only shade the paper edges. The printed face ignores light, so the inks stay true.
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x3a4680, 1.4));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.6);
   sun.position.set(-3, 7, 6);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.camera.left = -6;
-  sun.shadow.camera.right = 6;
-  sun.shadow.camera.top = 6;
-  sun.shadow.camera.bottom = -6;
-  sun.shadow.bias = -0.0008;
-  sun.shadow.radius = 6;
   scene.add(sun);
 
   const geometry = new THREE.BoxGeometry(SHEET_WIDTH, SHEET_HEIGHT, 0.006);
+  const shadowGeometry = new THREE.PlaneGeometry(SHEET_WIDTH, SHEET_HEIGHT);
+  // A hard offset shadow in the text color, as in the deck. Over the navy
+  // background it disappears. Over another sheet it separates the two.
+  const shadowMaterial = new THREE.MeshBasicMaterial();
   const sheets = files.map((file, index) => createSheet(file, index));
 
   function createSheet(file, index) {
@@ -80,27 +86,26 @@ function initSheets(canvas) {
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
     const paper = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
-    const front = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.82 });
+    const front = new THREE.MeshBasicMaterial({ map: texture });
     const mesh = new THREE.Mesh(geometry, [paper, paper, paper, paper, front, paper]);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    const shadow = new THREE.Mesh(shadowGeometry, shadowMaterial);
+    shadow.position.z = -0.012;
+    mesh.add(shadow);
     scene.add(mesh);
 
-    // Scatter the sheets up and to the right; the heading sits in the lower left.
+    // The sheet's place in the fan: left to right in slide order, one step
+    // forward each, then the whole fan tilts as one piece.
     const random = seeded(index + 7);
-    const angle = index * 2.399963;
-    const radius = 1.5 + random() * 1.6;
-    const scatterPosition = new THREE.Vector3(
-      2.1 + Math.cos(angle) * radius * 1.15,
-      0.55 + Math.sin(angle * 1.3) * 1.15 + (random() - 0.5) * 0.4,
-      -1.4 + Math.sin(angle) * radius * 0.8
-    );
-    if (scatterPosition.x < 1.6 && scatterPosition.y < 0.3) {
-      scatterPosition.y = 0.3 + random() * 1.1;
-    }
+    const n = files.length;
+    const angle = n === 1 ? 0 : ((index / (n - 1)) * 2 - 1) * FAN_SPREAD;
+    const offset = new THREE.Vector3(
+      FAN_RADIUS * Math.sin(angle),
+      FAN_RADIUS * Math.cos(angle),
+      index * FAN_DEPTH_STEP
+    ).applyEuler(FAN_TILT);
     const scatter = {
-      position: scatterPosition,
-      rotation: new THREE.Euler((random() - 0.5) * 0.9, (random() - 0.5) * 1.3, (random() - 0.5) * 0.6)
+      position: FAN_PIVOT.clone().add(offset),
+      turn: -angle
     };
     const stack = {
       position: new THREE.Vector3(
@@ -111,9 +116,7 @@ function initSheets(canvas) {
       rotation: new THREE.Euler(-0.95, 0.12, (random() - 0.5) * 0.05)
     };
 
-    const sheet = { file, index, mesh, texture, textureCanvas, scatter, stack, phase: random() * Math.PI * 2 };
-    drawSheet(sheet);
-    return sheet;
+    return { file, index, mesh, shadow, texture, textureCanvas, scatter, stack, phase: random() * Math.PI * 2 };
   }
 
   function drawSheet(sheet) {
@@ -127,66 +130,76 @@ function initSheets(canvas) {
     ctx.fillStyle = inks.paper;
     ctx.fillRect(0, 0, w, h);
 
-    ctx.globalCompositeOperation = "multiply";
-    const layout = sheet.index % 4;
-    if (layout === 0) {
-      ctx.fillStyle = inks.ink2;
-      ctx.fillRect(w * 0.58, 0, w * 0.42, h);
-      ctx.fillStyle = inks.ink1;
-      ctx.fillRect(72, 110, 420, 64);
-      ctx.fillRect(72, 196, 300, 64);
-      ctx.fillStyle = inks.ink3;
-      ctx.beginPath();
-      ctx.arc(w * 0.74, h * 0.46, 120, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (layout === 1) {
-      ctx.fillStyle = inks.ink1;
-      ctx.fillRect(72, 90, 520, 58);
-      for (let line = 0; line < 5; line += 1) {
-        ctx.fillRect(72, 200 + line * 44, 300 + random() * 220, 18);
-      }
-      ctx.fillStyle = inks.ink3;
-      ctx.fillRect(w * 0.64, 80, 290, 330);
-      ctx.fillStyle = inks.ink2;
-      ctx.fillRect(w * 0.64 + 40, 150, 290, 220);
-    } else if (layout === 2) {
-      ctx.fillStyle = inks.ink3;
-      ctx.fillRect(56, 70, w - 112, h - 190);
-      ctx.fillStyle = inks.ink1;
-      for (let bar = 0; bar < 7; bar += 1) {
-        const barHeight = 60 + random() * 230;
-        ctx.fillRect(110 + bar * 118, h - 130 - barHeight, 70, barHeight);
-      }
-      ctx.fillStyle = inks.ink2;
-      ctx.fillRect(56, h - 120, 360, 22);
-    } else {
-      ctx.fillStyle = inks.text;
-      ctx.fillRect(56, 70, w * 0.62, h - 190);
-      ctx.fillStyle = inks.ink3;
-      for (let line = 0; line < 6; line += 1) {
-        ctx.fillRect(100 + (line % 3) * 30, 110 + line * 48, 180 + random() * 260, 16);
-      }
-      ctx.fillStyle = inks.ink2;
-      ctx.fillRect(w * 0.72, 70, 200, 200);
-    }
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = inks.text;
-    ctx.font = '800 150px "Bricolage Grotesque", sans-serif';
-    ctx.textAlign = "right";
-    ctx.textBaseline = "alphabetic";
-    ctx.globalCompositeOperation = "multiply";
-    ctx.fillStyle = inks.ink1;
-    ctx.fillText(String(sheet.index + 1).padStart(2, "0"), w - 48, h - 44);
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = inks.text;
+    // The left column holds the file name and number: the part of each sheet the fan leaves visible.
+    const slash = sheet.file.lastIndexOf("/");
+    const folder = slash >= 0 ? sheet.file.slice(0, slash + 1) : "";
+    const name = sheet.file.slice(slash + 1);
     ctx.textAlign = "left";
-    ctx.font = '500 30px "Martian Mono", monospace';
+    ctx.textBaseline = "alphabetic";
+    ctx.font = '500 26px "Martian Mono", monospace';
     if ("fontStretch" in ctx) {
       ctx.fontStretch = "semi-condensed";
     }
-    ctx.fillText(sheet.file, 56, h - 44);
+    ctx.fillStyle = inks.soft;
+    ctx.fillText(folder, 44, 74);
+    ctx.fillStyle = inks.text;
+    ctx.fillText(name, 44, 108);
+    if ("fontStretch" in ctx) {
+      ctx.fontStretch = "normal";
+    }
+    ctx.font = '800 150px "Bricolage Grotesque", sans-serif';
+    ctx.globalCompositeOperation = "multiply";
+    ctx.fillStyle = inks.ink1;
+    ctx.fillText(String(sheet.index + 1).padStart(2, "0"), 34, 262);
+
+    // A sketch of a slide in the art area on the right.
+    const ax = 330;
+    const ay = 56;
+    const aw = w - ax - 48;
+    const ah = h - ay - 56;
+    const layout = sheet.index % 4;
+    if (layout === 0) {
+      ctx.fillStyle = inks.ink2;
+      ctx.fillRect(ax + aw * 0.56, ay, aw * 0.44, ah);
+      ctx.fillStyle = inks.ink1;
+      ctx.fillRect(ax, ay + 40, aw * 0.5, 54);
+      ctx.fillRect(ax, ay + 116, aw * 0.36, 54);
+      ctx.fillStyle = inks.ink3;
+      ctx.beginPath();
+      ctx.arc(ax + aw * 0.7, ay + ah * 0.56, ah * 0.26, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (layout === 1) {
+      ctx.fillStyle = inks.ink1;
+      ctx.fillRect(ax, ay + 20, aw * 0.62, 50);
+      for (let line = 0; line < 6; line += 1) {
+        ctx.fillRect(ax, ay + 118 + line * 46, aw * (0.34 + random() * 0.2), 18);
+      }
+      ctx.fillStyle = inks.ink3;
+      ctx.fillRect(ax + aw * 0.62, ay + 110, aw * 0.3, ah * 0.6);
+      ctx.fillStyle = inks.ink2;
+      ctx.fillRect(ax + aw * 0.7, ay + 170, aw * 0.3, ah * 0.5);
+    } else if (layout === 2) {
+      ctx.fillStyle = inks.ink3;
+      ctx.fillRect(ax, ay, aw, ah);
+      ctx.fillStyle = inks.ink1;
+      const barWidth = (aw - 60) / 6;
+      for (let bar = 0; bar < 6; bar += 1) {
+        const barHeight = ah * (0.2 + random() * 0.6);
+        ctx.fillRect(ax + 40 + bar * barWidth, ay + ah - 36 - barHeight, barWidth - 26, barHeight);
+      }
+      ctx.fillStyle = inks.ink2;
+      ctx.fillRect(ax, ay + ah - 22, aw * 0.5, 22);
+    } else {
+      ctx.fillStyle = inks.text;
+      ctx.fillRect(ax, ay, aw * 0.78, ah);
+      ctx.fillStyle = inks.ink3;
+      for (let line = 0; line < 7; line += 1) {
+        ctx.fillRect(ax + 36 + (line % 3) * 30, ay + 44 + line * 54, aw * (0.2 + random() * 0.3), 16);
+      }
+      ctx.fillStyle = inks.ink2;
+      ctx.fillRect(ax + aw * 0.66, ay + 30, aw * 0.34, aw * 0.34);
+    }
+    ctx.globalCompositeOperation = "source-over";
 
     if (sheet.file === ownSource) {
       ctx.strokeStyle = inks.ink2;
@@ -203,13 +216,20 @@ function initSheets(canvas) {
     return {
       paper: read("--color-paper", "#f5f6f2"),
       text: read("--color-text", "#1d2657"),
+      soft: read("--color-text-soft", "#4a5384"),
       ink1: read("--ink-1", "#0078bf"),
       ink2: read("--ink-2", "#ff48b0"),
       ink3: read("--ink-3", "#ffe800")
     };
   }
 
-  document.addEventListener("byeslide:inks", () => sheets.forEach(drawSheet));
+  function paint() {
+    shadowMaterial.color.set(readInks().text);
+    sheets.forEach(drawSheet);
+  }
+
+  document.addEventListener("byeslide:inks", paint);
+  paint();
 
   const pointer = new THREE.Vector2();
   const pointerTarget = new THREE.Vector2();
@@ -221,14 +241,15 @@ function initSheets(canvas) {
     );
   });
 
-  const scatterQuaternion = new THREE.Quaternion();
+  const fanEuler = new THREE.Euler();
+  const fanQuaternion = new THREE.Quaternion();
   const stackQuaternion = new THREE.Quaternion();
   const floatPosition = new THREE.Vector3();
   let startedAt = performance.now();
   let hasRendered = false;
   let wasActive = false;
 
-  // Each cycle: drift, fly into the stack one by one, hold, fly apart.
+  // Each cycle: float as a fan, fly into the stack one by one, hold, fan out again.
   function place(sheet, time) {
     const cycleTime = time % CYCLE;
     const n = sheets.length;
@@ -241,22 +262,22 @@ function initSheets(canvas) {
       progress = 1 - easeInOut(clamp((cycleTime - RELEASE_AT - (n - sheet.index) * (1.2 / n)) / 1.6));
     }
 
-    const bob = Math.sin(time * 0.7 + sheet.phase);
+    // Floating moves each sheet within the fan only, so the sheets stay parallel.
     floatPosition.copy(sheet.scatter.position);
-    floatPosition.y += bob * 0.12;
-    floatPosition.x += Math.cos(time * 0.4 + sheet.phase) * 0.08;
+    floatPosition.y += Math.sin(time * 0.8 + sheet.index * 0.45) * 0.035;
+
+    // The shadow falls to the lower left, onto the sheet behind. In the stack it hides.
+    sheet.shadow.position.x = -SHADOW_OFFSET * (1 - progress);
+    sheet.shadow.position.y = -SHADOW_OFFSET * (1 - progress);
 
     sheet.mesh.position.lerpVectors(floatPosition, sheet.stack.position, progress);
-    sheet.mesh.position.y += Math.sin(progress * Math.PI) * 0.7;
+    sheet.mesh.position.y += Math.sin(progress * Math.PI) * 0.25;
 
-    const wobble = (1 - progress) * 0.12;
-    scatterQuaternion.setFromEuler(new THREE.Euler(
-      sheet.scatter.rotation.x + Math.sin(time * 0.5 + sheet.phase) * wobble,
-      sheet.scatter.rotation.y + Math.cos(time * 0.45 + sheet.phase) * wobble,
-      sheet.scatter.rotation.z
-    ));
+    // Euler order XYZ turns the sheet about its own normal first, then applies the shared tilt.
+    fanEuler.set(FAN_TILT.x, FAN_TILT.y, sheet.scatter.turn + Math.sin(time * 0.6 + sheet.phase) * 0.01);
+    fanQuaternion.setFromEuler(fanEuler);
     stackQuaternion.setFromEuler(sheet.stack.rotation);
-    sheet.mesh.quaternion.slerpQuaternions(scatterQuaternion, stackQuaternion, progress);
+    sheet.mesh.quaternion.slerpQuaternions(fanQuaternion, stackQuaternion, progress);
   }
 
   function resize() {

@@ -1,3 +1,8 @@
+---
+name: byeslide-theme
+description: Change the look of this Byeslide deck through theme.css and styles.css. Use when changing fonts, colors, sizes or the visual direction.
+---
+
 # Byeslide Theme
 
 Use when editing `theme.css` or changing visual direction.

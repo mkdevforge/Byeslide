@@ -1,0 +1,53 @@
+<section class="slide">
+  <div class="split split--center" style="--split-left: 0.8fr; --split-right: 1.2fr;">
+    <div class="column">
+      <h2 class="heading">Send the deck as one file</h2>
+      <p class="body-copy soft"><code>byeslide bundle</code> puts every slide, font, video and script into one HTML file. Put it on Teams or SharePoint: people download it, open it in Edge or Chrome, and it works offline.</p>
+    </div>
+    <figure class="bundle">
+      <div class="bundle__files" data-bundle-files aria-hidden="true"></div>
+      <div class="bundle__one" data-bundle-target>
+        <strong>byeslide.html</strong>
+        <span>One file, 3.6 MB</span>
+      </div>
+      <figcaption class="small soft">This deck after <code>byeslide build</code>: 59 files in <code>dist/</code>. After <code>byeslide bundle</code>: one.</figcaption>
+      <span class="fragment" data-step="bundle"></span>
+    </figure>
+  </div>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const files = slide?.querySelector("[data-bundle-files]");
+      const target = slide?.querySelector("[data-bundle-target]");
+      if (!slide || !files || !target || files.childElementCount > 0) {
+        return;
+      }
+
+      // One small sheet for each file that byeslide build writes for this deck.
+      for (let index = 0; index < 59; index += 1) {
+        const file = document.createElement("i");
+        file.style.setProperty("--i", index);
+        files.append(file);
+      }
+
+      // Aim every sheet at the middle of the one file. Offsets are in slide
+      // pixels, so they stay right however Reveal scales the slide.
+      const aim = () => {
+        const middleX = target.offsetLeft + target.offsetWidth / 2;
+        const middleY = target.offsetTop + target.offsetHeight / 2;
+        Array.from(files.children).forEach((file) => {
+          file.style.setProperty("--dx", `${middleX - (file.offsetLeft + file.offsetWidth / 2)}px`);
+          file.style.setProperty("--dy", `${middleY - (file.offsetTop + file.offsetHeight / 2)}px`);
+        });
+      };
+      window.Reveal?.on?.("slidechanged", (event) => {
+        if (event.currentSlide === slide) {
+          aim();
+        }
+      });
+      window.Reveal?.on?.("ready", aim);
+      aim();
+    })();
+  </script>
+  <aside class="notes">Click once: the 59 files that byeslide build writes for this deck fly into one HTML file. That file is what you share after the talk. It needs no server and no network, and the speaker view still works. Videos above 20 MB stop the bundle with a message; raise the limit with --max-asset-mb. Technique: a slide script creates the sheets and aims each one with custom properties, and one empty fragment starts the move.</aside>
+</section>
