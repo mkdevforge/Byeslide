@@ -3,17 +3,22 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
+const { PassThrough } = require("node:stream");
 const { initDeck } = require("../src/init");
+const { pickTemplate } = require("../src/prompt");
+const { SHARED_DIR, listTemplates } = require("../src/templates");
 const { main, parseArgs } = require("../src/cli");
 const rootPackage = require("../package.json");
 
-test("initDeck copies the starter template", async () => {
+test("initDeck copies the tour template by default", async () => {
   const target = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-init-"));
   const result = await initDeck(target);
 
   assert.equal(result.deckDir, target);
+  assert.equal(result.template, "tour");
   assert.ok(await exists(path.join(target, "deck.config.js")));
   assert.ok(await exists(path.join(target, "patterns", "title.html")));
+  assert.ok(await exists(path.join(target, "slides", "06-sheets.html")));
   assert.ok(await exists(path.join(target, "content", "01-title.md")));
   assert.match(await fs.readFile(path.join(target, ".gitignore"), "utf8"), /^dist\/$/m);
   assert.equal(await exists(path.join(target, "gitignore")), false);
@@ -24,10 +29,54 @@ test("initDeck copies the starter template", async () => {
   assert.equal(deckPackage.devDependencies.byeslide, rootPackage.version);
 });
 
-test("the template stores its gitignore under a name that npm publishes", async () => {
-  const templateRoot = path.resolve(__dirname, "..", "template");
-  assert.ok(await exists(path.join(templateRoot, "gitignore")));
-  assert.equal(await exists(path.join(templateRoot, ".gitignore")), false);
+for (const template of listTemplates()) {
+  test(`initDeck creates a deck from the ${template.name} template`, async () => {
+    const target = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-init-"));
+    const result = await initDeck(target, { template: template.name });
+
+    assert.equal(result.template, template.name);
+    const expected = await fs.readFile(path.join(template.dir, "deck.config.js"), "utf8");
+    assert.equal(await fs.readFile(path.join(target, "deck.config.js"), "utf8"), expected);
+    assert.ok(await exists(path.join(target, ".gitignore")));
+    assert.ok(await exists(path.join(target, "package.json")));
+    assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-build", "SKILL.md")));
+  });
+}
+
+test("initDeck names the valid templates when the name is unknown", async () => {
+  const target = path.join(os.tmpdir(), `byeslide-init-missing-${process.pid}`);
+  await assert.rejects(
+    initDeck(target, { template: "brochure" }),
+    /Unknown template "brochure"\. Choose one of: tour, report, lesson\./
+  );
+  assert.equal(await exists(target), false);
+});
+
+test("pickTemplate chooses with the arrow keys or a number", async () => {
+  const templates = listTemplates();
+  const run = async (keys) => {
+    const input = new PassThrough();
+    input.isTTY = true;
+    input.setRawMode = () => input;
+    const output = new PassThrough();
+    output.resume();
+    const choice = pickTemplate(templates, { input, output });
+    for (const key of keys) {
+      input.write(key);
+    }
+    return choice;
+  };
+
+  assert.equal(await run(["\r"]), "tour");
+  assert.equal(await run(["\x1b[B", "\r"]), "report");
+  assert.equal(await run(["\x1b[A", "\r"]), "lesson");
+  assert.equal(await run(["2", "\r"]), "report");
+  await assert.rejects(run(["\x03"]), /Stopped\. No deck was created\./);
+});
+
+test("the shared files store the gitignore under a name that npm publishes", async () => {
+  assert.ok(await exists(path.join(SHARED_DIR, "gitignore")));
+  assert.equal(await exists(path.join(SHARED_DIR, ".gitignore")), false);
 });
 
 test("initDeck refuses a non-empty directory without force", async () => {

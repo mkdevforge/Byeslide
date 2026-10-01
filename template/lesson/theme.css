@@ -1,0 +1,67 @@
+@font-face {
+  font-display: block;
+  font-family: "Podkova";
+  font-weight: 400 800;
+  src: url("assets/fonts/podkova.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: block;
+  font-family: "Atkinson Hyperlegible Next";
+  font-weight: 200 800;
+  src: url("assets/fonts/atkinson-hyperlegible-next.woff2") format("woff2");
+}
+
+:root {
+  /* Fonts. Podkova for headings, names and big numbers; Atkinson Hyperlegible Next for
+     everything pupils read. Atkinson draws zero with a slash, so counts, days and the
+     timer use Podkova, whose zero is a plain oval. */
+  --font-display: "Podkova", "Rockwell", Georgia, serif;
+  --font-body: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+
+  /* Colors. Pages are daylight; the sky is night. Sunlight marks only what the
+     Sun lights, and answers when they are revealed. Never use it for text on a page. */
+  --color-day: #f5f7fc;
+  --color-night: #191d4a;
+  --color-dusk: #4d5384;
+  --color-sun: #ffc93c;
+  --color-sky: #2f54d6;
+  --color-haze: #e3e7f2;
+
+  /* Drawing colors, made from the palette. */
+  --color-sun-ink: #a86f00;
+  --color-moon-dark: #2b305f;
+  --color-moon-lit: var(--color-sun);
+  --color-maria: color-mix(in srgb, var(--color-sun) 87%, var(--color-night));
+  --color-earth: #4a6cf0;
+  --color-earth-night: #26357f;
+  --color-eclipse: #a8462b;
+
+  /* Text on night slides. */
+  --color-night-text: var(--color-day);
+  --color-night-soft: #b9bfe3;
+  --color-night-line: #9aa1d0;
+  --color-night-deep: #0f1238;
+
+  /* Layout. */
+  --slide-padding: 96px 128px;
+  --slide-padding-tight: 64px 96px;
+  --slide-gap: 48px;
+  --gutter: 72px;
+  --radius: 14px;
+  --rule: 4px;
+
+  /* Type sizes. What pupils read uses --text-body or larger; --text-small is for side
+     notes and --text-label for labels in drawings. Nothing goes below 32px. */
+  --text-label: 32px;
+  --text-small: 36px;
+  --text-body: 42px;
+  --text-lead: 54px;
+  --text-h3: 60px;
+  --text-h2: 92px;
+  --text-h1: 150px;
+  --text-display: 250px;
+  --line-tight: 0.98;
+  --line-heading: 1.05;
+  --line-body: 1.42;
+}

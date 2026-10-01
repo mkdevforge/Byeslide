@@ -1,0 +1,55 @@
+<section class="slide">
+  <h2 class="headline">A headline that names the biggest step from start to end</h2>
+  <div class="chart">
+    <canvas data-pattern-bridge aria-label="Describe the bridge: start, each step, end"></canvas>
+    <!-- One empty fragment per step between the totals: each click adds the next bar. -->
+    <span class="fragment" data-step></span>
+    <span class="fragment" data-step></span>
+  </div>
+  <p class="source">Source: name the system. Say where the axis starts if it is not zero.</p>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script src="./assets/acme-charts.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-pattern-bridge]");
+      if (!slide || !canvas || !window.AcmeCharts || canvas.dataset.chartReady === "true") {
+        return;
+      }
+      const colors = window.AcmeCharts.theme();
+      // The steps must add up to end minus start. key: true marks the step that matters.
+      const steps = [{ label: "Start", value: 10, total: true }, { label: "Step up", value: 3, key: true }, { label: "Step down", value: -1 }, { label: "End", value: 12, total: true }];
+      // Each bar floats from the level before the step to the level after it.
+      let level = 0;
+      const ranges = steps.map((step) => {
+        const start = step.total ? 0 : level;
+        level = step.total ? step.value : level + step.value;
+        return [start, level];
+      });
+      const fragments = Array.from(slide.querySelectorAll("[data-step]"));
+      const data = () => {
+        const shown = fragments.filter((fragment) => fragment.classList.contains("visible")).length;
+        return ranges.map((range, index) => (steps[index].total || index <= shown ? range : null));
+      };
+      const chart = window.AcmeCharts.create(canvas, {
+        type: "bar",
+        data: {
+          labels: steps.map((step) => step.label),
+          datasets: [{
+            data: data(),
+            borderSkipped: false,
+            backgroundColor: steps.map((step) => (step.key ? colors.accent : step.total ? colors.ink : step.value > 0 ? colors.soft : colors.compare)),
+            valueLabels: (_range, index) => (steps[index].total ? `${steps[index].value}` : `${steps[index].value > 0 ? "+" : "−"}${Math.abs(steps[index].value)}`)
+          }]
+        },
+        options: { scales: { x: { grid: { display: false } }, y: { min: 0 } } }
+      });
+      const observer = new MutationObserver(() => {
+        chart.data.datasets[0].data = data();
+        chart.update("none");
+      });
+      fragments.forEach((fragment) => observer.observe(fragment, { attributes: true, attributeFilter: ["class"] }));
+    })();
+  </script>
+  <aside class="notes">Show start and end first, then walk one step per click. Name the cause of each step in plain words.</aside>
+</section>

@@ -1,0 +1,228 @@
+<section class="slide slide--night slide--tight" data-background-color="var(--color-night)">
+  <div class="model" data-model data-prevent-swipe>
+    <div class="model__head">
+      <h2 class="heading">Move the Moon around Earth</h2>
+      <p class="small soft">Drag the Moon or the slider. The white curve marks the half of the Moon that faces Earth.</p>
+    </div>
+
+    <figure class="model__top">
+      <!-- Top view. The Sun is far away on the left; the Moon goes around Earth counterclockwise. -->
+      <svg class="orbit-view" viewBox="0 0 880 620" data-model-top role="img" aria-label="Top view: sunlight from the left, Earth in the middle and the Moon on its path around Earth">
+        <path class="sun" d="M0 0 A700 700 0 0 1 0 620 Z"/>
+        <text class="label-sun" x="112" y="70">Sunlight</text>
+        <g>
+          <line class="ray" x1="112" y1="130" x2="186" y2="130"/><path class="ray-head" d="M206 130 l-24 -13 v26 z"/>
+          <line class="ray" x1="112" y1="230" x2="186" y2="230"/><path class="ray-head" d="M206 230 l-24 -13 v26 z"/>
+          <line class="ray" x1="112" y1="330" x2="186" y2="330"/><path class="ray-head" d="M206 330 l-24 -13 v26 z"/>
+          <line class="ray" x1="112" y1="430" x2="186" y2="430"/><path class="ray-head" d="M206 430 l-24 -13 v26 z"/>
+          <line class="ray" x1="112" y1="530" x2="186" y2="530"/><path class="ray-head" d="M206 530 l-24 -13 v26 z"/>
+        </g>
+        <circle class="orbit" cx="540" cy="310" r="220"/>
+        <line class="sight" data-model-sight x1="540" y1="310" x2="540" y2="310"/>
+        <g data-model-earth>
+          <circle class="earth-night" cx="540" cy="310" r="56"/>
+          <path class="earth-day" d="M540 254 A56 56 0 0 0 540 366 Z"/>
+        </g>
+        <text class="label-strong halo" x="540" y="414" text-anchor="middle">Earth</text>
+        <g data-model-orbiter transform="translate(540 90)">
+          <path class="facing" data-model-facing d="M0 -50 A50 50 0 0 1 0 50"/>
+          <circle class="dark" r="36"/>
+          <path class="lit" d="M0 -36 A36 36 0 0 0 0 36 Z"/>
+          <circle class="edge" r="36"/>
+          <circle class="grab" r="72"/>
+        </g>
+        <text class="label-strong halo" data-model-moon-label x="540" y="20" text-anchor="middle">Moon</text>
+      </svg>
+      <figcaption class="soft">Seen from above the North Pole. Not to scale.</figcaption>
+    </figure>
+
+    <figure class="model__sky">
+      <p class="model__phase" data-model-phase aria-live="polite">Waxing crescent</p>
+      <p class="model__facts"><span data-model-day>Day 4 of 29.5</span>, <span data-model-lit>15% lit</span></p>
+      <span class="moon" data-model-moon role="img" aria-label="The Moon as seen from Earth"></span>
+      <p class="body-copy" data-model-explain>Lit on the right, and growing.</p>
+      <figcaption class="soft">Seen from Earth's Northern Hemisphere</figcaption>
+    </figure>
+
+    <div class="model__controls">
+      <button class="btn live-only" type="button" data-model-play>Play a month</button>
+      <div class="month">
+        <input type="range" min="0" max="357" step="3" value="45" aria-label="Days since new moon" data-model-range>
+        <div class="month__ticks live-only">
+          <button type="button" data-model-jump="0"><span class="moon moon--plain" data-moon="new"></span></button>
+          <button type="button" data-model-jump="45"><span class="moon moon--plain" data-moon="waxing-crescent"></span></button>
+          <button type="button" data-model-jump="90"><span class="moon moon--plain" data-moon="first-quarter"></span></button>
+          <button type="button" data-model-jump="135"><span class="moon moon--plain" data-moon="waxing-gibbous"></span></button>
+          <button type="button" data-model-jump="180"><span class="moon moon--plain" data-moon="full"></span></button>
+          <button type="button" data-model-jump="225"><span class="moon moon--plain" data-moon="waning-gibbous"></span></button>
+          <button type="button" data-model-jump="270"><span class="moon moon--plain" data-moon="third-quarter"></span></button>
+          <button type="button" data-model-jump="315"><span class="moon moon--plain" data-moon="waning-crescent"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/lesson-kit.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const kit = window.LessonKit;
+      const model = slide?.querySelector("[data-model]");
+      if (!slide || !kit || !model || model.dataset.ready === "true") {
+        return;
+      }
+      model.dataset.ready = "true";
+      kit.setup(slide);
+
+      // Earth's center and the Moon's path in the top view's own units.
+      const ORBIT = { x: 540, y: 310, r: 220 };
+      const MONTH_SECONDS = 14;
+      const EXPLAIN = {
+        "new": "We see only the Moon's night side.",
+        "waxing-crescent": "Lit on the right, and growing.",
+        "first-quarter": "Half of the side we see is lit.",
+        "waxing-gibbous": "More than half lit, and growing.",
+        "full": "We see the whole sunlit half.",
+        "waning-gibbous": "More than half lit, and shrinking.",
+        "third-quarter": "Half lit again, on the left this time.",
+        "waning-crescent": "Lit on the left, and shrinking."
+      };
+
+      const top = model.querySelector("[data-model-top]");
+      const earth = model.querySelector("[data-model-earth] circle");
+      const orbiter = model.querySelector("[data-model-orbiter]");
+      const facing = model.querySelector("[data-model-facing]");
+      const sight = model.querySelector("[data-model-sight]");
+      const moonLabel = model.querySelector("[data-model-moon-label]");
+      const skyMoon = model.querySelector("[data-model-moon]");
+      const phaseText = model.querySelector("[data-model-phase]");
+      const dayText = model.querySelector("[data-model-day]");
+      const litText = model.querySelector("[data-model-lit]");
+      const explainText = model.querySelector("[data-model-explain]");
+      const range = model.querySelector("[data-model-range]");
+      const play = model.querySelector("[data-model-play]");
+      const jumps = Array.from(model.querySelectorAll("[data-model-jump]"));
+      const step = Number(range.step);
+      const max = Number(range.max);
+
+      // angle: degrees since new moon. The Sun is on the left and we look down on the
+      // North Pole, so the Moon goes counterclockwise: new moon between Earth and the
+      // Sun, first quarter below Earth, full moon on the far side, third quarter above.
+      function show(next) {
+        const angle = ((next % 360) + 360) % 360;
+        const radians = (angle * Math.PI) / 180;
+        const ux = -Math.cos(radians);
+        const uy = Math.sin(radians);
+        const x = ORBIT.x + ORBIT.r * ux;
+        const y = ORBIT.y + ORBIT.r * uy;
+
+        orbiter.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+        facing.setAttribute("transform", `rotate(${((Math.atan2(-uy, -ux) * 180) / Math.PI).toFixed(1)})`);
+        sight.setAttribute("x1", (ORBIT.x + 66 * ux).toFixed(1));
+        sight.setAttribute("y1", (ORBIT.y + 66 * uy).toFixed(1));
+        sight.setAttribute("x2", (x - 58 * ux).toFixed(1));
+        sight.setAttribute("y2", (y - 58 * uy).toFixed(1));
+        // The label sits above the Moon beside Earth, and next to it above or below Earth,
+        // so it never covers the sunlight arrows or the line of sight.
+        const beside = Math.abs(uy) < 0.7;
+        moonLabel.setAttribute("x", (beside ? x : x + 62).toFixed(1));
+        moonLabel.setAttribute("y", (beside ? y - 66 : y + 11).toFixed(1));
+        moonLabel.setAttribute("text-anchor", beside ? "middle" : "start");
+
+        const phase = kit.phaseOf(angle);
+        const day = Math.round(kit.dayOf(angle)) % 30;
+        const lit = Math.round(kit.litFraction(angle) * 100);
+        kit.drawMoon(skyMoon, angle);
+        skyMoon.setAttribute("aria-label", `${phase.name}, ${lit}% lit`);
+        phaseText.textContent = phase.name;
+        dayText.textContent = `Day ${day} of 29.5`;
+        litText.textContent = `${lit}% lit`;
+        explainText.textContent = EXPLAIN[phase.key];
+        range.value = String((Math.round(angle / step) * step) % (max + step));
+        range.setAttribute("aria-valuetext", `Day ${day}, ${phase.name}`);
+        model.dataset.angle = angle.toFixed(1);
+        model.dataset.phase = phase.key;
+        return angle;
+      }
+
+      let angle = show(Number(range.value));
+
+      // Play a month: the Moon goes once around in MONTH_SECONDS. With reduced
+      // motion it jumps one day at a time instead of gliding.
+      let frame = null;
+      let ticker = null;
+      function start() {
+        play.textContent = "Pause";
+        if (kit.prefersReducedMotion()) {
+          ticker = window.setInterval(() => {
+            angle = show(angle + 360 / kit.SYNODIC_DAYS);
+          }, 600);
+          return;
+        }
+        let last = performance.now();
+        const tick = (now) => {
+          angle = show(angle + ((now - last) / 1000) * (360 / MONTH_SECONDS));
+          last = now;
+          frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+      }
+      function stop() {
+        cancelAnimationFrame(frame);
+        window.clearInterval(ticker);
+        frame = null;
+        ticker = null;
+        play.textContent = "Play a month";
+      }
+      const playing = () => frame !== null || ticker !== null;
+
+      play.addEventListener("click", () => (playing() ? stop() : start()));
+      range.addEventListener("input", () => {
+        stop();
+        angle = show(Number(range.value));
+      });
+      jumps.forEach((button) => {
+        const target = Number(button.dataset.modelJump);
+        button.style.setProperty("--at", String(target / max));
+        button.setAttribute("aria-label", `Go to ${kit.phaseOf(target).name.toLowerCase()}`);
+        button.addEventListener("click", () => {
+          stop();
+          angle = show(target);
+        });
+      });
+
+      // Drag the Moon, or click anywhere on its path. The angle is measured from
+      // Earth's center on screen, so it stays right however Reveal scales the slide.
+      let dragging = false;
+      const angleAt = (event) => {
+        const box = earth.getBoundingClientRect();
+        const dx = event.clientX - (box.left + box.width / 2);
+        const dy = event.clientY - (box.top + box.height / 2);
+        return (Math.atan2(dy, -dx) * 180) / Math.PI;
+      };
+      top.addEventListener("pointerdown", (event) => {
+        stop();
+        dragging = true;
+        top.setPointerCapture(event.pointerId);
+        angle = show(angleAt(event));
+        event.preventDefault();
+      });
+      top.addEventListener("pointermove", (event) => {
+        if (dragging) {
+          angle = show(angleAt(event));
+        }
+      });
+      const release = () => {
+        dragging = false;
+      };
+      top.addEventListener("pointerup", release);
+      top.addEventListener("pointercancel", release);
+
+      window.Reveal?.on?.("slidechanged", (event) => {
+        if (event.currentSlide !== slide) {
+          stop();
+        }
+      });
+    })();
+  </script>
+  <aside class="notes">About 8 minutes. This is the heart of the lesson. The left side is a view from far above the North Pole, with the Sun far off to the left. The right side is what we see from Earth, from the Northern Hemisphere. In the Southern Hemisphere the picture is flipped left to right. Start by clicking the new moon button under the slider: the Moon is between Earth and the Sun, and we see only its dark night side. Ask: "Which half of the Moon is lit?" Always the half facing the Sun. "Which half can we see?" The half facing Earth, marked by the white curve. The phase is the part of the lit half that we can see. Drag the Moon slowly around, or press Play a month. Stop at first quarter (lit on the right), full moon (Earth is between the Sun and the Moon, and we see the whole lit half) and third quarter (lit on the left). Point out the day counter: one full cycle takes 29.5 days. The model keeps the Sun still and is not to scale: the real Moon is about 30 Earth widths away. Return to the vote: which explanation fits what the model shows?</aside>
+</section>

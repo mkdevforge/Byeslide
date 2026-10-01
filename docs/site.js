@@ -98,6 +98,30 @@
     grid.append(...Array.from({ length: 59 }, () => document.createElement("i")));
   }
 
+  // Starter deck tabs: one gallery per template. ------------------------------
+  const tabs = Array.from(document.querySelectorAll("[data-tabs] [role='tab']"));
+  const selectTab = (tab, focus) => {
+    tabs.forEach((other) => {
+      const selected = other === tab;
+      other.setAttribute("aria-selected", String(selected));
+      other.tabIndex = selected ? 0 : -1;
+      document.getElementById(other.getAttribute("aria-controls")).hidden = !selected;
+    });
+    if (focus) {
+      tab.focus();
+    }
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => selectTab(tab, false));
+    tab.addEventListener("keydown", (event) => {
+      const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+      if (step) {
+        event.preventDefault();
+        selectTab(tabs[(index + step + tabs.length) % tabs.length], true);
+      }
+    });
+  });
+
   // Docs table of contents: mark the section on screen. -----------------------
   const links = new Map(Array.from(document.querySelectorAll(".toc a")).map((link) => [link.hash.slice(1), link]));
   const sections = Array.from(links.keys()).map((id) => document.getElementById(id)).filter(Boolean);

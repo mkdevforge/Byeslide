@@ -1,0 +1,74 @@
+<section class="slide" data-auto-animate>
+  <div class="head">
+    <h2 class="headline">Revenue grew 12% on last year but has trailed plan all of 2026</h2>
+    <div class="readout readout--compact is-key" data-id="revenue">
+      <p class="readout__value" data-id="revenue-value">$48.6M</p>
+      <p class="readout__label" data-id="revenue-label">Revenue</p>
+      <p class="readout__detail" data-id="revenue-detail">2.8% below plan, up 12.0% on Q3 2025</p>
+    </div>
+  </div>
+  <div class="chart">
+    <canvas data-revenue-chart aria-label="Quarterly revenue against plan, Q2 2025 to Q3 2026. Revenue ran above plan in 2025 and below it in each quarter of 2026: Q3 2026 is $48.6M against a plan of $50.0M."></canvas>
+    <!-- Pinned to point 5 (Q3 2026) of dataset 1 (Actual) by assets/acme-charts.js. -->
+    <div class="chart-note" data-at="5" data-dataset="1">
+      <p class="chart-note__text"><strong>$1.4M below plan</strong><span>Gateway orders moved to October</span></p>
+    </div>
+  </div>
+  <p class="source">Source: management accounts. Plan is the budget the board approved for each year.</p>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script src="./assets/acme-charts.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-revenue-chart]");
+      if (!slide || !canvas || !window.AcmeCharts || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      const colors = window.AcmeCharts.theme();
+      const money = (value) => `$${value.toFixed(1)}M`;
+      const plan = [40.5, 43.0, 45.5, 44.8, 47.2, 50.0];
+      const actual = [41.0, 43.4, 46.2, 44.1, 46.9, 48.6];
+
+      window.AcmeCharts.create(canvas, {
+        type: "line",
+        data: {
+          labels: ["Q2 2025", "Q3 2025", "Q4 2025", "Q1 2026", "Q2 2026", "Q3 2026"],
+          datasets: [
+            {
+              label: "Plan",
+              data: plan,
+              borderColor: colors.compare,
+              borderDash: [14, 12],
+              borderWidth: 4,
+              endLabel: "Plan $50.0M"
+            },
+            {
+              label: "Actual",
+              data: actual,
+              borderColor: colors.ink,
+              pointBackgroundColor: colors.ink,
+              pointBorderColor: colors.surface,
+              pointBorderWidth: 4,
+              pointRadius: 9,
+              endLabel: "Actual $48.6M",
+              // Each value on the side away from the plan line. The last one is in the end label.
+              valueLabels: (value, index) => (index < 5 ? { text: money(value), below: value < plan[index] } : "")
+            }
+          ]
+        },
+        options: {
+          layout: { padding: { right: 250, top: 12 } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: colors.ink } },
+            y: { min: 36, max: 56, ticks: { stepSize: 4, callback: (value) => `$${value}M` } }
+          },
+          plugins: {
+            tooltip: { callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y)}` } }
+          }
+        }
+      });
+    })();
+  </script>
+  <aside class="notes">Through 2025 we ran a little ahead of plan. In 2026 we have been behind in every quarter: $0.7M in Q1, $0.3M in Q2 and $1.4M in Q3. Q3 is the gateway delay: without it we would have ended $0.6M above plan. Growth on last year is still 12%, so demand is not the problem. The question for Q4 is whether we can ship on time.</aside>
+</section>

@@ -1,0 +1,36 @@
+<section class="slide">
+  <div class="column">
+    <h2 class="heading">What do you think?</h2>
+    <p class="lead">Why does the Moon seem to change shape during the month?</p>
+  </div>
+  <!-- Each click on a choice adds one vote. Shift-click or right-click takes one away. -->
+  <div class="vote" data-vote data-prevent-swipe>
+    <div class="vote__row" data-vote-row>
+      <button class="vote__choice" type="button" data-vote-option><span class="vote__letter">A</span>Earth's shadow covers part of the Moon.</button>
+      <span class="vote__tally" data-vote-tally></span>
+      <output class="vote__count" data-vote-count>0</output>
+    </div>
+    <div class="vote__row" data-vote-row>
+      <button class="vote__choice" type="button" data-vote-option><span class="vote__letter">B</span>Clouds cover part of the Moon.</button>
+      <span class="vote__tally" data-vote-tally></span>
+      <output class="vote__count" data-vote-count>0</output>
+    </div>
+    <div class="vote__row" data-vote-row>
+      <button class="vote__choice" type="button" data-vote-option><span class="vote__letter">C</span>We see different amounts of the Moon's sunlit side.</button>
+      <span class="vote__tally" data-vote-tally></span>
+      <output class="vote__count" data-vote-count>0</output>
+    </div>
+    <div class="vote__foot">
+      <p class="small soft">Hands up for A, B or C. We find out who is right later in the lesson.</p>
+      <button class="btn btn--quiet live-only" type="button" data-vote-reset>Clear votes</button>
+    </div>
+  </div>
+  <script src="./assets/lesson-kit.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      window.LessonKit?.setup(slide);
+    })();
+  </script>
+  <aside class="notes">About 4 minutes. Read the three explanations aloud. Give pupils 30 seconds to choose on their own, then ask for hands for A, B and C, and click a choice once for each hand. Shift-click or right-click takes a vote away if you miscount. Do not say which is right: slide 8 comes back to this vote. Many pupils, and many adults, choose A. Earth's shadow is the most common wrong idea about the phases. B is common with younger pupils. C is correct. Ask one pupil from each group to say why they chose it, and write the reasons on the board so you can come back to them.</aside>
+</section>

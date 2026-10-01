@@ -26,6 +26,22 @@ pnpm build
 pnpm preview
 ```
 
+`init` asks which starter deck to begin from. Choose one directly with `--template`:
+
+| Template | What it is |
+| --- | --- |
+| `tour` (default) | Presents Byeslide itself. Each slide shows one technique: 3D, charts, fragments, video. |
+| `report` | A quarterly business review for a made-up company: key numbers, charts, risks and decisions. |
+| `lesson` | A science lesson for ages 10 to 12, "Why does the Moon have phases?", with a live model, predictions and an exit ticket. |
+
+```sh
+pnpm dlx byeslide init my-deck --template report
+```
+
+When `init` runs without a terminal, for example from an agent or a script, it does not ask. It uses `tour` and says so. `byeslide templates` lists the templates.
+
+Each template has its own look, patterns and content. The look is an example: change `theme.css` and `styles.css` to make the deck your own.
+
 The generated deck structure is:
 
 ```text
@@ -47,7 +63,8 @@ my-deck/
 ```sh
 byeslide --version
 byeslide version
-byeslide init [dir] [--force]
+byeslide init [dir] [--template tour|report|lesson] [--force]
+byeslide templates
 byeslide build [dir] [--out dist] [--no-clean]
 byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
 byeslide check [dir] [--json] [--out dist] [--no-clean]
@@ -100,3 +117,13 @@ byeslide install-browsers
 Slide files may be fragments or full HTML documents. Fragments are the default and are wrapped in Reveal `<section>` elements during build.
 
 Slide files may also include browser-side dependencies and setup scripts. External `src` scripts are moved after Reveal initialization and repeated dependency tags are deduped; add `data-byeslide-repeat` to an external setup script when it must run once per slide. Inline scripts are preserved per slide. Use `window.Byeslide.slideForScript(document.currentScript)` in classic inline setup scripts, or `window.Byeslide.slideForScript(import.meta)` / `import.meta.byeslideSlide` in inline module scripts, when setup code needs to query the slide it came from. The starter deck includes a Three.js slide and a Chart.js slide that demonstrate this model.
+
+## Working on the Templates
+
+The starter decks live in `template/`: one folder for each template (`template/tour`, `template/report`, `template/lesson`), and `template/shared` for the files every deck gets, such as the agent skills and `package.json`. `init` copies the shared files first, then the chosen template.
+
+```sh
+pnpm run build:template     # builds every template into template/dist/<name>/, with an index page
+pnpm run check:template     # checks every template for overflow
+node src/cli.js preview template/report
+```

@@ -1,0 +1,1198 @@
+/*
+  Lesson deck styles.
+
+  Pages are daylight: dark ink on a pale page, so they read on a weak projector
+  from the back of the room and print cleanly. The sky is night: the Moon model
+  sits on a dark slide. Sunlight yellow marks only what the Sun lights, and
+  answers as they are revealed. Text is left-aligned and never smaller than
+  --text-body when pupils read it in sentences.
+*/
+
+/* Page and Reveal chrome ------------------------------------------------------- */
+
+.reveal-viewport {
+  background-color: var(--color-day);
+}
+
+.reveal {
+  color: var(--color-night);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--line-body);
+}
+
+/* :where() keeps these resets at zero specificity, so any class can override them. */
+.reveal :where(h1, h2, h3, h4, p, ul, ol, figure, figcaption, blockquote) {
+  margin: 0;
+}
+
+.reveal :where(ul, ol) {
+  list-style: none;
+  padding: 0;
+}
+
+.reveal :where(button, input, output) {
+  font: inherit;
+}
+
+.reveal .controls {
+  color: var(--color-night);
+}
+
+.reveal .progress {
+  color: var(--color-sky);
+  height: 8px;
+}
+
+.reveal.has-dark-background .controls {
+  color: var(--color-day);
+}
+
+.reveal.has-dark-background .progress {
+  color: var(--color-sun);
+}
+
+.reveal ::selection {
+  background: var(--color-sun);
+  color: var(--color-night);
+}
+
+/* Slide frame ------------------------------------------------------------------ */
+
+.reveal .slides section,
+.reveal .slides section *,
+.reveal .slides section *::before,
+.reveal .slides section *::after {
+  box-sizing: border-box;
+}
+
+/* deck.config.js sets Reveal's display option to flex; stack slide content top to bottom. */
+.reveal .slides section[data-byeslide-source] {
+  flex-direction: column;
+}
+
+.reveal .slides section.slide {
+  --byeslide-slide-padding: var(--slide-padding);
+
+  color: var(--color-night);
+  display: flex;
+  flex-direction: column;
+  gap: var(--slide-gap);
+  overflow: hidden;
+  padding: var(--slide-padding);
+}
+
+/* Less margin, for slides that need the room: the model. */
+.reveal .slides section.slide--tight {
+  --byeslide-slide-padding: var(--slide-padding-tight);
+
+  padding: var(--slide-padding-tight);
+}
+
+/* Full-bleed slides put their own content at the edges. */
+.reveal .slides section.slide--bleed {
+  --byeslide-slide-padding: 0px;
+
+  padding: 0;
+}
+
+/* Night slides: set data-background-color="var(--color-night)" on the section too. */
+.reveal .slides section.slide--night {
+  color: var(--color-night-text);
+}
+
+/* Type ------------------------------------------------------------------------------ */
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--line-tight);
+  text-wrap: balance;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: var(--line-heading);
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+.subheading {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.lead {
+  font-size: var(--text-lead);
+  font-weight: 500;
+  line-height: 1.3;
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+
+.body-copy {
+  font-size: var(--text-body);
+  line-height: var(--line-body);
+  max-width: 36ch;
+  text-wrap: pretty;
+}
+
+.small {
+  font-size: var(--text-small);
+  line-height: 1.35;
+}
+
+.soft {
+  color: var(--color-dusk);
+}
+
+.slide--night .soft {
+  color: var(--color-night-soft);
+}
+
+.reveal strong {
+  font-weight: 750;
+}
+
+/* Key word: a thick sunlight underline, like a highlighter under the line. */
+.reveal mark {
+  background: none;
+  color: inherit;
+  text-decoration-color: var(--color-sun);
+  text-decoration-line: underline;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: 0.24em;
+  text-underline-offset: -0.02em;
+}
+
+/* Layout ------------------------------------------------------------------------------ */
+
+.split {
+  align-items: start;
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: minmax(0, var(--split-left, 1fr)) minmax(0, var(--split-right, 1fr));
+  min-height: 0;
+}
+
+.split--center {
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+.push-down {
+  margin-top: auto;
+}
+
+/* Panel: a flat block of haze for a side note or a list of materials. */
+.panel {
+  background: var(--color-haze);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 40px 48px;
+}
+
+/* Buttons -------------------------------------------------------------------------------- */
+
+.btn {
+  align-items: center;
+  background: var(--color-night);
+  border: var(--rule) solid var(--color-night);
+  border-radius: 12px;
+  color: var(--color-day);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 38px;
+  font-weight: 700;
+  gap: 16px;
+  justify-content: center;
+  line-height: 1;
+  min-height: 84px;
+  padding: 0 40px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  background: var(--color-sky);
+  border-color: var(--color-sky);
+}
+
+.btn:active {
+  transform: translateY(2px);
+}
+
+.btn--quiet {
+  background: transparent;
+  color: var(--color-night);
+}
+
+.btn--quiet:hover {
+  background: var(--color-haze);
+  border-color: var(--color-night);
+}
+
+.slide--night .btn {
+  background: var(--color-sun);
+  border-color: var(--color-sun);
+  color: var(--color-night);
+}
+
+.slide--night .btn:hover {
+  background: var(--color-day);
+  border-color: var(--color-day);
+}
+
+.reveal button:focus-visible,
+.reveal input:focus-visible {
+  outline: 5px solid var(--color-sky);
+  outline-offset: 5px;
+}
+
+.slide--night button:focus-visible,
+.slide--night input:focus-visible {
+  outline-color: var(--color-sun);
+}
+
+/* Lists -------------------------------------------------------------------------------- */
+
+/* Points: each bullet is a half-lit Moon. */
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.points li {
+  display: grid;
+  gap: 0.6em;
+  grid-template-columns: 0.6em minmax(0, 1fr);
+  line-height: 1.38;
+}
+
+.points li::before {
+  background: linear-gradient(90deg, var(--color-night) 50%, var(--color-sun) 50%);
+  border: 3px solid var(--color-night);
+  border-radius: 50%;
+  content: "";
+  height: 0.6em;
+  margin-top: 0.4em;
+  width: 0.6em;
+}
+
+/* Goals: each line starts with a Moon that grows a little more than the one before. */
+.goals {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.goals li {
+  align-items: center;
+  display: grid;
+  font-size: 48px;
+  gap: 40px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  line-height: 1.3;
+}
+
+.goals .moon {
+  --moon-size: 96px;
+}
+
+/* Numbered steps, for things that must happen in order. */
+.steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.steps li {
+  counter-increment: step;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 76px minmax(0, 1fr);
+  line-height: 1.32;
+}
+
+.steps li::before {
+  align-items: center;
+  border: var(--rule) solid var(--color-night);
+  border-radius: 50%;
+  content: counter(step);
+  display: flex;
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 700;
+  height: 76px;
+  justify-content: center;
+  line-height: 1;
+  margin-top: -10px;
+  transition: background-color 0.4s ease;
+  width: 76px;
+}
+
+/* The step just revealed gets the light. */
+.reveal .steps li.current-fragment::before {
+  background: var(--color-sun);
+}
+
+/* Moons ----------------------------------------------------------------------------- */
+
+/*
+  <span class="moon" data-moon="first-quarter"></span>
+  assets/lesson-kit.js draws the Moon as seen from the Northern Hemisphere.
+  data-moon takes a phase (new, waxing-crescent, first-quarter, waxing-gibbous,
+  full, waning-gibbous, third-quarter, waning-crescent) or an angle in degrees.
+  Set the size with --moon-size.
+*/
+.moon {
+  aspect-ratio: 1;
+  display: inline-block;
+  flex: none;
+  line-height: 0;
+  width: var(--moon-size, 160px);
+}
+
+.moon__svg {
+  display: block;
+  height: 100%;
+  overflow: visible;
+  width: 100%;
+}
+
+.moon__dark {
+  fill: var(--color-moon-dark);
+}
+
+.moon__lit {
+  fill: var(--color-moon-lit);
+}
+
+.moon__maria {
+  fill: var(--color-maria);
+}
+
+.moon--plain .moon__maria {
+  display: none;
+}
+
+.moon__edge {
+  fill: none;
+  stroke: var(--color-night);
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+}
+
+.slide--night .moon__edge {
+  stroke: var(--color-night-line);
+  stroke-opacity: 0.55;
+}
+
+/* Drawings ------------------------------------------------------------------------------- */
+
+/* Inline SVG diagrams. Shapes take a class, so they follow the theme. */
+.art {
+  display: block;
+  height: auto;
+  overflow: visible;
+  width: 100%;
+}
+
+.art text {
+  fill: var(--color-night);
+  font-family: var(--font-body);
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.art .text-soft { fill: var(--color-dusk); }
+.art .sun { fill: var(--color-sun); }
+.art .sun-glow { fill: var(--color-sun); opacity: 0.3; }
+.art .ray { fill: none; stroke: var(--color-sun-ink); stroke-linecap: round; stroke-width: 6px; }
+.art .ray-head { fill: var(--color-sun-ink); }
+.art .lit { fill: var(--color-moon-lit); }
+.art .dark { fill: var(--color-moon-dark); }
+.art .edge { fill: none; stroke: var(--color-night); stroke-width: 3px; }
+.art .line { fill: none; stroke: var(--color-night); stroke-linecap: round; stroke-width: 4px; }
+.art .dashed { stroke-dasharray: 3 13; }
+.art .earth { fill: var(--color-earth); }
+.art .earth-night { fill: var(--color-earth-night); }
+.art .shadow { fill: var(--color-night); opacity: 0.16; }
+.art .eclipsed { fill: var(--color-eclipse); }
+.art .arrow-head { fill: var(--color-night); }
+
+/* Facts with a drawing each --------------------------------------------------------------- */
+
+.facts {
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: repeat(var(--facts, 3), minmax(0, 1fr));
+  min-height: 0;
+}
+
+.fact {
+  border-top: var(--rule) solid var(--color-night);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 28px;
+}
+
+.fact__art {
+  align-items: center;
+  display: flex;
+  height: 250px;
+}
+
+.fact__art .art {
+  height: 100%;
+  width: auto;
+}
+
+.fact h3 {
+  font-family: var(--font-display);
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.fact p {
+  font-size: 38px;
+  line-height: 1.38;
+}
+
+/* Answers ------------------------------------------------------------------------------- */
+
+/* An answer, lit up. Add class="fragment sunrise" to reveal it on the next click. */
+.answer {
+  align-items: baseline;
+  background: var(--color-sun);
+  border-radius: var(--radius);
+  color: var(--color-night);
+  display: flex;
+  gap: 28px;
+  padding: 30px 44px;
+}
+
+.answer__tag {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 0.9em;
+  font-weight: 700;
+}
+
+/* Sunrise fragment: light sweeps in from the right, the way a waxing Moon fills in. */
+.reveal .slides section .fragment.sunrise {
+  clip-path: inset(0 0 0 100%);
+  opacity: 1;
+  transition: clip-path 0.9s cubic-bezier(0.65, 0, 0.35, 1), visibility 0s linear 0.9s;
+}
+
+.reveal .slides section .fragment.sunrise.visible {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.9s cubic-bezier(0.65, 0, 0.35, 1), visibility 0s;
+}
+
+/* Choices ---------------------------------------------------------------------------------- */
+
+/*
+  Options with a letter each. Give the right one class="choice fragment is-correct":
+  on that click it lights up and the others fade back.
+*/
+.choices {
+  display: grid;
+  gap: 48px;
+  grid-template-columns: repeat(var(--choices, 4), minmax(0, 1fr));
+}
+
+.choice {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  transition: opacity 0.5s ease;
+}
+
+/* Choices with words: the letter sits in front of the text. */
+.choices--text .choice {
+  align-items: center;
+  flex-direction: row;
+  gap: 28px;
+  line-height: 1.3;
+}
+
+.choice__letter,
+.vote__letter {
+  align-items: center;
+  background: var(--color-day);
+  border: var(--rule) solid var(--color-night);
+  border-radius: 50%;
+  display: flex;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 50px;
+  font-weight: 700;
+  height: 88px;
+  justify-content: center;
+  line-height: 1;
+  transition: background-color 0.4s ease;
+  width: 88px;
+}
+
+.reveal .slides section .fragment.is-correct {
+  opacity: 1;
+  visibility: inherit;
+}
+
+.reveal .slides section .fragment.is-correct.visible .choice__letter {
+  background: var(--color-sun);
+}
+
+.choices:has(.is-correct.visible) .choice:not(.is-correct) {
+  opacity: 0.35;
+}
+
+/* Votes --------------------------------------------------------------------------------- */
+
+.vote {
+  display: flex;
+  flex-direction: column;
+}
+
+.vote__row {
+  align-items: center;
+  border-top: 3px solid var(--color-haze);
+  display: grid;
+  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) 400px 110px;
+  min-height: 132px;
+  padding: 18px 0;
+}
+
+.vote__choice {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  gap: 32px;
+  padding: 0 24px 0 0;
+  text-align: left;
+}
+
+.vote__choice:hover .vote__letter {
+  background: var(--color-sun);
+}
+
+.vote__choice:active .vote__letter {
+  transform: scale(0.94);
+}
+
+.vote__tally {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+}
+
+/* Many votes: the marks get smaller rather than run out of the row. */
+.tally {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.tally__mark {
+  stroke: var(--color-night);
+  stroke-linecap: round;
+  stroke-width: 7px;
+}
+
+.tally__mark.is-new {
+  animation: tally-draw 0.3s ease-out both;
+  stroke-dasharray: 1;
+}
+
+@keyframes tally-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.vote__count {
+  font-family: var(--font-display);
+  font-size: 68px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+}
+
+.vote__foot {
+  align-items: center;
+  border-top: 3px solid var(--color-haze);
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+  padding-top: 28px;
+}
+
+/* The eight phases ------------------------------------------------------------------- */
+
+.phases {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.phase {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.phase .moon {
+  --moon-size: 100%;
+}
+
+.phase__name {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.phase__day {
+  color: var(--color-dusk);
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 600;
+}
+
+/* Word meanings, in a row. */
+.words {
+  display: grid;
+  gap: 24px 56px;
+  grid-template-columns: repeat(var(--words, 4), minmax(0, 1fr));
+}
+
+.words div {
+  border-top: var(--rule) solid var(--color-night);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 18px;
+}
+
+.words dt {
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.words dd {
+  font-size: 38px;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Two things side by side ----------------------------------------------------------------- */
+
+.versus {
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 0;
+}
+
+.versus > div {
+  border-top: 12px solid var(--versus-color, var(--color-sun));
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 22px;
+}
+
+.versus > div + div {
+  --versus-color: var(--color-night);
+}
+
+.versus .art {
+  height: 170px;
+  width: auto;
+}
+
+/* Timer ---------------------------------------------------------------------------------- */
+
+.timer {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.timer__time {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+/* lesson-kit.js puts each character in a fixed-width cell. */
+.timer__digit,
+.timer__colon {
+  display: inline-block;
+  text-align: center;
+  width: 0.6em;
+}
+
+.timer__colon {
+  width: 0.32em;
+}
+
+.timer__track {
+  background: var(--color-haze);
+  border-radius: 12px;
+  height: 24px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.timer__track span {
+  background: var(--color-sky);
+  display: block;
+  height: 100%;
+  transition: width 0.2s linear;
+  width: calc(var(--timer-left, 1) * 100%);
+}
+
+.timer.is-done .timer__track span {
+  background: var(--color-sun);
+}
+
+.timer__status {
+  font-size: var(--text-lead);
+  font-weight: 750;
+  min-height: 1.3em;
+}
+
+.timer__buttons {
+  display: flex;
+  gap: 24px;
+}
+
+/* Exit ticket ------------------------------------------------------------------------------ */
+
+.tickets {
+  counter-reset: ticket;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.ticket {
+  counter-increment: ticket;
+  display: grid;
+  gap: 16px 32px;
+  grid-template-columns: 76px minmax(0, 1fr);
+}
+
+.ticket::before {
+  align-items: center;
+  border: var(--rule) solid var(--color-night);
+  border-radius: 50%;
+  content: counter(ticket);
+  display: flex;
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 700;
+  grid-row: span 2;
+  height: 76px;
+  justify-content: center;
+  line-height: 1;
+  width: 76px;
+}
+
+.ticket__question {
+  font-size: 46px;
+  font-weight: 750;
+  line-height: 1.3;
+  padding-top: 8px;
+}
+
+.ticket .answer {
+  font-size: 40px;
+  line-height: 1.35;
+  padding: 18px 32px;
+}
+
+/* Moon diary ---------------------------------------------------------------------------------- */
+
+/* A grid pupils fill in at home. It prints as a handout. */
+.diary {
+  border: 3px solid var(--color-night);
+  display: grid;
+  grid-template-columns: repeat(var(--nights, 7), minmax(0, 1fr));
+}
+
+.diary__night {
+  align-items: center;
+  border-left: 3px solid var(--color-night);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 12px 20px;
+}
+
+.diary__night:first-child {
+  border-left: 0;
+}
+
+.diary__night strong {
+  font-size: 32px;
+}
+
+.diary__circle {
+  aspect-ratio: 1;
+  border: 3px dashed var(--color-dusk);
+  border-radius: 50%;
+  width: 78%;
+}
+
+.diary__line {
+  border-bottom: 2px solid var(--color-dusk);
+  color: var(--color-dusk);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  padding-bottom: 30px;
+  width: 100%;
+}
+
+/* Title page ------------------------------------------------------------------------------ */
+
+.cover {
+  align-items: center;
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.cover__text {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+.cover__moon {
+  --moon-size: 640px;
+}
+
+/* A picture on the title page, cut into a disc like the Moon. */
+.cover__picture {
+  aspect-ratio: 1;
+  border: 3px solid var(--color-night);
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
+  width: 640px;
+}
+
+/* Key fact: one sentence, large, in the middle of the slide. */
+.key-fact {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 44px;
+  justify-content: center;
+}
+
+.statement {
+  font-family: var(--font-display);
+  font-size: 128px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+/* Picture with a caption ------------------------------------------------------------------- */
+
+.picture {
+  display: grid;
+  flex: 1;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+}
+
+.picture img,
+.picture svg {
+  display: block;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  width: 100%;
+}
+
+.picture figcaption {
+  align-items: baseline;
+  background: var(--color-day);
+  display: flex;
+  gap: 40px;
+  padding: 36px 128px 44px;
+}
+
+/* The Moon model ------------------------------------------------------------------------ */
+
+.model {
+  display: grid;
+  flex: 1;
+  gap: 24px 56px;
+  grid-template-areas:
+    "head head"
+    "top sky"
+    "controls sky";
+  grid-template-columns: 900px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 0;
+}
+
+.model__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  grid-area: head;
+}
+
+.model__head .heading {
+  font-size: 80px;
+  max-width: none;
+}
+
+.model__top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  grid-area: top;
+  min-height: 0;
+}
+
+.model__top svg {
+  cursor: pointer;
+  display: block;
+  flex: 1;
+  min-height: 0;
+  touch-action: none;
+  width: 100%;
+}
+
+.model__top figcaption,
+.model__sky figcaption {
+  font-size: var(--text-label);
+  margin-top: auto;
+}
+
+.model__top figcaption {
+  padding-left: 112px;
+}
+
+/* The sky as seen from Earth: darker than the slide, so the Moon's night side shows. */
+.model__sky {
+  background: var(--color-night-deep);
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  grid-area: sky;
+  padding: 40px 52px;
+}
+
+.model__sky .moon {
+  --moon-size: 360px;
+
+  align-self: center;
+  margin: 16px 0;
+}
+
+.model__phase {
+  font-family: var(--font-display);
+  font-size: 76px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.model__facts {
+  color: var(--color-sun);
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 700;
+}
+
+.model__controls {
+  align-items: start;
+  display: grid;
+  gap: 32px;
+  grid-area: controls;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.model__controls .btn {
+  min-width: 270px;
+}
+
+/* Top view drawing. */
+.orbit-view .sun { fill: var(--color-sun); }
+.orbit-view .sun-glow { fill: var(--color-sun); opacity: 0.22; }
+.orbit-view .ray { stroke: var(--color-sun); stroke-linecap: round; stroke-width: 6px; }
+.orbit-view .ray-head { fill: var(--color-sun); }
+.orbit-view .orbit { fill: none; stroke: var(--color-night-line); stroke-dasharray: 2 14; stroke-linecap: round; stroke-width: 4px; }
+.orbit-view .earth-day { fill: var(--color-earth); }
+.orbit-view .earth-night { fill: var(--color-earth-night); }
+.orbit-view .lit { fill: var(--color-moon-lit); }
+.orbit-view .dark { fill: var(--color-moon-dark); }
+.orbit-view .edge { fill: none; stroke: var(--color-night-line); stroke-opacity: 0.6; stroke-width: 2px; }
+.orbit-view .sight { stroke: var(--color-day); stroke-dasharray: 10 10; stroke-opacity: 0.75; stroke-width: 3px; }
+.orbit-view .facing { fill: none; stroke: var(--color-day); stroke-linecap: round; stroke-width: 7px; }
+.orbit-view .grab { cursor: grab; fill: transparent; }
+.orbit-view text { fill: var(--color-night-soft); font-family: var(--font-body); font-size: 32px; font-weight: 700; }
+.orbit-view .label-strong { fill: var(--color-day); }
+.orbit-view .halo { paint-order: stroke; stroke: var(--color-night); stroke-linejoin: round; stroke-width: 10px; }
+.orbit-view .label-sun { fill: var(--color-sun); }
+
+/* Month slider: the track is bright where the Moon is full, dark where it is new. */
+.month {
+  --thumb: 56px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.month input[type="range"] {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 64px;
+  margin: 0;
+  width: 100%;
+}
+
+.month input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(90deg, var(--color-moon-dark), var(--color-sun) 50%, var(--color-moon-dark));
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-night-line) 60%, transparent);
+  height: 14px;
+}
+
+.month input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  background: var(--color-day);
+  border: 6px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--color-day);
+  height: var(--thumb);
+  margin-top: calc((14px - var(--thumb)) / 2);
+  width: var(--thumb);
+}
+
+.month input[type="range"]::-moz-range-track {
+  background: linear-gradient(90deg, var(--color-moon-dark), var(--color-sun) 50%, var(--color-moon-dark));
+  border-radius: 7px;
+  height: 14px;
+}
+
+.month input[type="range"]::-moz-range-thumb {
+  background: var(--color-day);
+  border: 6px solid var(--color-night);
+  border-radius: 50%;
+  height: var(--thumb);
+  width: var(--thumb);
+}
+
+/* A button under the slider for each phase; it jumps the model there. */
+.month__ticks {
+  height: 60px;
+  position: relative;
+}
+
+.month__ticks button {
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  left: calc(var(--thumb) / 2 + (100% - var(--thumb)) * var(--at));
+  line-height: 0;
+  padding: 6px;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.month__ticks .moon {
+  --moon-size: 46px;
+}
+
+.month__ticks button:hover .moon__edge {
+  stroke: var(--color-day);
+  stroke-opacity: 1;
+  stroke-width: 4px;
+}
+
+/* Print view and PDF ------------------------------------------------------------------------ */
+
+/* Reveal's print view forces display: block on slides; keep the flex layout. */
+html.reveal-print .reveal .slides section.slide {
+  display: flex !important;
+}
+
+/* Print shows each slide as it ends: fragments that fade out on the way are left out. */
+html.reveal-print .reveal .fragment.fade-out,
+html.reveal-print .reveal .fragment.fade-in-then-out {
+  display: none !important;
+}
+
+/* Buttons that only work live keep their place on paper but are not printed. */
+html.reveal-print .reveal .live-only {
+  visibility: hidden !important;
+}
+
+/* Reduced motion ---------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal *,
+  .reveal *::before,
+  .reveal *::after {
+    animation-delay: 0s !important;
+    animation-duration: 1ms !important;
+    transition-delay: 0s !important;
+    transition-duration: 1ms !important;
+  }
+}

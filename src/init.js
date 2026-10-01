@@ -1,10 +1,17 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { copyDirectory, pathExists } = require("./fs-utils");
+const { SHARED_DIR, resolveTemplate } = require("./templates");
 
 async function initDeck(target = ".", options = {}) {
   const root = path.resolve(target);
-  const templateRoot = path.resolve(__dirname, "..", "template");
+  const template = resolveTemplate(options.template);
+
+  for (const dir of [SHARED_DIR, template.dir]) {
+    if (!(await pathExists(dir))) {
+      throw new Error(`Template directory not found: ${dir}`);
+    }
+  }
 
   await fs.mkdir(root, { recursive: true });
   const entries = await fs.readdir(root);
@@ -12,20 +19,16 @@ async function initDeck(target = ".", options = {}) {
     throw new Error(`Refusing to initialize ${root} because it is not empty. Use --force to overwrite matching files.`);
   }
 
-  if (!(await pathExists(templateRoot))) {
-    throw new Error(`Template directory not found: ${templateRoot}`);
-  }
-
-  await copyDirectory(templateRoot, root, {
-    skip(entry) {
-      return entry.name === "node_modules" || entry.name === "dist";
-    }
-  });
+  // Files every deck shares first, then the chosen deck. The deck wins where both have a file.
+  const skip = (entry) => entry.name === "node_modules" || entry.name === "dist";
+  await copyDirectory(SHARED_DIR, root, { skip });
+  await copyDirectory(template.dir, root, { skip });
   await restoreGitignore(root);
   await stampPackageVersion(root);
 
   return {
-    deckDir: root
+    deckDir: root,
+    template: template.name
   };
 }
 

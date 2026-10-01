@@ -4,6 +4,6 @@ coverage/
 *.log
 *.tmp
 template/dist/
-template/*.pdf
+template/**/*.pdf
 test/
 prd-rough.md

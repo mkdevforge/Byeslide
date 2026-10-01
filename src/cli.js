@@ -7,6 +7,8 @@ const { bundleDeck, formatBytes } = require("./bundle");
 const { checkDeck, exportPdf, installBrowsers } = require("./browser");
 const { loadConfig } = require("./config");
 const { initDeck } = require("./init");
+const { pickTemplate } = require("./prompt");
+const { DEFAULT_TEMPLATE, listTemplates } = require("./templates");
 const { previewDeck } = require("./preview");
 const { listHtmlFiles, toPosixPath } = require("./fs-utils");
 
@@ -39,6 +41,8 @@ async function main(argv = process.argv.slice(2)) {
       return runBundle(parsed);
     case "patterns":
       return runPatterns(parsed);
+    case "templates":
+      return runTemplates();
     case "install-browsers":
       return runInstallBrowsers(parsed);
     default:
@@ -48,10 +52,35 @@ async function main(argv = process.argv.slice(2)) {
 
 async function runInit(parsed) {
   const target = parsed.positionals[0] || ".";
+  let template = parsed.options.template;
+  if (template === true) {
+    throw new Error(`--template needs a name: ${listTemplates().map((item) => item.name).join(", ")}.`);
+  }
+  if (!template) {
+    if (process.stdin.isTTY && process.stdout.isTTY) {
+      template = await pickTemplate(listTemplates());
+    } else {
+      // No person to ask, for example an agent or a script: never wait for input.
+      template = DEFAULT_TEMPLATE;
+      console.log(`Using the ${template} template. Choose another with --template <name>; byeslide templates lists them.`);
+    }
+  }
+
   const result = await initDeck(target, {
-    force: Boolean(parsed.options.force)
+    force: Boolean(parsed.options.force),
+    template
   });
-  console.log(`Initialized Byeslide deck in ${result.deckDir}`);
+  console.log(`Created ${result.deckDir} from the ${result.template} template.`);
+  return 0;
+}
+
+function runTemplates() {
+  const templates = listTemplates();
+  const width = Math.max(...templates.map((template) => template.name.length));
+  for (const template of templates) {
+    const suffix = template.name === DEFAULT_TEMPLATE ? " (default)" : "";
+    console.log(`${template.name.padEnd(width)}  ${template.description}${suffix}`);
+  }
   return 0;
 }
 
@@ -231,7 +260,8 @@ function printHelp() {
 Usage:
   byeslide --version
   byeslide version
-  byeslide init [dir] [--force]
+  byeslide init [dir] [--template tour|report|lesson] [--force]
+  byeslide templates
   byeslide build [dir] [--out dist] [--no-clean]
   byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
   byeslide check [dir] [--json] [--out dist] [--no-clean]
