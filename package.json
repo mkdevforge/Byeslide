@@ -15,6 +15,10 @@
   "files": [
     "src",
     "template",
+    "!template/dist",
+    "!template/node_modules",
+    "!template/**/*.pdf",
+    "!template/**/*.log",
     "README.md"
   ],
   "scripts": {
