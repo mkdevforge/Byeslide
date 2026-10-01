@@ -207,7 +207,6 @@ test("a bundled deck runs offline and matches the built deck", async (t) => {
       window.scrollTo(0, 100);
       return window.scrollY;
     }), 100);
-    await frame.evaluate(() => document.getElementById("section-2").scrollIntoView());
 
     // Video plays from the bundle.
     await goToSlide(page, 3);
@@ -321,6 +320,10 @@ async function goToSlide(page, index) {
 
 async function settledScreenshot(page, index) {
   await goToSlide(page, index);
+  // Both decks show iframes from the top, so the screenshots compare the same view.
+  for (const frame of page.frames().filter((item) => item !== page.mainFrame())) {
+    await frame.evaluate(() => window.scrollTo(0, 0));
+  }
   await page.evaluate(async () => {
     await document.fonts.ready;
     await Promise.all(Array.from(document.querySelectorAll("video")).map((video) => new Promise((resolve) => {
@@ -395,7 +398,9 @@ async function makeFixtureDeck(options = {}) {
   controls: false,
   progress: false,
   hash: false,
-  plugins: ["notes"]
+  plugins: ["notes"],
+  // Slides further than one step away stay hidden, so the iframe slide loads while hidden.
+  reveal: { viewDistance: 1 }
 };
 `);
   await write("theme.css", "@font-face { font-family: \"Fixture Mono\"; src: url(\"assets/fonts/fixture.woff2\") format(\"woff2\"); }\n:root { --ink: #1d2657; }\n");

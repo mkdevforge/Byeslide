@@ -1046,9 +1046,12 @@ function headInsertionPoint(document) {
   return doctype?.sourceCodeLocation?.endOffset ?? 0;
 }
 
+// Scrolls the iframe to its anchor once. An iframe on a slide that Reveal has
+// not shown yet has no layout when it loads, so the script also waits for the
+// first resize, which comes when the slide appears.
 function scrollScript(anchor) {
   const id = JSON.stringify(anchor).replace(/</g, "\\u003c");
-  return `<script>addEventListener("load", () => { const target = document.getElementById(${id}) || document.getElementsByName(${id})[0]; if (target) target.scrollIntoView(); });</script>`;
+  return `<script>(() => { let done = false; const go = () => { const target = document.getElementById(${id}) || document.getElementsByName(${id})[0]; if (done || !target || !innerHeight) return; target.scrollIntoView(); done = true; removeEventListener("resize", go); }; addEventListener("load", go); addEventListener("resize", go); })();</script>`;
 }
 
 function decodeHash(hash) {
