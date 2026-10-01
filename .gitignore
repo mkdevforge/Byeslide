@@ -11,4 +11,4 @@ Thumbs.db
 .env.*
 !.env.example
 template/dist/
-template/*.pdf
+template/**/*.pdf

@@ -1,0 +1,32 @@
+<section class="slide">
+  <h2 class="headline">Name the risk that is both likely and severe</h2>
+  <div class="split split--center" style="--split-left: 0.9fr; --split-right: 1.1fr;">
+    <figure class="matrix" aria-label="Risks placed by likelihood and impact">
+      <p class="matrix__axis-y">Impact</p>
+      <p class="matrix__level matrix__level--y" style="grid-row: 1;">High</p>
+      <p class="matrix__level matrix__level--y" style="grid-row: 2;">Medium</p>
+      <p class="matrix__level matrix__level--y" style="grid-row: 3;">Low</p>
+      <!-- Nine cells, top row first: high impact, likelihood low to high. Move a risk by moving its dot. -->
+      <div class="matrix__cell" style="--heat: 2;"></div>
+      <div class="matrix__cell" style="--heat: 3;"><span class="risk-dot">2</span></div>
+      <div class="matrix__cell" style="--heat: 4;"><span class="risk-dot is-key">1</span></div>
+      <div class="matrix__cell" style="--heat: 1;"></div>
+      <div class="matrix__cell" style="--heat: 2;"><span class="risk-dot">3</span></div>
+      <div class="matrix__cell" style="--heat: 3;"></div>
+      <div class="matrix__cell" style="--heat: 0;"></div>
+      <div class="matrix__cell" style="--heat: 1;"></div>
+      <div class="matrix__cell" style="--heat: 2;"></div>
+      <p class="matrix__level matrix__level--x" style="grid-column: 3;">Low</p>
+      <p class="matrix__level matrix__level--x" style="grid-column: 4;">Medium</p>
+      <p class="matrix__level matrix__level--x" style="grid-column: 5;">High</p>
+      <p class="matrix__axis-x">Likelihood</p>
+    </figure>
+    <ol class="risks">
+      <li><span class="risk-dot is-key">1</span><strong>The risk, as what could happen</strong><p>Owner. What we are doing about it.</p></li>
+      <li><span class="risk-dot">2</span><strong>Another risk</strong><p>Owner. What we are doing about it.</p></li>
+      <li><span class="risk-dot">3</span><strong>A third risk</strong><p>Owner. What we are doing about it.</p></li>
+    </ol>
+  </div>
+  <p class="source">Source: risk register, and the date it was last reviewed.</p>
+  <aside class="notes">Up to six risks fit. --heat on each cell shades it from 0 to 4.</aside>
+</section>

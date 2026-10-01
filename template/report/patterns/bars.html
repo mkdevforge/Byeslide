@@ -1,0 +1,25 @@
+<section class="slide">
+  <h2 class="headline">A headline that names the part that beat or missed plan</h2>
+  <!-- No script: --max is the right end of the scale. Each row sets --actual and --plan in the same unit. -->
+  <div class="bars" style="--max: 20;">
+    <div class="bars__head">
+      <span>Part</span><span>Actual, with plan</span><span>Actual</span><span>Against plan</span><span>On last year</span>
+    </div>
+    <div class="bars__row" style="--actual: 12; --plan: 15;">
+      <p class="bars__name">First part<span>What it includes</span></p>
+      <div class="bars__track"><i class="bars__actual"></i><i class="bars__gap"></i><i class="bars__plan" data-label="Plan 15"></i></div>
+      <p class="bars__value">12</p>
+      <p><span class="status is-behind">3 below</span></p>
+      <p>+4%</p>
+    </div>
+    <div class="bars__row" style="--actual: 9; --plan: 8;">
+      <p class="bars__name">Second part<span>What it includes</span></p>
+      <div class="bars__track"><i class="bars__actual"></i><i class="bars__plan" data-label="Plan 8"></i></div>
+      <p class="bars__value">9</p>
+      <p><span class="status is-ahead">1 above</span></p>
+      <p>+12%</p>
+    </div>
+  </div>
+  <p class="source">Source: name the system and the date of the data.</p>
+  <aside class="notes">bars__gap hatches a shortfall in the needle color. Use it on the one row that matters, and only when actual is below plan.</aside>
+</section>

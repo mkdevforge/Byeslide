@@ -1,0 +1,31 @@
+<section class="slide">
+  <div class="column">
+    <h2 class="heading">What do you think?</h2>
+    <p class="lead">A question with more than one idea pupils might hold.</p>
+  </div>
+  <!-- Each click on a choice adds a vote; shift-click or right-click takes one away. Add or remove rows freely. -->
+  <div class="vote" data-vote data-prevent-swipe>
+    <div class="vote__row" data-vote-row>
+      <button class="vote__choice" type="button" data-vote-option><span class="vote__letter">A</span>The first idea</button>
+      <span class="vote__tally" data-vote-tally></span>
+      <output class="vote__count" data-vote-count>0</output>
+    </div>
+    <div class="vote__row" data-vote-row>
+      <button class="vote__choice" type="button" data-vote-option><span class="vote__letter">B</span>The second idea</button>
+      <span class="vote__tally" data-vote-tally></span>
+      <output class="vote__count" data-vote-count>0</output>
+    </div>
+    <div class="vote__foot">
+      <p class="small soft">Hands up for A or B.</p>
+      <button class="btn btn--quiet live-only" type="button" data-vote-reset>Clear votes</button>
+    </div>
+  </div>
+  <script src="./assets/lesson-kit.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      window.LessonKit?.setup(slide);
+    })();
+  </script>
+  <aside class="notes">Click a choice once for each raised hand. Do not say which idea is right yet; come back to the vote later.</aside>
+</section>

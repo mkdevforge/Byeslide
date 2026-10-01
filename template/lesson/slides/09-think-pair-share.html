@@ -1,0 +1,31 @@
+<section class="slide">
+  <div class="split" style="--split-left: 1.15fr; --split-right: 0.85fr;">
+    <div class="column">
+      <h2 class="heading">Think, pair, share</h2>
+      <p class="lead">Your friend says: "The Moon has phases because Earth's shadow covers part of it." What would you tell them?</p>
+      <ol class="steps push-down">
+        <li><span><strong>Think</strong> on your own.</span></li>
+        <li><span><strong>Pair:</strong> explain your answer to a partner.</span></li>
+        <li><span><strong>Share</strong> with the class.</span></li>
+      </ol>
+    </div>
+    <!-- data-seconds sets the length. data-timer-sound="off" turns off the chime at the end. -->
+    <div class="panel timer" data-timer data-seconds="120" data-prevent-swipe>
+      <output class="timer__time" data-timer-display>2:00</output>
+      <div class="timer__track"><span data-timer-bar></span></div>
+      <div class="timer__buttons live-only">
+        <button class="btn" type="button" data-timer-start>Start</button>
+        <button class="btn btn--quiet" type="button" data-timer-reset>Reset</button>
+      </div>
+      <p class="timer__status" data-timer-status aria-live="polite"></p>
+    </div>
+  </div>
+  <script src="./assets/lesson-kit.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      window.LessonKit?.setup(slide);
+    })();
+  </script>
+  <aside class="notes">About 5 minutes. Read the friend's claim aloud. Press Start: the timer runs for 2 minutes and plays a soft chime at the end. Give about 30 seconds to think alone, then tell pupils to turn to a partner. Walk around and listen for the words "sunlit half", "faces Earth" and "full moon". A strong answer: Earth's shadow only reaches the Moon when Earth is between the Sun and the Moon, at full moon, and that is a lunar eclipse. The phases happen because we see different amounts of the Moon's sunlit half. Take two or three answers when time is up. The timer keeps running if you change slides. Reset sets it back to 2:00.</aside>
+</section>

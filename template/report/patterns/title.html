@@ -1,0 +1,27 @@
+<section class="slide slide--title">
+  <header class="brand">
+    <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+      <path class="brand__dial" d="M13.6 50.4A26 26 0 1 1 50.4 50.4"/>
+      <path class="brand__needle" d="M32 32 46.1 17.9"/>
+      <circle class="brand__hub" cx="32" cy="32" r="6"/>
+    </svg>
+    <span class="brand__name">Company name</span>
+  </header>
+  <div class="cover">
+    <h1 class="cover__title"><span class="cover__quarter">Q4 2026</span> <span class="cover__name">Name the review</span></h1>
+  </div>
+  <!-- --days: days in the period. Each month label's --start is its first day, counted from 0. -->
+  <div class="quarter-scale" style="--days: 92;" aria-hidden="true">
+    <div class="quarter-scale__ticks"></div>
+    <div class="quarter-scale__track"></div>
+    <div class="quarter-scale__fill"></div>
+    <span class="quarter-scale__month" style="--start: 0;">October</span>
+    <span class="quarter-scale__month" style="--start: 31;">November</span>
+    <span class="quarter-scale__month" style="--start: 61;">December</span>
+    <span class="quarter-scale__needle"></span>
+  </div>
+  <footer class="cover__meta">
+    <p>Presenter name and role<br>Audience, date of the meeting</p>
+  </footer>
+  <aside class="notes">Say what period this covers, what comes first and what you will ask for at the end.</aside>
+</section>

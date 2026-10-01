@@ -16,7 +16,8 @@
     "src",
     "template",
     "!template/dist",
-    "!template/node_modules",
+    "!template/*/dist",
+    "!template/**/node_modules",
     "!template/**/*.pdf",
     "!template/**/*.log",
     "README.md"
@@ -27,10 +28,10 @@
     "release:patch": "node scripts/release.js patch",
     "release:minor": "node scripts/release.js minor",
     "release:major": "node scripts/release.js major",
-    "build:template": "node src/cli.js build template",
-    "check:template": "node src/cli.js check template",
+    "build:template": "node scripts/examples.js build",
+    "check:template": "node scripts/examples.js check",
     "install:browsers": "node src/cli.js install-browsers",
-    "preview:template": "node src/cli.js preview template"
+    "preview:template": "node src/cli.js preview template/tour"
   },
   "dependencies": {
     "es-module-lexer": "^3.0.2",

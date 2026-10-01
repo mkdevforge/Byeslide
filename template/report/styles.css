@@ -1,0 +1,1207 @@
+/*
+  Acme Corp report styles.
+
+  The look is a measuring instrument: a white dial, anthracite type and marks,
+  gray scales, and one orange needle. On each slide the needle points at the one
+  number or point the slide is about. Nothing else is orange, so the eye knows
+  where to go, on the screen and in the PDF.
+
+  The needle has one shape per context:
+  - a readout: an orange track over the number, with a pointer (.readout.is-key)
+  - a chart: an orange line down to the data point (.chart-note)
+  - a row or list item: an orange bar on its left edge (.is-key)
+*/
+
+/* Page and Reveal chrome ------------------------------------------------- */
+
+.reveal-viewport {
+  background-color: var(--color-surface);
+}
+
+.reveal {
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: var(--line-body);
+}
+
+/* :where() keeps these resets at zero specificity, so any class can override them. */
+.reveal :where(h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote) {
+  margin: 0;
+}
+
+.reveal :where(ul, ol) {
+  list-style: none;
+  padding: 0;
+}
+
+.reveal :where(table) {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.reveal :where(strong, b, dt, th) {
+  font-weight: 650;
+}
+
+.reveal .controls {
+  color: var(--color-ink-soft);
+}
+
+.reveal .progress {
+  color: var(--color-compare);
+  height: 4px;
+}
+
+.reveal ::selection {
+  background: var(--color-panel);
+  color: var(--color-ink);
+}
+
+/* Slide frame ------------------------------------------------------------- */
+
+.reveal .slides section,
+.reveal .slides section *,
+.reveal .slides section *::before,
+.reveal .slides section *::after {
+  box-sizing: border-box;
+}
+
+/* deck.config.js sets Reveal's display option to flex; stack slide content top to bottom. */
+.reveal .slides section[data-byeslide-source] {
+  flex-direction: column;
+}
+
+.reveal .slides section.slide {
+  --byeslide-slide-padding: var(--slide-padding);
+
+  color: var(--color-ink);
+  display: flex;
+  flex-direction: column;
+  gap: var(--slide-gap);
+  overflow: hidden;
+  padding: var(--slide-padding);
+}
+
+/* Full-bleed slides put their own content at the edges. */
+.reveal .slides section.slide--bleed {
+  --byeslide-slide-padding: 0px;
+
+  padding: 0;
+}
+
+/* Type ---------------------------------------------------------------------- */
+
+/* The headline states the finding as a sentence; the slide body proves it. */
+.headline {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--line-heading);
+  max-width: 32ch;
+  text-wrap: balance;
+}
+
+.lead {
+  color: var(--color-ink-soft);
+  font-size: var(--text-lead);
+  line-height: 1.22;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+.body-copy {
+  font-size: var(--text-body);
+  line-height: var(--line-body);
+  max-width: 40ch;
+  text-wrap: pretty;
+}
+
+.small {
+  font-size: var(--text-small);
+  line-height: 1.35;
+}
+
+.soft {
+  color: var(--color-ink-soft);
+}
+
+/* Figures that line up in columns. Big standalone numbers keep proportional figures. */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Every data slide names its source, so the PDF can be read without a speaker. */
+.source {
+  color: var(--color-ink-soft);
+  font-size: var(--text-note);
+  line-height: 1.3;
+  margin-top: auto;
+  max-width: 110ch;
+}
+
+/* Headline with something beside it, such as a readout. The headline keeps its place at the top. */
+.head {
+  align-items: start;
+  display: grid;
+  gap: var(--gutter);
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Readouts: a number on a scale ---------------------------------------------- */
+
+.readouts {
+  display: grid;
+  gap: var(--gutter);
+  grid-template-columns: repeat(var(--readouts, 4), minmax(0, 1fr));
+}
+
+.readout {
+  border-top: var(--track) solid var(--color-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 30px;
+  position: relative;
+}
+
+.readout__value {
+  font-size: var(--text-readout);
+  font-stretch: var(--stretch-readout);
+  font-weight: 640;
+  letter-spacing: -0.01em;
+  line-height: var(--line-tight);
+  white-space: nowrap;
+}
+
+.readout__label {
+  font-size: var(--text-body);
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.readout__detail {
+  color: var(--color-ink-soft);
+  font-size: var(--text-body);
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+/* The needle: the readout that matters gets an orange track and a pointer. */
+.readout.is-key {
+  border-top-color: var(--color-accent);
+}
+
+.readout.is-key::before {
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: "";
+  height: 24px;
+  left: 0;
+  position: absolute;
+  top: calc(-1 * var(--track) - 30px);
+  width: 30px;
+}
+
+.readout--compact {
+  min-width: 400px;
+}
+
+.readout--compact .readout__value {
+  font-size: 104px;
+}
+
+/* A row or list item that matters: an orange bar on its left edge. */
+.reveal .is-key-row {
+  box-shadow: inset var(--track) 0 0 var(--color-accent);
+}
+
+/* Ahead or behind: a triangle and a word, never color alone. */
+.status {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.36em;
+  white-space: nowrap;
+}
+
+.status::before {
+  background: var(--color-compare);
+  content: "";
+  flex: none;
+  height: 0.16em;
+  width: 0.6em;
+}
+
+.status.is-ahead::before {
+  background: var(--color-good);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  height: 0.52em;
+}
+
+.status.is-behind::before {
+  background: var(--color-bad);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  height: 0.52em;
+}
+
+/* Layouts ------------------------------------------------------------------- */
+
+.split {
+  align-items: start;
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: minmax(0, var(--split-left, 1fr)) minmax(0, var(--split-right, 1fr));
+  min-height: 0;
+}
+
+.split--center {
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+.push-down {
+  margin-top: auto;
+}
+
+/* Title ------------------------------------------------------------------------ */
+
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+}
+
+.brand__mark {
+  display: block;
+  flex: none;
+  height: 64px;
+  width: 64px;
+}
+
+.brand__dial {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-linecap: round;
+  stroke-width: 7;
+}
+
+.brand__needle {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-linecap: round;
+  stroke-width: 6;
+}
+
+.brand__hub {
+  fill: var(--color-ink);
+}
+
+.brand__name {
+  font-size: 40px;
+  font-stretch: var(--stretch-title);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.cover {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cover__title {
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  gap: 36px;
+}
+
+.cover__quarter {
+  font-size: var(--text-display);
+  font-stretch: var(--stretch-title);
+  letter-spacing: -0.035em;
+  line-height: 0.8;
+  margin-left: -0.05em;
+}
+
+.cover__name {
+  font-size: var(--text-h1);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.cover__meta {
+  align-items: end;
+  display: flex;
+  gap: var(--gutter);
+  justify-content: space-between;
+}
+
+.cover__meta p {
+  font-size: var(--text-body);
+  line-height: 1.3;
+}
+
+.cover__sample {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small) !important;
+  text-align: right;
+}
+
+/*
+  The quarter as a scale: one tick per day, a longer tick where each month starts.
+  Set --days to the number of days in the period. The needle sweeps to its place
+  when the slide appears; set --at (0 to 1) to stop it earlier.
+*/
+.quarter-scale {
+  --at: 1;
+
+  height: 150px;
+  position: relative;
+}
+
+/* Tiled gradients, not repeating-linear-gradient: some PDF viewers draw those as flat pink. */
+.quarter-scale__ticks {
+  background: linear-gradient(90deg, var(--color-compare) 0 2px, transparent 2px) 0 0 / calc(100% / var(--days, 92)) 100% repeat-x;
+  bottom: 52px;
+  height: 22px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.quarter-scale__track {
+  background: var(--color-rule);
+  bottom: 44px;
+  height: var(--track);
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.quarter-scale__fill {
+  background: var(--color-ink);
+  bottom: 44px;
+  height: var(--track);
+  left: 0;
+  position: absolute;
+  transform-origin: left center;
+  width: calc(var(--at) * 100%);
+}
+
+.quarter-scale__month {
+  border-left: 3px solid var(--color-ink);
+  bottom: 0;
+  font-size: var(--text-small);
+  font-weight: 600;
+  height: 96px;
+  left: calc(var(--start) / var(--days, 92) * 100%);
+  line-height: 1;
+  padding-left: 12px;
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+}
+
+.quarter-scale__needle {
+  background: var(--color-accent);
+  bottom: 44px;
+  height: 150px;
+  left: calc(var(--at) * 100%);
+  margin-left: calc(var(--needle) / -2);
+  position: absolute;
+  width: var(--needle);
+}
+
+.quarter-scale__needle::before {
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: "";
+  height: 26px;
+  left: 50%;
+  margin-left: -16px;
+  position: absolute;
+  top: -2px;
+  width: 32px;
+}
+
+.reveal .slides section.present .quarter-scale__needle {
+  animation: needle-sweep 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+.reveal .slides section.present .quarter-scale__fill {
+  animation: scale-fill 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+@keyframes needle-sweep {
+  from {
+    left: 0;
+  }
+}
+
+@keyframes scale-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Section divider ------------------------------------------------------------ */
+
+.section-mark {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 36px;
+  justify-content: center;
+}
+
+.section-mark__number {
+  border-top: var(--track) solid var(--color-ink);
+  font-size: var(--text-readout);
+  font-stretch: var(--stretch-readout);
+  font-weight: 640;
+  line-height: var(--line-tight);
+  padding-top: 30px;
+  width: 6ch;
+}
+
+.section-mark__title {
+  font-size: var(--text-h1);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+/* Statement ------------------------------------------------------------------- */
+
+.statement {
+  font-size: 84px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  max-width: 26ch;
+  text-wrap: balance;
+}
+
+.statement--fill {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Charts ------------------------------------------------------------------------ */
+
+/* The chart box: the canvas fills it, and notes are pinned on top by assets/acme-charts.js. */
+.chart {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.chart > canvas {
+  display: block;
+}
+
+/* In a .split, the chart takes the full height of its row. */
+.split > .chart {
+  align-self: stretch;
+}
+
+/* Empty fragments that step a chart script along take no space. */
+.chart > .fragment:empty {
+  position: absolute;
+}
+
+/*
+  A note pinned to a data point: an orange needle from the top of the chart down to
+  the point, with the words beside it. The chart script sets --x and --y.
+*/
+.chart-note {
+  height: var(--y, 0px);
+  left: var(--x, 0px);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 0;
+}
+
+.chart-note::before {
+  background: var(--color-accent);
+  bottom: 0;
+  content: "";
+  left: calc(var(--needle) / -2);
+  position: absolute;
+  top: 0;
+  width: var(--needle);
+}
+
+.chart-note::after {
+  background: var(--color-accent);
+  border: 5px solid var(--color-surface);
+  border-radius: 50%;
+  bottom: -15px;
+  content: "";
+  height: 30px;
+  left: -15px;
+  position: absolute;
+  width: 30px;
+}
+
+.chart-note__text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 16em;
+  position: absolute;
+  right: 26px;
+  text-align: right;
+  top: -4px;
+  width: max-content;
+}
+
+.chart-note[data-side="right"] .chart-note__text {
+  left: 26px;
+  right: auto;
+  text-align: left;
+}
+
+.chart-note__text strong {
+  font-size: var(--text-lead);
+  font-weight: 700;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.chart-note__text span {
+  color: var(--color-ink-soft);
+  font-size: var(--text-body);
+  line-height: 1.2;
+}
+
+/* Bars against plan (HTML and CSS, no script) ------------------------------------- */
+
+/*
+  Each row sets --actual and --plan; the table sets --max, the right end of the scale.
+  A bar is the actual figure, the black tick is plan.
+*/
+.bars {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+  grid-template-columns: 330px minmax(0, 1fr) 190px 250px 180px;
+  row-gap: 0;
+}
+
+.bars__head,
+.bars__row {
+  align-items: center;
+  column-gap: 40px;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+.bars__head {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1.2;
+  padding-bottom: 14px;
+}
+
+.bars__head > :nth-child(n + 3),
+.bars__row > :nth-child(n + 3) {
+  text-align: right;
+}
+
+.bars__row {
+  border-top: 2px solid var(--color-rule);
+  padding: 32px 0 18px;
+}
+
+.bars__row--total {
+  border-top: 4px solid var(--color-ink);
+  font-weight: 700;
+}
+
+.bars__name {
+  font-weight: 650;
+  line-height: 1.15;
+}
+
+.bars__name span {
+  color: var(--color-ink-soft);
+  display: block;
+  font-size: var(--text-small);
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.bars__track {
+  height: 52px;
+  position: relative;
+}
+
+.bars__actual,
+.bars__gap,
+.bars__plan {
+  bottom: 0;
+  position: absolute;
+  top: 0;
+}
+
+.bars__actual {
+  background: var(--color-ink);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  left: 0;
+  width: calc(var(--actual) / var(--max) * 100%);
+}
+
+/* Plan: a tick across the bar, with its value above it. */
+.bars__plan {
+  background: var(--color-ink);
+  bottom: -10px;
+  box-shadow: 0 0 0 3px var(--color-surface);
+  left: calc(var(--plan) / var(--max) * 100%);
+  margin-left: -3px;
+  top: -10px;
+  width: 6px;
+}
+
+.bars__plan::before {
+  bottom: calc(100% + 6px);
+  color: var(--color-ink-soft);
+  content: attr(data-label);
+  font-size: var(--text-note);
+  left: 50%;
+  line-height: 1;
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* The shortfall between actual and plan, hatched in the needle color. */
+.bars__gap {
+  background: linear-gradient(-45deg, var(--color-accent) 25%, var(--color-surface) 25% 50%, var(--color-accent) 50% 75%, var(--color-surface) 75%) 0 0 / 14px 14px;
+  box-shadow: inset 0 0 0 4px var(--color-accent);
+  left: calc(var(--actual) / var(--max) * 100%);
+  width: calc((var(--plan) - var(--actual)) / var(--max) * 100%);
+}
+
+.bars__value {
+  font-weight: 700;
+}
+
+.bars__callout {
+  border-left: var(--needle) solid var(--color-accent);
+  grid-column: 2;
+  justify-self: end;
+  line-height: 1.25;
+  margin-top: 16px;
+  max-width: 24em;
+  padding-left: 20px;
+  text-align: left !important;
+}
+
+/* KPI table ----------------------------------------------------------------------- */
+
+/* Separate borders belong to the cells, so a hidden row hides its rule too. */
+.kpi {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-body);
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+}
+
+.kpi th {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0 0 16px 36px;
+  text-align: right;
+  vertical-align: bottom;
+}
+
+.kpi td {
+  border-top: 2px solid var(--color-rule);
+  padding: 20px 0 20px 36px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.kpi :is(th, td):first-child {
+  padding-left: 32px;
+  text-align: left;
+}
+
+.kpi :is(th, td):last-child {
+  text-align: left;
+}
+
+.kpi td:first-child {
+  font-weight: 650;
+}
+
+.kpi td.kpi__actual {
+  font-weight: 700;
+}
+
+.kpi td.soft {
+  color: var(--color-ink-soft);
+}
+
+.reveal .kpi tr.is-key-row {
+  box-shadow: none;
+}
+
+.reveal .kpi tr.is-key-row td:first-child {
+  box-shadow: inset var(--track) 0 0 var(--color-accent);
+}
+
+/* Two lists side by side ------------------------------------------------------------ */
+
+.versus {
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 0;
+}
+
+.versus h3 {
+  border-bottom: var(--track) solid var(--color-ink);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  padding-bottom: 20px;
+}
+
+.versus li {
+  border-bottom: 2px solid var(--color-rule);
+  line-height: 1.28;
+  padding: 26px 0 26px 32px;
+}
+
+.versus li strong {
+  display: block;
+}
+
+.versus li span {
+  color: var(--color-ink-soft);
+}
+
+/* Risk matrix ------------------------------------------------------------------------- */
+
+.matrix {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 52px auto repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr)) auto auto;
+  height: 100%;
+  max-height: 640px;
+}
+
+.matrix__axis-y {
+  align-self: center;
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  font-weight: 600;
+  grid-column: 1;
+  grid-row: 1 / 4;
+  justify-self: center;
+  transform: rotate(180deg);
+  writing-mode: vertical-rl;
+}
+
+.matrix__axis-x {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  font-weight: 600;
+  grid-column: 3 / -1;
+  text-align: center;
+}
+
+.matrix__level {
+  align-self: center;
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  line-height: 1;
+}
+
+.matrix__level--y {
+  grid-column: 2;
+  padding-right: 12px;
+  text-align: right;
+}
+
+.matrix__level--x {
+  grid-row: 4;
+  padding-top: 8px;
+  text-align: center;
+}
+
+/* A cell. --heat from 0 to 4 shades it: darker where likelihood and impact are both high. */
+.matrix__cell {
+  align-content: center;
+  background: color-mix(in srgb, var(--color-rule) calc(var(--heat, 0) * 25%), var(--color-surface));
+  border-radius: var(--radius);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  padding: 14px;
+}
+
+.risk-dot {
+  align-items: center;
+  background: var(--color-ink);
+  border-radius: 50%;
+  color: var(--color-surface);
+  display: inline-flex;
+  flex: none;
+  font-size: 34px;
+  font-weight: 700;
+  height: 68px;
+  justify-content: center;
+  line-height: 1;
+  width: 68px;
+}
+
+.risk-dot.is-key {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.risks {
+  counter-reset: risk;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.risks li {
+  align-items: start;
+  column-gap: 26px;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  line-height: 1.22;
+}
+
+.risks .risk-dot {
+  font-size: 26px;
+  grid-row: span 2;
+  height: 52px;
+  width: 52px;
+}
+
+.risks li p {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  margin-top: 6px;
+}
+
+/* Timeline ------------------------------------------------------------------------------ */
+
+/*
+  Milestones placed by date. Set --days on .timeline to the days in the period, and
+  --day on each milestone to its day, counted from 0 on the first day. Put milestones
+  above or below the scale so their labels do not collide.
+*/
+.timeline {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.timeline__scale {
+  display: flex;
+  height: 72px;
+  left: 0;
+  margin-top: -36px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+.timeline__month {
+  align-items: center;
+  background: var(--color-panel);
+  border-left: 4px solid var(--color-surface);
+  display: flex;
+  flex: var(--length) 0 0;
+  font-size: var(--text-small);
+  font-weight: 600;
+  padding-left: 18px;
+}
+
+.timeline__month:first-child {
+  border-left: 0;
+}
+
+.milestone {
+  left: calc(var(--day) / var(--days) * 100%);
+  position: absolute;
+  width: 0;
+}
+
+.milestone--above {
+  bottom: calc(50% + 36px);
+  height: var(--stem, 150px);
+}
+
+.milestone--below {
+  height: var(--stem, 150px);
+  top: calc(50% + 36px);
+}
+
+/* The stem joins the label to the scale. */
+.milestone::before {
+  background: var(--color-ink);
+  bottom: 0;
+  content: "";
+  left: -2px;
+  position: absolute;
+  top: 0;
+  width: 4px;
+}
+
+/* The mark, on the edge of the scale next to its label. */
+.milestone::after {
+  background: var(--color-ink);
+  border: 5px solid var(--color-surface);
+  border-radius: 50%;
+  content: "";
+  height: 34px;
+  left: -17px;
+  position: absolute;
+  width: 34px;
+}
+
+.milestone--above::after {
+  bottom: -17px;
+}
+
+.milestone--below::after {
+  top: -17px;
+}
+
+.milestone.is-key::before,
+.milestone.is-key::after {
+  background: var(--color-accent);
+}
+
+.milestone.is-key::before {
+  left: calc(var(--needle) / -2);
+  width: var(--needle);
+}
+
+.milestone__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  left: 22px;
+  line-height: 1.2;
+  position: absolute;
+  width: max-content;
+  max-width: 11em;
+}
+
+.milestone--above .milestone__text {
+  top: -6px;
+}
+
+.milestone--below .milestone__text {
+  bottom: -6px;
+}
+
+.milestone__text time {
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+.milestone__text p {
+  font-weight: 600;
+}
+
+.milestone__text span {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+}
+
+/* Today: a short line under the scale, with its label. */
+.timeline__today {
+  border-left: 3px solid var(--color-ink);
+  color: var(--color-ink-soft);
+  font-size: var(--text-note);
+  left: calc(var(--day) / var(--days) * 100%);
+  line-height: 1;
+  margin-left: -1px;
+  padding: 40px 0 0 12px;
+  position: absolute;
+  top: calc(50% + 36px);
+  white-space: nowrap;
+}
+
+/* Asks: decisions with an owner and a date ---------------------------------------------- */
+
+.asks {
+  display: grid;
+  flex: 1;
+  gap: var(--gutter);
+  grid-template-columns: repeat(var(--asks, 3), minmax(0, 1fr));
+  min-height: 0;
+}
+
+.ask {
+  border-top: var(--track) solid var(--color-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 30px;
+  position: relative;
+}
+
+.ask.is-key {
+  border-top-color: var(--color-accent);
+}
+
+.ask.is-key::before {
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: "";
+  height: 24px;
+  left: 0;
+  position: absolute;
+  top: calc(-1 * var(--track) - 30px);
+  width: 30px;
+}
+
+.ask__number {
+  font-size: 96px;
+  font-stretch: var(--stretch-readout);
+  font-weight: 640;
+  line-height: var(--line-tight);
+}
+
+.ask__title {
+  font-size: var(--text-h3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.ask__meta {
+  display: grid;
+  gap: 10px 24px;
+  grid-template-columns: auto 1fr;
+  margin-top: auto;
+}
+
+.ask__meta dt {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.ask__meta dd {
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+/* Definitions --------------------------------------------------------------------------- */
+
+.defs {
+  column-gap: var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  row-gap: 30px;
+}
+
+.defs div {
+  line-height: 1.25;
+}
+
+.defs dt {
+  display: inline;
+}
+
+.defs dt::after {
+  content: ". ";
+}
+
+.defs dd {
+  color: var(--color-ink-soft);
+  display: inline;
+}
+
+/* Print view and PDF ----------------------------------------------------------------- */
+
+/* Reveal's print view forces display: block on slides; keep the flex layout. */
+html.reveal-print .reveal .slides section.slide {
+  display: flex !important;
+}
+
+/* Print shows each slide as it ends: fragments that fade out on the way are left out. */
+html.reveal-print .reveal .fragment.fade-out,
+html.reveal-print .reveal .fragment.fade-in-then-out {
+  display: none !important;
+}
+
+/* Print shows the needle where it stops, without the sweep. */
+html.reveal-print .quarter-scale__needle,
+html.reveal-print .quarter-scale__fill {
+  animation: none !important;
+}
+
+/* Page numbers, in the footer line next to the source. */
+html.reveal-print .reveal .slide-number-pdf {
+  background: none;
+  bottom: 64px;
+  color: var(--color-ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--text-note);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  padding: 0;
+  right: 112px;
+}
+
+html.reveal-print .reveal .pdf-page:has(> section.slide--title) .slide-number-pdf {
+  display: none;
+}
+
+/* Reduced motion -------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal *,
+  .reveal *::before,
+  .reveal *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 1ms !important;
+  }
+}

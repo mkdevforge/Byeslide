@@ -423,9 +423,11 @@ kbd {
 .ink-set i:nth-child(2) { background: var(--b); left: 17px; top: 9px; }
 .ink-set i:nth-child(3) { background: var(--c); left: 12.5px; top: 17px; }
 
+/* The giant wordmark is decoration. Its glyphs reach past its box, so it must not take clicks meant for the controls around it. */
 .wordmark {
   display: block;
   font-size: 27.4cqi;
+  pointer-events: none;
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 0.8;
@@ -989,6 +991,58 @@ kbd {
 }
 
 /* Starter deck gallery ------------------------------------------------------ */
+
+.deck-tabs {
+  border-bottom: 2px solid var(--text);
+  display: flex;
+  gap: 8px;
+  margin-bottom: 36px;
+  overflow-x: auto;
+}
+
+.deck-tab {
+  background: none;
+  border: 0;
+  border-bottom: 6px solid transparent;
+  color: var(--soft);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font: inherit;
+  gap: 2px;
+  margin-bottom: -2px;
+  padding: 10px 22px 14px 0;
+  text-align: left;
+}
+
+.deck-tab strong {
+  font-size: var(--step-2);
+  font-weight: 780;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.deck-tab span {
+  font-size: 0.95rem;
+}
+
+.deck-tab:hover {
+  color: var(--text);
+}
+
+.deck-tab[aria-selected="true"] {
+  border-bottom-color: var(--ink-2);
+  color: var(--text);
+}
+
+.deck-panel[hidden] {
+  display: none;
+}
+
+.deck-panel__init {
+  color: var(--soft);
+  margin-bottom: 28px;
+}
 
 .starter {
   padding-block: clamp(72px, 10vw, 150px);

@@ -13,9 +13,10 @@ const {
 } = require("../src/bundle");
 const { launchChromium } = require("../src/browser");
 const { initDeck } = require("../src/init");
+const { listTemplates } = require("../src/templates");
 const { createStaticServer } = require("../src/static-server");
 
-const templateRoot = path.resolve(__dirname, "..", "template");
+const templateRoot = path.resolve(__dirname, "..", "template", "tour");
 
 test("encodeDataUrlText escapes only what a data: URL cannot carry", () => {
   assert.equal(encodeDataUrlText("a%b#c\td\ne\rf \"g\" <h>"), "a%25b%23c%09d%0Ae%0Df \"g\" <h>");
@@ -154,14 +155,14 @@ test("bundleDeck handles Reveal attributes, deck links and an existing import ma
 });
 
 test("a bundled deck runs offline and matches the built deck", async (t) => {
-  const browser = await launchOrSkip(t);
-  if (!browser) {
-    return;
-  }
   const deckDir = await makeFixtureDeck();
   const result = await bundleDeck(deckDir);
   assert.deepEqual(result.warnings, []);
   const alone = await copyAlone(result.output);
+  const browser = await launchOrSkip(t);
+  if (!browser) {
+    return;
+  }
   const server = createStaticServer(result.outDir);
   const url = await server.start();
 
@@ -255,16 +256,17 @@ test("a bundled deck runs offline and matches the built deck", async (t) => {
   }
 });
 
-test("the starter deck bundles into one file that runs offline", async (t) => {
+for (const template of listTemplates()) {
+test(`the ${template.name} starter deck bundles into one file that runs offline`, async (t) => {
+  const deckDir = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-starter-"));
+  await initDeck(deckDir, { force: true, template: template.name });
+  const result = await bundleDeck(deckDir);
+  assert.deepEqual(result.warnings, []);
+  const alone = await copyAlone(result.output);
   const browser = await launchOrSkip(t);
   if (!browser) {
     return;
   }
-  const deckDir = await fs.mkdtemp(path.join(os.tmpdir(), "byeslide-starter-"));
-  await initDeck(deckDir, { force: true });
-  const result = await bundleDeck(deckDir);
-  assert.deepEqual(result.warnings, []);
-  const alone = await copyAlone(result.output);
 
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
@@ -279,8 +281,10 @@ test("the starter deck bundles into one file that runs offline", async (t) => {
     for (let index = 0; index < total; index += 1) {
       await goToSlide(page, index);
     }
-    assert.equal(await page.evaluate(() => document.querySelector("[data-sheets]").dataset.sheetsReady), "true");
-    assert.equal(await page.evaluate(() => Boolean(window.Chart?.getChart(document.querySelector("[data-context-chart]")))), true);
+    if (template.name === "tour") {
+      assert.equal(await page.evaluate(() => document.querySelector("[data-sheets]").dataset.sheetsReady), "true");
+      assert.equal(await page.evaluate(() => Boolean(window.Chart?.getChart(document.querySelector("[data-context-chart]")))), true);
+    }
 
     const bundleUrl = pathToFileURL(alone).href;
     assert.deepEqual(requests.filter((request) => !/^(?:data:|blob:|about:)/.test(request) && !request.startsWith(bundleUrl)), []);
@@ -289,6 +293,7 @@ test("the starter deck bundles into one file that runs offline", async (t) => {
     await browser.close();
   }
 });
+}
 
 async function launchOrSkip(t) {
   try {

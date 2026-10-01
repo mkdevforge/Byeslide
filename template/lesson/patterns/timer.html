@@ -1,0 +1,26 @@
+<section class="slide">
+  <div class="split" style="--split-left: 1.15fr; --split-right: 0.85fr;">
+    <div class="column">
+      <h2 class="heading">Think, pair, share</h2>
+      <p class="lead">The question pupils discuss, in one or two sentences.</p>
+    </div>
+    <!-- data-seconds sets the length. data-timer-sound="off" turns off the chime at the end. -->
+    <div class="panel timer" data-timer data-seconds="180" data-prevent-swipe>
+      <output class="timer__time" data-timer-display>3:00</output>
+      <div class="timer__track"><span data-timer-bar></span></div>
+      <div class="timer__buttons live-only">
+        <button class="btn" type="button" data-timer-start>Start</button>
+        <button class="btn btn--quiet" type="button" data-timer-reset>Reset</button>
+      </div>
+      <p class="timer__status" data-timer-status aria-live="polite"></p>
+    </div>
+  </div>
+  <script src="./assets/lesson-kit.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      window.LessonKit?.setup(slide);
+    })();
+  </script>
+  <aside class="notes">Press Start. The timer keeps running if you change slides, and a soft chime plays at the end.</aside>
+</section>

@@ -1,0 +1,47 @@
+@font-face {
+  font-display: block;
+  font-family: "Archivo";
+  font-stretch: 62% 125%;
+  font-weight: 100 900;
+  src: url("assets/fonts/archivo.woff2") format("woff2");
+}
+
+:root {
+  /* Fonts. One family; its width axis sets the roles. */
+  --font-sans: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --stretch-readout: 70%;
+  --stretch-title: 125%;
+
+  /* Colors. Orange is the needle: it marks the one thing to look at on a slide, and nothing else. */
+  --color-surface: #ffffff;
+  --color-panel: #eef0ed;
+  --color-rule: #d8dcd9;
+  --color-ink: #2a3136;
+  --color-ink-soft: #5d676d;
+  --color-compare: #8f989c;
+  --color-accent: #f2581c;
+  --color-good: #1f7a4d;
+  --color-bad: #b42318;
+
+  /* Layout */
+  --slide-padding: 88px 112px 64px;
+  --slide-gap: 44px;
+  --gutter: 64px;
+  --track: 8px;
+  --needle: 6px;
+  --radius: 4px;
+
+  /* Type sizes */
+  --text-note: 24px;
+  --text-small: 28px;
+  --text-body: 34px;
+  --text-lead: 42px;
+  --text-h3: 44px;
+  --text-h2: 66px;
+  --text-h1: 112px;
+  --text-readout: 136px;
+  --text-display: 290px;
+  --line-tight: 0.9;
+  --line-heading: 1.06;
+  --line-body: 1.3;
+}
