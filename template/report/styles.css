@@ -1,15 +1,16 @@
 /*
-  Acme Corp report styles.
+  Acme Corp board report styles.
 
-  The look is a measuring instrument: a white dial, anthracite type and marks,
-  gray scales, and one orange needle. On each slide the needle points at the one
-  number or point the slide is about. Nothing else is orange, so the eye knows
-  where to go, on the screen and in the PDF.
+  The genre is the board report: an action title that states the conclusion, a
+  numbered exhibit that proves it, a source under every page. Navy carries text and
+  data, blues and grays the rest, and copper marks the one point of each slide.
 
-  The needle has one shape per context:
-  - a readout: an orange track over the number, with a pointer (.readout.is-key)
-  - a chart: an orange line down to the data point (.chart-note)
-  - a row or list item: an orange bar on its left edge (.is-key)
+  The signature is a measuring scale, because Acme makes measuring instruments:
+  the cover reads the quarter on a scale, and every page carries the deck as a
+  scale (the tracker) with a needle at the current page.
+
+  Page furniture that depends on slide order (page numbers, tracker, exhibit
+  numbers, page references, Gantt dates) is filled in by assets/acme-deck.js.
 */
 
 /* Page and Reveal chrome ------------------------------------------------- */
@@ -19,7 +20,7 @@
 }
 
 .reveal {
-  color: var(--color-ink);
+  color: var(--color-navy);
   font-family: var(--font-sans);
   font-size: var(--text-body);
   font-weight: 400;
@@ -37,26 +38,26 @@
 }
 
 .reveal :where(table) {
-  border-collapse: collapse;
+  border-collapse: separate;
   border-spacing: 0;
 }
 
-.reveal :where(strong, b, dt, th) {
+.reveal :where(strong, b, th, dt) {
   font-weight: 650;
 }
 
 .reveal .controls {
-  color: var(--color-ink-soft);
+  color: var(--color-muted);
 }
 
 .reveal .progress {
-  color: var(--color-compare);
-  height: 4px;
+  color: var(--color-navy);
+  height: 3px;
 }
 
 .reveal ::selection {
-  background: var(--color-panel);
-  color: var(--color-ink);
+  background: var(--color-blue-4);
+  color: var(--color-navy);
 }
 
 /* Slide frame ------------------------------------------------------------- */
@@ -76,7 +77,7 @@
 .reveal .slides section.slide {
   --byeslide-slide-padding: var(--slide-padding);
 
-  color: var(--color-ink);
+  color: var(--color-navy);
   display: flex;
   flex-direction: column;
   gap: var(--slide-gap);
@@ -91,31 +92,185 @@
   padding: 0;
 }
 
+/* Navy slides: the cover and section dividers. Set data-background-color="var(--color-navy)" too. */
+.reveal .slides section.slide--dark {
+  color: var(--color-on-dark);
+}
+
+/* Tracker: the deck as a scale ------------------------------------------- */
+
+/* Sections side by side, each as wide as its pages; a tick per page; the needle at this page. */
+.tracker {
+  left: var(--margin-x);
+  position: absolute;
+  right: var(--margin-x);
+  top: var(--tracker-top);
+}
+
+.tracker ol {
+  display: flex;
+  gap: 8px;
+}
+
+.tracker__section {
+  display: flex;
+  flex: var(--pages, 1) 1 0;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tracker__name {
+  color: var(--color-muted);
+  font-size: var(--text-footer);
+  font-weight: 500;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracker__section.is-current .tracker__name {
+  color: var(--color-navy);
+  font-weight: 650;
+}
+
+.tracker__ticks {
+  border-top: 1px solid var(--color-rule);
+  display: flex;
+  height: 14px;
+}
+
+.tracker__section.is-current .tracker__ticks {
+  border-top: 2px solid var(--color-navy);
+  margin-top: -1px;
+}
+
+.tracker__ticks i {
+  flex: 1;
+  position: relative;
+}
+
+.tracker__ticks i::before {
+  background: var(--color-rule);
+  content: "";
+  height: 6px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+
+/* The needle. */
+.tracker__ticks i.is-here::before {
+  background: var(--color-navy);
+  height: 14px;
+  left: -1px;
+  width: 3px;
+}
+
+/* On navy slides, at the foot of the page and larger. */
+.tracker--dark {
+  bottom: 64px;
+  top: auto;
+}
+
+.tracker--dark .tracker__name {
+  color: var(--color-on-dark-muted);
+  font-size: var(--text-label);
+}
+
+.tracker--dark .tracker__section.is-current .tracker__name {
+  color: var(--color-on-dark);
+}
+
+.tracker--dark .tracker__ticks {
+  border-top-color: var(--color-on-dark-rule);
+  height: 22px;
+}
+
+.tracker--dark .tracker__section.is-current .tracker__ticks {
+  border-top-color: var(--color-on-dark);
+}
+
+.tracker--dark .tracker__ticks i::before {
+  background: var(--color-on-dark-rule);
+  height: 10px;
+}
+
+.tracker--dark .tracker__ticks i.is-here::before {
+  background: var(--color-accent-on-dark);
+  height: 22px;
+  left: -2px;
+  width: 5px;
+}
+
+/* Footer: source on the left, confidentiality line and page number on the right. */
+.footer {
+  align-items: baseline;
+  border-top: 1px solid var(--color-rule);
+  bottom: var(--footer-bottom);
+  color: var(--color-muted);
+  display: flex;
+  font-size: var(--text-footer);
+  gap: 48px;
+  left: var(--margin-x);
+  line-height: 1.3;
+  padding-top: 12px;
+  position: absolute;
+  right: var(--margin-x);
+}
+
+.footer__source {
+  flex: 1;
+  max-width: 1080px;
+}
+
+.footer__page {
+  color: var(--color-navy);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* The confidentiality line comes from theme.css, so it changes in one place. */
+.footer__page::before {
+  color: var(--color-muted);
+  content: var(--confidential);
+  font-weight: 400;
+  margin-right: 32px;
+}
+
 /* Type ---------------------------------------------------------------------- */
 
-/* The headline states the finding as a sentence; the slide body proves it. */
-.headline {
-  font-size: var(--text-h2);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: var(--line-heading);
-  max-width: 32ch;
+/*
+  The action title: one sentence that states the conclusion, two lines at most.
+  It always takes two lines of height, so the body starts at the same place on every page.
+*/
+.action-title {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--text-title);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: var(--line-title);
+  max-width: 1560px;
+  min-height: calc(2em * 1.1);
   text-wrap: balance;
 }
 
 .lead {
-  color: var(--color-ink-soft);
+  color: var(--color-ink-2);
   font-size: var(--text-lead);
-  line-height: 1.22;
+  line-height: 1.3;
   max-width: 52ch;
-  text-wrap: pretty;
 }
 
 .body-copy {
   font-size: var(--text-body);
   line-height: var(--line-body);
-  max-width: 40ch;
-  text-wrap: pretty;
+  max-width: 46ch;
 }
 
 .small {
@@ -124,226 +279,869 @@
 }
 
 .soft {
-  color: var(--color-ink-soft);
+  color: var(--color-ink-2);
 }
 
-/* Figures that line up in columns. Big standalone numbers keep proportional figures. */
+.muted {
+  color: var(--color-muted);
+}
+
 .num {
   font-variant-numeric: tabular-nums;
 }
 
-/* Every data slide names its source, so the PDF can be read without a speaker. */
-.source {
-  color: var(--color-ink-soft);
-  font-size: var(--text-note);
-  line-height: 1.3;
-  margin-top: auto;
-  max-width: 110ch;
+/* Exhibits ------------------------------------------------------------------ */
+
+/* An exhibit: a numbered label and a title line with the measure and unit, over a chart or table. */
+.exhibit {
+  border-top: 2px solid var(--color-navy);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+  min-width: 0;
+  padding-top: 14px;
 }
 
-/* Headline with something beside it, such as a readout. The headline keeps its place at the top. */
-.head {
-  align-items: start;
+.exhibit__head {
+  font-size: var(--text-small);
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.exhibit__label {
+  color: var(--color-muted);
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+/* An exhibit headed by a plain title instead of a number, such as "Decisions". */
+.exhibit--plain {
+  flex: none;
+}
+
+/* Exhibits stacked top to bottom. */
+.stacked {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 28px;
+  min-height: 0;
+}
+
+/* An exhibit beside an aside, such as a takeaway box or callout notes. */
+.panels {
   display: grid;
+  flex: 1;
   gap: var(--gutter);
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) var(--aside, 520px);
+  min-height: 0;
 }
 
-.stack {
+.panels > aside,
+.panels > .takeaway {
+  align-self: start;
+}
+
+/* Takeaway box: what the exhibit means, in two or three lines. */
+.takeaway {
+  background: var(--color-panel);
+  border-top: 4px solid var(--color-navy);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 28px 32px 32px;
 }
 
-/* Readouts: a number on a scale ---------------------------------------------- */
-
-.readouts {
-  display: grid;
-  gap: var(--gutter);
-  grid-template-columns: repeat(var(--readouts, 4), minmax(0, 1fr));
-}
-
-.readout {
-  border-top: var(--track) solid var(--color-rule);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 30px;
-  position: relative;
-}
-
-.readout__value {
-  font-size: var(--text-readout);
-  font-stretch: var(--stretch-readout);
-  font-weight: 640;
-  letter-spacing: -0.01em;
-  line-height: var(--line-tight);
-  white-space: nowrap;
-}
-
-.readout__label {
+.takeaway__title {
   font-size: var(--text-body);
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1.2;
 }
 
-.readout__detail {
-  color: var(--color-ink-soft);
-  font-size: var(--text-body);
-  line-height: 1.25;
-  text-wrap: pretty;
+.takeaway ul {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-/* The needle: the readout that matters gets an orange track and a pointer. */
-.readout.is-key {
-  border-top-color: var(--color-accent);
+.takeaway li {
+  font-size: 26px;
+  line-height: 1.32;
+  padding-left: 26px;
+  position: relative;
 }
 
-.readout.is-key::before {
-  background: var(--color-accent);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
+.takeaway li::before {
+  background: var(--color-navy);
   content: "";
-  height: 24px;
+  height: 8px;
   left: 0;
   position: absolute;
-  top: calc(-1 * var(--track) - 30px);
-  width: 30px;
+  top: 0.55em;
+  width: 8px;
 }
 
-.readout--compact {
-  min-width: 400px;
+.takeaway strong {
+  font-weight: 700;
 }
 
-.readout--compact .readout__value {
-  font-size: 104px;
+/* Numbered markers: a circled number on the exhibit and the same number on its note. */
+.marker {
+  align-items: center;
+  background: var(--color-navy);
+  border-radius: 50%;
+  color: var(--color-surface);
+  display: inline-flex;
+  flex: none;
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  height: 38px;
+  justify-content: center;
+  line-height: 1;
+  width: 38px;
 }
 
-/* A row or list item that matters: an orange bar on its left edge. */
-.reveal .is-key-row {
-  box-shadow: inset var(--track) 0 0 var(--color-accent);
+.marker.is-key {
+  background: var(--color-accent);
 }
 
-/* Ahead or behind: a triangle and a word, never color alone. */
+/* Numbered notes beside an exhibit, on the same rule. */
+.callout-panel {
+  border-top: 2px solid var(--color-navy);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 14px;
+}
+
+.callouts {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.callouts li {
+  column-gap: 18px;
+  display: grid;
+  font-size: 26px;
+  grid-template-columns: 36px minmax(0, 1fr);
+  line-height: 1.32;
+}
+
+.callouts li strong {
+  display: block;
+  font-weight: 700;
+}
+
+/* A closing line under callouts: the figures that frame them. */
+.aside-note {
+  border-top: 1px solid var(--color-rule);
+  color: var(--color-ink-2);
+  font-size: var(--text-small);
+  line-height: 1.35;
+  margin-top: 32px;
+  padding-top: 20px;
+}
+
+/* Charts -------------------------------------------------------------------- */
+
+/* The chart box: the canvas fills it; markers and notes are pinned on top by assets/acme-charts.js. */
+.chart {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.chart > canvas {
+  display: block;
+}
+
+/* Pinned elements stay hidden until the chart has placed them. */
+.chart [data-at]:not([style*="--x"]) {
+  visibility: hidden;
+}
+
+/* A numbered marker pinned above a data point (data-at). Set --lift to move it further up. */
+.chart-marker {
+  left: var(--x, 0px);
+  pointer-events: none;
+  position: absolute;
+  top: var(--y, 0px);
+  transform: translate(-50%, calc(-100% - var(--lift, 14px)));
+}
+
+/* Below its point instead, for bars that hang below the zero line. */
+.chart-marker--below {
+  transform: translate(-50%, var(--lift, 44px));
+}
+
+/* The point of the chart in words, in the accent, pinned under a data point. */
+.chart-flag {
+  color: var(--color-accent);
+  font-size: var(--text-label);
+  font-weight: 700;
+  left: var(--x, 0px);
+  line-height: 1;
+  pointer-events: none;
+  position: absolute;
+  top: var(--y, 0px);
+  transform: translate(22px, 22px);
+  white-space: nowrap;
+}
+
+/* Empty fragments that step a chart script along take no space. */
+.chart > .fragment:empty {
+  position: absolute;
+}
+
+/* Tables -------------------------------------------------------------------- */
+
+.table {
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  width: 100%;
+}
+
+.table th {
+  border-bottom: 2px solid var(--color-navy);
+  color: var(--color-muted);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0 18px 12px;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.table td {
+  border-bottom: 1px solid var(--color-rule);
+  padding: 16px 18px;
+  vertical-align: top;
+}
+
+.table :is(th, td):first-child {
+  padding-left: 20px;
+}
+
+.table :is(th, td).num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table td.strong {
+  font-weight: 650;
+}
+
+.table :is(th, td).nowrap {
+  white-space: nowrap;
+}
+
+.table td.soft {
+  color: var(--color-ink-2);
+}
+
+/* The row that matters: a copper bar on its first cell. */
+.table tr.is-key-row td:first-child {
+  box-shadow: inset 5px 0 0 var(--color-accent);
+}
+
+.table--compact td {
+  padding-bottom: 12px;
+  padding-top: 12px;
+}
+
+.table--roomy td {
+  padding-bottom: 22px;
+  padding-top: 22px;
+}
+
+/* Status: a small dot and a word. Green and red only mean ahead and behind. */
 .status {
   align-items: center;
   display: inline-flex;
-  gap: 0.36em;
+  gap: 10px;
   white-space: nowrap;
 }
 
 .status::before {
-  background: var(--color-compare);
+  border: 2px solid var(--color-muted);
+  border-radius: 50%;
   content: "";
   flex: none;
-  height: 0.16em;
-  width: 0.6em;
+  height: 14px;
+  width: 14px;
 }
 
 .status.is-ahead::before {
   background: var(--color-good);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  height: 0.52em;
+  border-color: var(--color-good);
 }
 
 .status.is-behind::before {
   background: var(--color-bad);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  height: 0.52em;
+  border-color: var(--color-bad);
 }
 
-/* Layouts ------------------------------------------------------------------- */
+/* Harvey ball: how much of something, always with a word. Set stroke-dasharray to "N 100". */
+.rating {
+  align-items: center;
+  display: inline-flex;
+  gap: 12px;
+  white-space: nowrap;
+}
 
-.split {
-  align-items: start;
+.harvey {
+  flex: none;
+  height: 28px;
+  width: 28px;
+}
+
+.harvey__ring {
+  fill: var(--color-surface);
+  stroke: var(--color-navy);
+  stroke-width: 2;
+}
+
+.harvey__fill {
+  fill: none;
+  stroke: var(--color-navy);
+  stroke-width: 12.5;
+}
+
+/* Bars against plan (HTML and CSS, no script) ------------------------------ */
+
+/*
+  Each row sets --actual and --plan; the table sets --max, the right end of the scale.
+  The bar is the actual figure; the tick is plan.
+*/
+.bars {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+  grid-template-columns: 38px 250px minmax(0, 1fr) 80px 160px 140px;
+}
+
+.bars__head,
+.bars__row {
+  align-items: center;
+  column-gap: 20px;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+.bars__head {
+  border-bottom: 2px solid var(--color-navy);
+  color: var(--color-muted);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.2;
+  padding-bottom: 12px;
+}
+
+.bars__head > :nth-child(n + 4),
+.bars__row > :nth-child(n + 4) {
+  text-align: right;
+}
+
+.bars__row {
+  border-bottom: 1px solid var(--color-rule);
+  font-size: var(--text-small);
+  padding: 40px 0 30px;
+}
+
+.bars__row--total {
+  border-bottom: 0;
+  border-top: 2px solid var(--color-navy);
+  font-weight: 700;
+  margin-top: -1px;
+}
+
+.bars__name {
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.bars__name span {
+  color: var(--color-muted);
+  display: block;
+  font-size: var(--text-label);
+  font-weight: 400;
+}
+
+.bars__track {
+  height: 40px;
+  position: relative;
+}
+
+.bars__actual,
+.bars__gap,
+.bars__plan {
+  bottom: 0;
+  position: absolute;
+  top: 0;
+}
+
+.bars__actual {
+  background: var(--color-navy);
+  left: 0;
+  width: calc(var(--actual) / var(--max) * 100%);
+}
+
+.bars__plan {
+  background: var(--color-navy);
+  bottom: -8px;
+  box-shadow: 0 0 0 2px var(--color-surface);
+  left: calc(var(--plan) / var(--max) * 100%);
+  margin-left: -2px;
+  top: -8px;
+  width: 4px;
+}
+
+.bars__plan::before {
+  bottom: calc(100% + 4px);
+  color: var(--color-muted);
+  content: attr(data-label);
+  font-size: var(--text-label);
+  left: 50%;
+  line-height: 1;
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* A shortfall against plan, hatched in the accent. Tiled gradients print reliably in PDF viewers. */
+.bars__gap {
+  background: linear-gradient(-45deg, var(--color-accent) 25%, var(--color-surface) 25% 50%, var(--color-accent) 50% 75%, var(--color-surface) 75%) 0 0 / 12px 12px;
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+  left: calc(var(--actual) / var(--max) * 100%);
+  width: calc((var(--plan) - var(--actual)) / var(--max) * 100%);
+}
+
+.bars__value {
+  font-weight: 650;
+}
+
+/* 2x2 matrix --------------------------------------------------------------- */
+
+/* The matrix beside a table that names each numbered item. */
+.matrix-layout {
   display: grid;
   flex: 1;
   gap: var(--gutter);
-  grid-template-columns: minmax(0, var(--split-left, 1fr)) minmax(0, var(--split-right, 1fr));
+  grid-template-columns: 700px minmax(0, 1fr);
   min-height: 0;
 }
 
-.split--center {
-  align-items: center;
+/* Place each dot with --x and --y, from 0 to 100, measured from the bottom left. */
+.matrix {
+  display: grid;
+  gap: 10px 14px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
 }
 
-.column {
+.matrix__plot {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  min-height: 0;
+  position: relative;
+}
+
+.matrix__quadrant {
+  background: var(--color-panel);
+  color: var(--color-muted);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 16px 18px;
+}
+
+.matrix__quadrant.is-hot {
+  background: var(--color-blue-4);
+  color: var(--color-navy);
+}
+
+.matrix__plot .marker {
+  bottom: calc(var(--y) * 1%);
+  left: calc(var(--x) * 1%);
+  position: absolute;
+  transform: translate(-50%, 50%);
+}
+
+.matrix__axis {
+  color: var(--color-muted);
+  display: flex;
+  font-size: var(--text-label);
+  justify-content: space-between;
+  line-height: 1.2;
+}
+
+.matrix__axis b {
+  color: var(--color-navy);
+  font-weight: 650;
+}
+
+.matrix__axis--y {
+  grid-column: 1;
+  grid-row: 1;
+  transform: rotate(180deg);
+  writing-mode: vertical-rl;
+}
+
+.matrix__axis--x {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Gantt roadmap -------------------------------------------------------------- */
+
+/*
+  Workstreams as rows, months as columns. data-from and data-to on .gantt set the
+  period; bars take data-start and data-end, milestones data-date (YYYY-MM-DD).
+  assets/acme-deck.js turns the dates into positions.
+*/
+.gantt {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  position: relative;
+}
+
+.gantt__corner,
+.gantt__months {
+  border-bottom: 2px solid var(--color-navy);
+  color: var(--color-muted);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.2;
+  padding-bottom: 12px;
+}
+
+.gantt__months {
+  display: flex;
+}
+
+.gantt__months span {
+  flex: var(--days) 1 0;
+  padding-left: 14px;
+}
+
+.gantt__name {
+  border-bottom: 1px solid var(--color-rule);
+  font-size: var(--text-small);
+  font-weight: 650;
+  line-height: 1.2;
+  padding: 16px 20px 16px 0;
+}
+
+.gantt__name span {
+  color: var(--color-ink-2);
+  display: block;
+  font-size: var(--text-label);
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.gantt__lane {
+  border-bottom: 1px solid var(--color-rule);
+  min-height: 92px;
+  position: relative;
+}
+
+/* Month boundaries, behind the lanes. Each line sets --at. */
+.gantt__line {
+  background: var(--color-grid);
+  bottom: 0;
+  left: calc(360px + (100% - 360px) * var(--at));
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+
+.gantt__bar {
+  background: var(--color-blue-4);
+  border-left: 4px solid var(--color-blue-1);
+  height: 22px;
+  left: calc(var(--start) * 100%);
+  position: absolute;
+  top: 20px;
+  width: calc((var(--end) - var(--start)) * 100%);
+}
+
+.gantt__bar.is-key {
+  background: color-mix(in srgb, var(--color-accent) 22%, var(--color-surface));
+  border-left-color: var(--color-accent);
+}
+
+/* A milestone: a diamond on the bar, with its date and a word under it. */
+.gantt__milestone {
+  color: var(--color-ink-2);
+  font-size: var(--text-label);
+  left: calc(var(--at) * 100%);
+  line-height: 1.2;
+  position: absolute;
+  top: 50px;
+  white-space: nowrap;
+}
+
+.gantt__milestone::before {
+  background: var(--color-navy);
+  box-shadow: 0 0 0 2px var(--color-surface);
+  content: "";
+  height: 18px;
+  left: -9px;
+  position: absolute;
+  top: -30px;
+  transform: rotate(45deg);
+  width: 18px;
+}
+
+.gantt__milestone.is-key::before {
+  background: var(--color-accent);
+}
+
+.gantt__milestone b {
+  color: var(--color-navy);
+  font-weight: 650;
+}
+
+/* Milestones near the right end put their label to the left of the diamond. */
+.gantt__milestone--end {
+  transform: translateX(-100%);
+}
+
+.gantt__milestone--end::before {
+  left: auto;
+  right: -9px;
+}
+
+/* Today: a line through every lane, labelled under the last one. */
+.gantt__today {
+  align-items: flex-end;
+  border-left: 2px solid var(--color-navy);
+  bottom: -32px;
+  color: var(--color-navy);
+  display: flex;
+  font-size: var(--text-label);
+  font-weight: 650;
+  left: calc(360px + (100% - 360px) * var(--at));
+  line-height: 1;
+  padding-left: 8px;
+  position: absolute;
+  top: 36px;
+  white-space: nowrap;
+}
+
+/* Executive summary ----------------------------------------------------------- */
+
+/* Key messages under the governing thought (the action title), each with its page. */
+.messages {
+  border-top: 2px solid var(--color-navy);
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  min-width: 0;
 }
 
-.push-down {
-  margin-top: auto;
+.messages li {
+  border-bottom: 1px solid var(--color-rule);
+  column-gap: 28px;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 200px;
+  padding: 22px 0 22px;
 }
 
-/* Title ------------------------------------------------------------------------ */
+.messages .marker {
+  margin-top: 2px;
+}
+
+.messages__lead {
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.messages__support {
+  color: var(--color-ink-2);
+  font-size: 26px;
+  line-height: 1.32;
+  margin-top: 6px;
+}
+
+.messages__ref {
+  color: var(--color-muted);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  padding-top: 6px;
+  text-align: right;
+}
+
+/* Contents -------------------------------------------------------------------- */
+
+.toc {
+  border-top: 2px solid var(--color-navy);
+}
+
+.toc li {
+  align-items: baseline;
+  border-bottom: 1px solid var(--color-rule);
+  column-gap: 40px;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 620px) minmax(0, 1fr) 120px;
+  padding: 44px 0 42px;
+}
+
+.toc__number {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.toc__name {
+  font-family: var(--font-serif);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.toc__desc {
+  color: var(--color-ink-2);
+  font-size: 26px;
+}
+
+.toc__page {
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.toc li.toc--minor .toc__name {
+  font-size: 36px;
+}
+
+/* Section divider ---------------------------------------------------------------- */
+
+.divider {
+  align-items: center;
+  display: grid;
+  flex: 1;
+  gap: 120px;
+  grid-template-columns: minmax(0, 1fr) 640px;
+  padding-bottom: 96px;
+}
+
+.divider__number {
+  color: var(--color-accent-on-dark);
+  font-family: var(--font-serif);
+  font-size: var(--text-numeral);
+  font-weight: 300;
+  line-height: 0.78;
+  margin-bottom: 40px;
+}
+
+.divider__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-divider);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1;
+}
+
+.divider__lead {
+  color: var(--color-on-dark-soft);
+  font-size: var(--text-lead);
+  line-height: 1.3;
+  margin-top: 28px;
+  max-width: 30ch;
+}
+
+.divider__list {
+  border-top: 2px solid var(--color-on-dark);
+}
+
+.divider__list li {
+  align-items: baseline;
+  border-bottom: 1px solid var(--color-on-dark-rule);
+  color: var(--color-on-dark);
+  display: flex;
+  font-size: 26px;
+  gap: 24px;
+  justify-content: space-between;
+  padding: 18px 0;
+}
+
+.divider__list li span:last-child {
+  color: var(--color-on-dark-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cover ------------------------------------------------------------------------------ */
 
 .brand {
   align-items: center;
   display: flex;
-  gap: 20px;
+  gap: 18px;
 }
 
 .brand__mark {
   display: block;
   flex: none;
-  height: 64px;
-  width: 64px;
+  height: 52px;
+  width: 52px;
 }
 
 .brand__dial {
   fill: none;
-  stroke: var(--color-ink);
+  stroke: currentColor;
   stroke-linecap: round;
-  stroke-width: 7;
+  stroke-width: 6;
 }
 
 .brand__needle {
   fill: none;
-  stroke: var(--color-accent);
+  stroke: var(--color-accent-on-dark);
   stroke-linecap: round;
   stroke-width: 6;
 }
 
 .brand__hub {
-  fill: var(--color-ink);
+  fill: currentColor;
 }
 
 .brand__name {
-  font-size: 40px;
-  font-stretch: var(--stretch-title);
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-size: 30px;
+  font-weight: 650;
+  letter-spacing: 0.005em;
 }
 
 .cover {
   display: flex;
   flex: 1;
   flex-direction: column;
+  gap: 32px;
   justify-content: center;
 }
 
 .cover__title {
-  display: flex;
-  flex-direction: column;
-  font-weight: 800;
-  gap: 36px;
+  font-family: var(--font-serif);
+  font-size: var(--text-cover);
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
 }
 
-.cover__quarter {
-  font-size: var(--text-display);
-  font-stretch: var(--stretch-title);
-  letter-spacing: -0.035em;
-  line-height: 0.8;
-  margin-left: -0.05em;
-}
-
-.cover__name {
-  font-size: var(--text-h1);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1;
+.cover__subtitle {
+  color: var(--color-on-dark-soft);
+  font-size: 36px;
+  line-height: 1.3;
 }
 
 .cover__meta {
@@ -354,99 +1152,103 @@
 }
 
 .cover__meta p {
-  font-size: var(--text-body);
-  line-height: 1.3;
+  color: var(--color-on-dark-soft);
+  font-size: 26px;
+  line-height: 1.4;
 }
 
-.cover__sample {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small) !important;
+.cover__meta p strong {
+  color: var(--color-on-dark);
+  font-weight: 650;
+}
+
+.cover__meta .cover__legal {
+  color: var(--color-on-dark-muted);
+  font-size: 20px;
   text-align: right;
 }
 
 /*
   The quarter as a scale: one tick per day, a longer tick where each month starts.
-  Set --days to the number of days in the period. The needle sweeps to its place
-  when the slide appears; set --at (0 to 1) to stop it earlier.
+  Set --days to the days in the period and --start on each month. The needle
+  sweeps to the last day when the slide appears.
 */
 .quarter-scale {
-  --at: 1;
-
-  height: 150px;
+  height: 120px;
   position: relative;
 }
 
-/* Tiled gradients, not repeating-linear-gradient: some PDF viewers draw those as flat pink. */
+/* Tiled gradients, not repeating-linear-gradient: some PDF viewers draw those as flat color. */
 .quarter-scale__ticks {
-  background: linear-gradient(90deg, var(--color-compare) 0 2px, transparent 2px) 0 0 / calc(100% / var(--days, 92)) 100% repeat-x;
-  bottom: 52px;
-  height: 22px;
+  background: linear-gradient(90deg, var(--color-on-dark-muted) 0 2px, transparent 2px) 0 0 / calc(100% / var(--days, 92)) 100% repeat-x;
+  bottom: 48px;
+  height: 16px;
   left: 0;
   position: absolute;
   right: 0;
 }
 
 .quarter-scale__track {
-  background: var(--color-rule);
-  bottom: 44px;
-  height: var(--track);
+  background: var(--color-on-dark-rule);
+  bottom: 42px;
+  height: 4px;
   left: 0;
   position: absolute;
   right: 0;
 }
 
 .quarter-scale__fill {
-  background: var(--color-ink);
-  bottom: 44px;
-  height: var(--track);
+  background: var(--color-on-dark);
+  bottom: 42px;
+  height: 4px;
   left: 0;
   position: absolute;
   transform-origin: left center;
-  width: calc(var(--at) * 100%);
+  width: 100%;
 }
 
 .quarter-scale__month {
-  border-left: 3px solid var(--color-ink);
+  align-items: flex-end;
+  border-left: 2px solid var(--color-on-dark-soft);
   bottom: 0;
-  font-size: var(--text-small);
-  font-weight: 600;
-  height: 96px;
+  color: var(--color-on-dark-soft);
+  display: flex;
+  font-size: var(--text-label);
+  height: 82px;
   left: calc(var(--start) / var(--days, 92) * 100%);
   line-height: 1;
   padding-left: 12px;
   position: absolute;
-  display: flex;
-  align-items: flex-end;
 }
 
 .quarter-scale__needle {
-  background: var(--color-accent);
-  bottom: 44px;
-  height: 150px;
-  left: calc(var(--at) * 100%);
-  margin-left: calc(var(--needle) / -2);
+  background: var(--color-accent-on-dark);
+  bottom: 42px;
+  height: 110px;
+  left: 100%;
+  margin-left: -3px;
   position: absolute;
-  width: var(--needle);
+  width: 5px;
 }
 
 .quarter-scale__needle::before {
-  background: var(--color-accent);
+  background: var(--color-accent-on-dark);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   content: "";
-  height: 26px;
+  height: 22px;
   left: 50%;
-  margin-left: -16px;
+  margin-left: -14px;
   position: absolute;
   top: -2px;
-  width: 32px;
+  width: 28px;
 }
 
 .reveal .slides section.present .quarter-scale__needle {
-  animation: needle-sweep 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  animation: needle-sweep 2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 .reveal .slides section.present .quarter-scale__fill {
-  animation: scale-fill 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  animation: scale-fill 2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 @keyframes needle-sweep {
@@ -461,704 +1263,56 @@
   }
 }
 
-/* Section divider ------------------------------------------------------------ */
+/* Text pages, definitions ------------------------------------------------------------ */
 
-.section-mark {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 36px;
-  justify-content: center;
+.columns {
+  display: grid;
+  gap: var(--gutter);
+  grid-template-columns: repeat(var(--columns, 2), minmax(0, 1fr));
 }
 
-.section-mark__number {
-  border-top: var(--track) solid var(--color-ink);
-  font-size: var(--text-readout);
-  font-stretch: var(--stretch-readout);
-  font-weight: 640;
-  line-height: var(--line-tight);
-  padding-top: 30px;
-  width: 6ch;
-}
-
-.section-mark__title {
-  font-size: var(--text-h1);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1;
-  max-width: 18ch;
-  text-wrap: balance;
-}
-
-/* Statement ------------------------------------------------------------------- */
-
-.statement {
-  font-size: 84px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.04;
-  max-width: 26ch;
-  text-wrap: balance;
-}
-
-.statement--fill {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Charts ------------------------------------------------------------------------ */
-
-/* The chart box: the canvas fills it, and notes are pinned on top by assets/acme-charts.js. */
-.chart {
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-  position: relative;
-}
-
-.chart > canvas {
-  display: block;
-}
-
-/* In a .split, the chart takes the full height of its row. */
-.split > .chart {
-  align-self: stretch;
-}
-
-/* Empty fragments that step a chart script along take no space. */
-.chart > .fragment:empty {
-  position: absolute;
-}
-
-/*
-  A note pinned to a data point: an orange needle from the top of the chart down to
-  the point, with the words beside it. The chart script sets --x and --y.
-*/
-.chart-note {
-  height: var(--y, 0px);
-  left: var(--x, 0px);
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  width: 0;
-}
-
-.chart-note::before {
-  background: var(--color-accent);
-  bottom: 0;
-  content: "";
-  left: calc(var(--needle) / -2);
-  position: absolute;
-  top: 0;
-  width: var(--needle);
-}
-
-.chart-note::after {
-  background: var(--color-accent);
-  border: 5px solid var(--color-surface);
-  border-radius: 50%;
-  bottom: -15px;
-  content: "";
-  height: 30px;
-  left: -15px;
-  position: absolute;
-  width: 30px;
-}
-
-.chart-note__text {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-width: 16em;
-  position: absolute;
-  right: 26px;
-  text-align: right;
-  top: -4px;
-  width: max-content;
-}
-
-.chart-note[data-side="right"] .chart-note__text {
-  left: 26px;
-  right: auto;
-  text-align: left;
-}
-
-.chart-note__text strong {
-  font-size: var(--text-lead);
-  font-weight: 700;
-  line-height: 1.05;
-  white-space: nowrap;
-}
-
-.chart-note__text span {
-  color: var(--color-ink-soft);
+.columns h3 {
+  border-top: 2px solid var(--color-navy);
   font-size: var(--text-body);
-  line-height: 1.2;
-}
-
-/* Bars against plan (HTML and CSS, no script) ------------------------------------- */
-
-/*
-  Each row sets --actual and --plan; the table sets --max, the right end of the scale.
-  A bar is the actual figure, the black tick is plan.
-*/
-.bars {
-  display: grid;
-  font-variant-numeric: tabular-nums;
-  grid-template-columns: 330px minmax(0, 1fr) 190px 250px 180px;
-  row-gap: 0;
-}
-
-.bars__head,
-.bars__row {
-  align-items: center;
-  column-gap: 40px;
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-}
-
-.bars__head {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  font-weight: 600;
-  line-height: 1.2;
-  padding-bottom: 14px;
-}
-
-.bars__head > :nth-child(n + 3),
-.bars__row > :nth-child(n + 3) {
-  text-align: right;
-}
-
-.bars__row {
-  border-top: 2px solid var(--color-rule);
-  padding: 32px 0 18px;
-}
-
-.bars__row--total {
-  border-top: 4px solid var(--color-ink);
   font-weight: 700;
-}
-
-.bars__name {
-  font-weight: 650;
-  line-height: 1.15;
-}
-
-.bars__name span {
-  color: var(--color-ink-soft);
-  display: block;
-  font-size: var(--text-small);
-  font-weight: 400;
-  margin-top: 4px;
-}
-
-.bars__track {
-  height: 52px;
-  position: relative;
-}
-
-.bars__actual,
-.bars__gap,
-.bars__plan {
-  bottom: 0;
-  position: absolute;
-  top: 0;
-}
-
-.bars__actual {
-  background: var(--color-ink);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  left: 0;
-  width: calc(var(--actual) / var(--max) * 100%);
-}
-
-/* Plan: a tick across the bar, with its value above it. */
-.bars__plan {
-  background: var(--color-ink);
-  bottom: -10px;
-  box-shadow: 0 0 0 3px var(--color-surface);
-  left: calc(var(--plan) / var(--max) * 100%);
-  margin-left: -3px;
-  top: -10px;
-  width: 6px;
-}
-
-.bars__plan::before {
-  bottom: calc(100% + 6px);
-  color: var(--color-ink-soft);
-  content: attr(data-label);
-  font-size: var(--text-note);
-  left: 50%;
-  line-height: 1;
-  position: absolute;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-/* The shortfall between actual and plan, hatched in the needle color. */
-.bars__gap {
-  background: linear-gradient(-45deg, var(--color-accent) 25%, var(--color-surface) 25% 50%, var(--color-accent) 50% 75%, var(--color-surface) 75%) 0 0 / 14px 14px;
-  box-shadow: inset 0 0 0 4px var(--color-accent);
-  left: calc(var(--actual) / var(--max) * 100%);
-  width: calc((var(--plan) - var(--actual)) / var(--max) * 100%);
-}
-
-.bars__value {
-  font-weight: 700;
-}
-
-.bars__callout {
-  border-left: var(--needle) solid var(--color-accent);
-  grid-column: 2;
-  justify-self: end;
   line-height: 1.25;
-  margin-top: 16px;
-  max-width: 24em;
-  padding-left: 20px;
-  text-align: left !important;
+  padding-top: 14px;
 }
 
-/* KPI table ----------------------------------------------------------------------- */
-
-/* Separate borders belong to the cells, so a hidden row hides its rule too. */
-.kpi {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: var(--text-body);
-  font-variant-numeric: tabular-nums;
-  width: 100%;
-}
-
-.kpi th {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  font-weight: 600;
-  line-height: 1.2;
-  padding: 0 0 16px 36px;
-  text-align: right;
-  vertical-align: bottom;
-}
-
-.kpi td {
-  border-top: 2px solid var(--color-rule);
-  padding: 20px 0 20px 36px;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.kpi :is(th, td):first-child {
-  padding-left: 32px;
-  text-align: left;
-}
-
-.kpi :is(th, td):last-child {
-  text-align: left;
-}
-
-.kpi td:first-child {
-  font-weight: 650;
-}
-
-.kpi td.kpi__actual {
-  font-weight: 700;
-}
-
-.kpi td.soft {
-  color: var(--color-ink-soft);
-}
-
-.reveal .kpi tr.is-key-row {
-  box-shadow: none;
-}
-
-.reveal .kpi tr.is-key-row td:first-child {
-  box-shadow: inset var(--track) 0 0 var(--color-accent);
-}
-
-/* Two lists side by side ------------------------------------------------------------ */
-
-.versus {
-  display: grid;
-  flex: 1;
-  gap: var(--gutter);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  min-height: 0;
-}
-
-.versus h3 {
-  border-bottom: var(--track) solid var(--color-ink);
-  font-size: var(--text-h3);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-  padding-bottom: 20px;
-}
-
-.versus li {
-  border-bottom: 2px solid var(--color-rule);
-  line-height: 1.28;
-  padding: 26px 0 26px 32px;
-}
-
-.versus li strong {
-  display: block;
-}
-
-.versus li span {
-  color: var(--color-ink-soft);
-}
-
-/* Risk matrix ------------------------------------------------------------------------- */
-
-.matrix {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 52px auto repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr)) auto auto;
-  height: 100%;
-  max-height: 640px;
-}
-
-.matrix__axis-y {
-  align-self: center;
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  font-weight: 600;
-  grid-column: 1;
-  grid-row: 1 / 4;
-  justify-self: center;
-  transform: rotate(180deg);
-  writing-mode: vertical-rl;
-}
-
-.matrix__axis-x {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  font-weight: 600;
-  grid-column: 3 / -1;
-  text-align: center;
-}
-
-.matrix__level {
-  align-self: center;
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  line-height: 1;
-}
-
-.matrix__level--y {
-  grid-column: 2;
-  padding-right: 12px;
-  text-align: right;
-}
-
-.matrix__level--x {
-  grid-row: 4;
-  padding-top: 8px;
-  text-align: center;
-}
-
-/* A cell. --heat from 0 to 4 shades it: darker where likelihood and impact are both high. */
-.matrix__cell {
-  align-content: center;
-  background: color-mix(in srgb, var(--color-rule) calc(var(--heat, 0) * 25%), var(--color-surface));
-  border-radius: var(--radius);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-  padding: 14px;
-}
-
-.risk-dot {
-  align-items: center;
-  background: var(--color-ink);
-  border-radius: 50%;
-  color: var(--color-surface);
-  display: inline-flex;
-  flex: none;
-  font-size: 34px;
-  font-weight: 700;
-  height: 68px;
-  justify-content: center;
-  line-height: 1;
-  width: 68px;
-}
-
-.risk-dot.is-key {
-  background: var(--color-accent);
-  color: var(--color-ink);
-}
-
-.risks {
-  counter-reset: risk;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-}
-
-.risks li {
-  align-items: start;
-  column-gap: 26px;
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
-  line-height: 1.22;
-}
-
-.risks .risk-dot {
+.columns p {
   font-size: 26px;
-  grid-row: span 2;
-  height: 52px;
-  width: 52px;
+  line-height: 1.38;
+  margin-top: 14px;
 }
-
-.risks li p {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  margin-top: 6px;
-}
-
-/* Timeline ------------------------------------------------------------------------------ */
-
-/*
-  Milestones placed by date. Set --days on .timeline to the days in the period, and
-  --day on each milestone to its day, counted from 0 on the first day. Put milestones
-  above or below the scale so their labels do not collide.
-*/
-.timeline {
-  flex: 1;
-  min-height: 0;
-  position: relative;
-}
-
-.timeline__scale {
-  display: flex;
-  height: 72px;
-  left: 0;
-  margin-top: -36px;
-  position: absolute;
-  right: 0;
-  top: 50%;
-}
-
-.timeline__month {
-  align-items: center;
-  background: var(--color-panel);
-  border-left: 4px solid var(--color-surface);
-  display: flex;
-  flex: var(--length) 0 0;
-  font-size: var(--text-small);
-  font-weight: 600;
-  padding-left: 18px;
-}
-
-.timeline__month:first-child {
-  border-left: 0;
-}
-
-.milestone {
-  left: calc(var(--day) / var(--days) * 100%);
-  position: absolute;
-  width: 0;
-}
-
-.milestone--above {
-  bottom: calc(50% + 36px);
-  height: var(--stem, 150px);
-}
-
-.milestone--below {
-  height: var(--stem, 150px);
-  top: calc(50% + 36px);
-}
-
-/* The stem joins the label to the scale. */
-.milestone::before {
-  background: var(--color-ink);
-  bottom: 0;
-  content: "";
-  left: -2px;
-  position: absolute;
-  top: 0;
-  width: 4px;
-}
-
-/* The mark, on the edge of the scale next to its label. */
-.milestone::after {
-  background: var(--color-ink);
-  border: 5px solid var(--color-surface);
-  border-radius: 50%;
-  content: "";
-  height: 34px;
-  left: -17px;
-  position: absolute;
-  width: 34px;
-}
-
-.milestone--above::after {
-  bottom: -17px;
-}
-
-.milestone--below::after {
-  top: -17px;
-}
-
-.milestone.is-key::before,
-.milestone.is-key::after {
-  background: var(--color-accent);
-}
-
-.milestone.is-key::before {
-  left: calc(var(--needle) / -2);
-  width: var(--needle);
-}
-
-.milestone__text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  left: 22px;
-  line-height: 1.2;
-  position: absolute;
-  width: max-content;
-  max-width: 11em;
-}
-
-.milestone--above .milestone__text {
-  top: -6px;
-}
-
-.milestone--below .milestone__text {
-  bottom: -6px;
-}
-
-.milestone__text time {
-  font-size: var(--text-small);
-  font-weight: 700;
-}
-
-.milestone__text p {
-  font-weight: 600;
-}
-
-.milestone__text span {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-}
-
-/* Today: a short line under the scale, with its label. */
-.timeline__today {
-  border-left: 3px solid var(--color-ink);
-  color: var(--color-ink-soft);
-  font-size: var(--text-note);
-  left: calc(var(--day) / var(--days) * 100%);
-  line-height: 1;
-  margin-left: -1px;
-  padding: 40px 0 0 12px;
-  position: absolute;
-  top: calc(50% + 36px);
-  white-space: nowrap;
-}
-
-/* Asks: decisions with an owner and a date ---------------------------------------------- */
-
-.asks {
-  display: grid;
-  flex: 1;
-  gap: var(--gutter);
-  grid-template-columns: repeat(var(--asks, 3), minmax(0, 1fr));
-  min-height: 0;
-}
-
-.ask {
-  border-top: var(--track) solid var(--color-ink);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding-top: 30px;
-  position: relative;
-}
-
-.ask.is-key {
-  border-top-color: var(--color-accent);
-}
-
-.ask.is-key::before {
-  background: var(--color-accent);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  content: "";
-  height: 24px;
-  left: 0;
-  position: absolute;
-  top: calc(-1 * var(--track) - 30px);
-  width: 30px;
-}
-
-.ask__number {
-  font-size: 96px;
-  font-stretch: var(--stretch-readout);
-  font-weight: 640;
-  line-height: var(--line-tight);
-}
-
-.ask__title {
-  font-size: var(--text-h3);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-  text-wrap: balance;
-}
-
-.ask__meta {
-  display: grid;
-  gap: 10px 24px;
-  grid-template-columns: auto 1fr;
-  margin-top: auto;
-}
-
-.ask__meta dt {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.ask__meta dd {
-  font-weight: 650;
-  line-height: 1.3;
-}
-
-/* Definitions --------------------------------------------------------------------------- */
 
 .defs {
+  border-top: 2px solid var(--color-navy);
   column-gap: var(--gutter);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  row-gap: 30px;
 }
 
 .defs div {
-  line-height: 1.25;
+  border-bottom: 1px solid var(--color-rule);
+  font-size: var(--text-small);
+  line-height: 1.3;
+  padding: 12px 0;
 }
 
 .defs dt {
-  display: inline;
-}
-
-.defs dt::after {
-  content: ". ";
+  font-weight: 700;
 }
 
 .defs dd {
-  color: var(--color-ink-soft);
-  display: inline;
+  color: var(--color-ink-2);
 }
 
-/* Print view and PDF ----------------------------------------------------------------- */
+.table.sources td {
+  padding-bottom: 11px;
+  padding-top: 11px;
+}
+
+/* Print view and PDF ------------------------------------------------------------------ */
 
 /* Reveal's print view forces display: block on slides; keep the flex layout. */
 html.reveal-print .reveal .slides section.slide {
@@ -1175,23 +1329,6 @@ html.reveal-print .reveal .fragment.fade-in-then-out {
 html.reveal-print .quarter-scale__needle,
 html.reveal-print .quarter-scale__fill {
   animation: none !important;
-}
-
-/* Page numbers, in the footer line next to the source. */
-html.reveal-print .reveal .slide-number-pdf {
-  background: none;
-  bottom: 64px;
-  color: var(--color-ink-soft);
-  font-family: var(--font-sans);
-  font-size: var(--text-note);
-  font-variant-numeric: tabular-nums;
-  line-height: 1.3;
-  padding: 0;
-  right: 112px;
-}
-
-html.reveal-print .reveal .pdf-page:has(> section.slide--title) .slide-number-pdf {
-  display: none;
 }
 
 /* Reduced motion -------------------------------------------------------------------- */

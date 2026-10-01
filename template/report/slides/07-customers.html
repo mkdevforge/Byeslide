@@ -1,0 +1,83 @@
+<section class="slide" id="customers">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">We added 61 software customers in Q3, the most in any quarter, while losses held steady</h2>
+  <div class="panels" style="--aside: 440px;">
+    <figure class="exhibit">
+      <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>New and lost software customers by quarter, number of companies</p>
+      <div class="chart">
+        <canvas data-customers-chart aria-label="New and lost software customers per quarter, Q2 2025 to Q3 2026. New: 38, 42, 47, 51, 55 and 61. Lost: 7, 8, 6, 11, 9 and 9."></canvas>
+        <!-- Markers pinned to bars by assets/acme-charts.js: data-at is the bar, data-dataset the series. -->
+        <span class="marker is-key chart-marker" data-at="5" data-dataset="0" style="--lift: 52px;">1</span>
+        <span class="marker chart-marker chart-marker--below" data-at="3" data-dataset="1">2</span>
+      </div>
+    </figure>
+    <aside class="callout-panel">
+      <p class="exhibit__head"><span class="exhibit__label">Notes</span></p>
+      <ol class="callouts">
+        <li><span class="marker is-key">1</span><p><strong>61 new customers in Q3.</strong> New customers have grown in each of the last six quarters, from 38.</p></li>
+        <li><span class="marker">2</span><p><strong>Losses held at 6 to 11 a quarter.</strong> Of the 9 lost in Q3, 6 were small sites that closed or merged.</p></li>
+      </ol>
+      <p class="aside-note">1,056 customers on 30 September, up 20.4% on a year ago. The 9 lost in Q3 are 0.9% of the 1,004 we had on 30 June.</p>
+    </aside>
+  </div>
+  <footer class="footer"><p class="footer__source">Source: sales CRM, 1 October 2026. A customer is a company with at least one active Pulse subscription.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script src="./assets/acme-charts.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-customers-chart]");
+      if (!slide || !canvas || !window.AcmeCharts || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      const colors = window.AcmeCharts.theme();
+      const newCustomers = [38, 42, 47, 51, 55, 61];
+      const lostCustomers = [7, 8, 6, 11, 9, 9];
+
+      window.AcmeCharts.create(canvas, {
+        type: "bar",
+        data: {
+          labels: ["Q2 2025", "Q3 2025", "Q4 2025", "Q1 2026", "Q2 2026", "Q3 2026"],
+          datasets: [
+            {
+              label: "New customers",
+              data: newCustomers,
+              // The bar that matters is copper.
+              backgroundColor: newCustomers.map((_value, index) => (index === 5 ? colors.accent : colors.navy)),
+              valueLabels: (value) => String(value)
+            },
+            {
+              label: "Customers lost",
+              // Lost customers hang below the zero line, as negative numbers.
+              data: lostCustomers.map((value) => -value),
+              backgroundColor: colors.blue3,
+              valueLabels: (value) => `−${Math.abs(value)}`
+            }
+          ]
+        },
+        options: {
+          datasets: { bar: { categoryPercentage: 0.56, barPercentage: 1 } },
+          layout: { padding: { left: 96, top: 16 } },
+          scales: {
+            x: { stacked: true, grid: { display: false }, ticks: { color: colors.navy } },
+            y: {
+              stacked: true,
+              min: -24,
+              max: 72,
+              ticks: { display: false },
+              // Only the zero line.
+              grid: { color: (context) => (context.tick.value === 0 ? colors.navy : "transparent"), lineWidth: 2 }
+            }
+          },
+          plugins: {
+            acmeSideLabels: { items: [{ text: "New", value: 30 }, { text: "Lost", value: -10 }] },
+            tooltip: { callbacks: { label: (item) => `${item.dataset.label}: ${Math.abs(item.parsed.y)}` } }
+          }
+        }
+      });
+    })();
+  </script>
+  <aside class="notes">New customers have grown every quarter for six quarters, from 38 to 61. Losses have stayed between 6 and 11 a quarter. Of the 9 we lost in Q3, 6 were small sites that closed or merged, and 3 moved to a cheaper competitor. Net, we ended the quarter with 52 more customers than we started with: 1,056 in total.</aside>
+</section>

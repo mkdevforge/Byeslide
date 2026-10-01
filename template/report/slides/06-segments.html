@@ -1,0 +1,58 @@
+<section class="slide" id="segments">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">Software beat plan by $0.6M, while a late chip left hardware $2.0M short</h2>
+  <div class="panels" style="--aside: 440px;">
+    <figure class="exhibit">
+      <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Revenue by segment against plan, Q3 2026, $M</p>
+      <!-- --max is the right end of the scale. Each row sets --actual and --plan. -->
+      <div class="bars" style="--max: 30;">
+        <div class="bars__head">
+          <span></span><span>Segment</span><span>Actual, with plan</span><span>Actual</span><span>Against plan</span><span>On Q3 2025</span>
+        </div>
+        <div class="bars__row" style="--actual: 27.0; --plan: 29.0;">
+          <span class="marker is-key">1</span>
+          <p class="bars__name">Hardware<span>Sensors and gateways</span></p>
+          <div class="bars__track"><i class="bars__actual"></i><i class="bars__gap"></i><i class="bars__plan" data-label="Plan 29.0"></i></div>
+          <p class="bars__value">27.0</p>
+          <p><span class="status is-behind">2.0 behind</span></p>
+          <p>+3.4%</p>
+        </div>
+        <div class="bars__row" style="--actual: 15.4; --plan: 14.8;">
+          <span class="marker">2</span>
+          <p class="bars__name">Software<span>Pulse subscriptions</span></p>
+          <div class="bars__track"><i class="bars__actual"></i><i class="bars__plan" data-label="Plan 14.8"></i></div>
+          <p class="bars__value">15.4</p>
+          <p><span class="status is-ahead">0.6 ahead</span></p>
+          <p>+30.5%</p>
+        </div>
+        <div class="bars__row" style="--actual: 6.2; --plan: 6.2;">
+          <span class="marker">3</span>
+          <p class="bars__name">Services<span>Installs, calibration</span></p>
+          <div class="bars__track"><i class="bars__actual"></i><i class="bars__plan" data-label="Plan 6.2"></i></div>
+          <p class="bars__value">6.2</p>
+          <p><span class="status">On plan</span></p>
+          <p>+12.7%</p>
+        </div>
+        <div class="bars__row bars__row--total">
+          <span></span>
+          <p class="bars__name">Total</p>
+          <p class="muted">Plan 50.0</p>
+          <p class="bars__value">48.6</p>
+          <p><span class="status is-behind">1.4 behind</span></p>
+          <p>+12.0%</p>
+        </div>
+      </div>
+    </figure>
+    <aside class="callout-panel">
+      <p class="exhibit__head"><span class="exhibit__label">Notes</span></p>
+      <ol class="callouts">
+        <li><span class="marker is-key">1</span><p><strong>Hardware missed by $2.0M.</strong> Gateway orders waited for a late controller chip. They ship in October.</p></li>
+        <li><span class="marker">2</span><p><strong>Software beat plan by $0.6M.</strong> Pulse subscriptions grew 30.5% on last year.</p></li>
+        <li><span class="marker">3</span><p><strong>Services landed on plan.</strong> Installation and calibration grew 12.7%.</p></li>
+      </ol>
+    </aside>
+  </div>
+  <footer class="footer"><p class="footer__source">Source: management accounts, Q3 2026. Plan is the FY2026 budget. Growth compares each segment with Q3 2025.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">Hardware is still more than half of our revenue, so a slip there moves the total. Marker one is the gap: $2.0M of gateway orders that were ready to sell but waited for one chip. Software came in $0.6M above plan, and services landed exactly on plan. Growth on last year: hardware 3.4%, software 30.5%, services 12.7%.</aside>
+</section>

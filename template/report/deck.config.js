@@ -1,6 +1,6 @@
 module.exports = {
   title: "Acme Corp Q3 2026 business review",
-  description: "A quarterly business review starter deck for a fictional company: results, charts, risks and decisions.",
+  description: "A quarterly business review in the style of a board report, for a fictional company: results, risks, roadmap and decisions.",
   width: 1920,
   height: 1080,
   margin: 0.04,
@@ -10,8 +10,8 @@ module.exports = {
   controls: true,
   progress: true,
   hash: true,
-  // Page numbers appear in the PDF and print view only (see showSlideNumber below).
-  slideNumber: "c",
+  // Page numbers are part of each page's footer (assets/acme-deck.js fills them in).
+  slideNumber: false,
   transition: "fade",
   backgroundTransition: "fade",
   plugins: ["notes", "search", "zoom"],
@@ -20,7 +20,6 @@ module.exports = {
     display: "flex",
     // One PDF page per slide, with every fragment shown.
     pdfSeparateFragments: false,
-    // Number the pages of the PDF, so people can say "page 5" in the meeting.
-    showSlideNumber: "print"
+    transitionSpeed: "fast"
   }
 };

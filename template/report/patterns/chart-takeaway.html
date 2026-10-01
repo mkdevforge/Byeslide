@@ -1,0 +1,49 @@
+<section class="slide" id="chart-takeaway">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">An action title: the conclusion the exhibit proves, in one sentence</h2>
+  <div class="panels">
+    <figure class="exhibit">
+      <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Measure by period, unit</p>
+      <div class="chart">
+        <canvas data-pattern-chart aria-label="Describe the chart and its key values"></canvas>
+        <p class="chart-flag" data-at="3" data-dataset="1">3.0 below plan</p>
+      </div>
+    </figure>
+    <aside class="takeaway">
+      <h3 class="takeaway__title">What this means</h3>
+      <ul>
+        <li><strong>First implication.</strong> One line of support.</li>
+        <li><strong>Second implication.</strong> One line of support.</li>
+      </ul>
+    </aside>
+  </div>
+  <footer class="footer"><p class="footer__source">Source: name the system and the date of the data.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script src="./assets/acme-charts.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-pattern-chart]");
+      if (!slide || !canvas || !window.AcmeCharts || canvas.dataset.chartReady === "true") {
+        return;
+      }
+      const colors = window.AcmeCharts.theme();
+      const plan = [10, 12, 14, 16];
+      const actual = [11, 13, 13.5, 13];
+      // Units go in the exhibit title, not on the labels. Copper marks the point that matters.
+      window.AcmeCharts.create(canvas, {
+        type: "line",
+        data: {
+          labels: ["Q1", "Q2", "Q3", "Q4"],
+          datasets: [
+            { label: "Plan", data: plan, borderColor: colors.blue3, borderDash: [12, 10], borderWidth: 3, endLabel: "Plan 16.0", endLabelColor: colors.ink2 },
+            { label: "Actual", data: actual, borderColor: colors.navy, pointRadius: 8, pointBorderColor: colors.surface, pointBorderWidth: 3, pointBackgroundColor: [colors.navy, colors.navy, colors.navy, colors.accent], endLabel: "Actual 13.0", valueLabels: (value, index) => (index < 3 ? { text: value.toFixed(1), below: value < plan[index] } : "") }
+          ]
+        },
+        options: { layout: { padding: { right: 190 } }, scales: { x: { grid: { display: false } }, y: { min: 0, max: 20, ticks: { stepSize: 5 } } } }
+      });
+    })();
+  </script>
+  <aside class="notes">Say the conclusion first, then show where the exhibit proves it. Name the source.</aside>
+</section>

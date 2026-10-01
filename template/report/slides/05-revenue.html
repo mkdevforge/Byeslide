@@ -1,0 +1,82 @@
+<section class="slide" id="revenue">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">Revenue grew 12% on last year but has trailed plan in every quarter of 2026</h2>
+  <div class="panels">
+    <figure class="exhibit">
+      <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Revenue by quarter, actual and plan, $M</p>
+      <div class="chart">
+        <canvas data-revenue-chart aria-label="Quarterly revenue against plan, Q2 2025 to Q3 2026, in $M. Actual: 41.0, 43.4, 46.2, 44.1, 46.9, 48.6. Plan: 40.5, 43.0, 45.5, 44.8, 47.2, 50.0."></canvas>
+        <!-- Pinned under point 5 (Q3 2026) of dataset 1 (Actual) by assets/acme-charts.js. -->
+        <p class="chart-flag" data-at="5" data-dataset="1">1.4 below plan</p>
+      </div>
+    </figure>
+    <aside class="takeaway">
+      <h3 class="takeaway__title">What this means</h3>
+      <ul>
+        <li><strong>Demand holds.</strong> Revenue is up 12.0% on Q3 2025.</li>
+        <li><strong>The Q3 gap is timing.</strong> Without the gateway delay, revenue would have been $0.6M above plan.</li>
+        <li><strong>Q4 depends on delivery.</strong> The delayed orders must ship by 31 October (page <span data-page-of="roadmap"></span>).</li>
+      </ul>
+    </aside>
+  </div>
+  <footer class="footer"><p class="footer__source">Source: management accounts. Plan is the budget the board approved for each year; quarters in 2025 use the FY2025 budget.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script src="./assets/acme-charts.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-revenue-chart]");
+      if (!slide || !canvas || !window.AcmeCharts || canvas.dataset.chartReady === "true") {
+        return;
+      }
+
+      const colors = window.AcmeCharts.theme();
+      const plan = [40.5, 43.0, 45.5, 44.8, 47.2, 50.0];
+      const actual = [41.0, 43.4, 46.2, 44.1, 46.9, 48.6];
+      const last = actual.length - 1;
+
+      window.AcmeCharts.create(canvas, {
+        type: "line",
+        data: {
+          labels: ["Q2 2025", "Q3 2025", "Q4 2025", "Q1 2026", "Q2 2026", "Q3 2026"],
+          datasets: [
+            {
+              label: "Plan",
+              data: plan,
+              borderColor: colors.blue3,
+              borderDash: [12, 10],
+              borderWidth: 3,
+              endLabel: "Plan 50.0",
+              endLabelColor: colors.ink2
+            },
+            {
+              label: "Actual",
+              data: actual,
+              borderColor: colors.navy,
+              // The point that matters is copper.
+              pointBackgroundColor: actual.map((_value, index) => (index === last ? colors.accent : colors.navy)),
+              pointBorderColor: colors.surface,
+              pointBorderWidth: 3,
+              pointRadius: 8,
+              endLabel: "Actual 48.6",
+              // Each value on the side away from the plan line. The last one is in the end label.
+              valueLabels: (value, index) => (index < last ? { text: value.toFixed(1), below: value < plan[index] } : "")
+            }
+          ]
+        },
+        options: {
+          layout: { padding: { right: 180, top: 16 } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: colors.navy } },
+            y: { min: 40, max: 52, ticks: { stepSize: 4 } }
+          },
+          plugins: {
+            tooltip: { callbacks: { label: (item) => `${item.dataset.label}: $${item.parsed.y.toFixed(1)}M` } }
+          }
+        }
+      });
+    })();
+  </script>
+  <aside class="notes">Through 2025 we ran a little ahead of plan. In 2026 we have been behind in every quarter: $0.7M in Q1, $0.3M in Q2 and $1.4M in Q3. Q3 is the gateway delay: without it we would have ended $0.6M above plan. Growth on last year is still 12%, so demand is not the problem. The question for Q4 is whether we can ship on time.</aside>
+</section>

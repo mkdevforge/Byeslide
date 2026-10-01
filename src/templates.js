@@ -15,7 +15,7 @@ const TEMPLATES = [
   {
     name: "report",
     title: "Quarterly report",
-    description: "A business review for a made-up company: key numbers, charts, risks and decisions."
+    description: "A board-style quarterly review for a made-up company: executive summary, exhibits, risks and decisions."
   },
   {
     name: "lesson",

@@ -1,0 +1,55 @@
+<section class="slide" id="options">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">A second supplier is the only option that removes the single source, for $0.05M more than extra stock</h2>
+  <div class="panels" style="--aside: 440px;">
+    <figure class="exhibit">
+      <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Options for controller-chip supply, one-off cost in $M</p>
+      <table class="table table--roomy">
+        <thead>
+          <tr>
+            <th scope="col">Option</th>
+            <th scope="col" class="num">Cost</th>
+            <th scope="col">Cover</th>
+            <th scope="col">Single source removed</th>
+            <th scope="col">Risk reduction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Harvey balls: stroke-dasharray "100 100" is full, "50 100" half, "0 100" empty. Always add the word. -->
+          <tr class="is-key-row">
+            <td><strong>A. Second supplier and 8 weeks of stock</strong><br><span class="muted">Recommended</span></td>
+            <td class="num strong">0.80</td>
+            <td>Stock from December; a second source from Q1 2027</td>
+            <td>Yes</td>
+            <td><span class="rating"><svg class="harvey" viewBox="0 0 28 28" aria-hidden="true"><circle class="harvey__ring" cx="14" cy="14" r="12.5"/><circle class="harvey__fill" cx="14" cy="14" r="6.25" pathLength="100" stroke-dasharray="100 100" transform="rotate(-90 14 14)"/></svg>High</span></td>
+          </tr>
+          <tr>
+            <td><strong>B. 12 weeks of stock from today's supplier</strong></td>
+            <td class="num strong">0.75</td>
+            <td>Stock from December</td>
+            <td>No</td>
+            <td><span class="rating"><svg class="harvey" viewBox="0 0 28 28" aria-hidden="true"><circle class="harvey__ring" cx="14" cy="14" r="12.5"/><circle class="harvey__fill" cx="14" cy="14" r="6.25" pathLength="100" stroke-dasharray="50 100" transform="rotate(-90 14 14)"/></svg>Partial</span></td>
+          </tr>
+          <tr>
+            <td><strong>C. No change</strong></td>
+            <td class="num strong">0.00</td>
+            <td>None</td>
+            <td>No</td>
+            <td><span class="rating"><svg class="harvey" viewBox="0 0 28 28" aria-hidden="true"><circle class="harvey__ring" cx="14" cy="14" r="12.5"/><circle class="harvey__fill" cx="14" cy="14" r="6.25" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 14 14)"/></svg>None</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+    <aside class="takeaway">
+      <h3 class="takeaway__title">Recommendation</h3>
+      <ul>
+        <li><strong>Choose option A.</strong> For $0.05M more than stock alone, it ends our dependence on one supplier.</li>
+        <li><strong>Cost, $0.8M.</strong> $0.3M to qualify the supplier and $0.5M for 8 weeks of stock.</li>
+        <li><strong>Decide by 15 October</strong> to have parts by 15 December (page <span data-page-of="roadmap"></span>).</li>
+      </ul>
+    </aside>
+  </div>
+  <footer class="footer"><p class="footer__source">Source: Operations and Finance estimates, October 2026. A week of stock costs about $62,500.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">We looked at three options. Extra stock alone costs almost as much, $0.75M for 12 weeks, and leaves us with one supplier: the next shortage hits us the same way. A second supplier plus 8 weeks of stock costs $0.8M, $0.05M more, and removes the single source from Q1. Doing nothing costs nothing now and leaves the risk where it is. We recommend option A.</aside>
+</section>

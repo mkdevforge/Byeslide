@@ -1,4 +1,4 @@
-<section class="slide slide--title">
+<section class="slide slide--dark" id="title" data-background-color="var(--color-navy)">
   <header class="brand">
     <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
       <path class="brand__dial" d="M13.6 50.4A26 26 0 1 1 50.4 50.4"/>
@@ -8,9 +8,10 @@
     <span class="brand__name">Company name</span>
   </header>
   <div class="cover">
-    <h1 class="cover__title"><span class="cover__quarter">Q4 2026</span> <span class="cover__name">Name the review</span></h1>
+    <h1 class="cover__title">Q4 2026 business review</h1>
+    <p class="cover__subtitle">What the review covers, in one line</p>
   </div>
-  <!-- --days: days in the period. Each month label's --start is its first day, counted from 0. -->
+  <!-- --days: days in the period. Each month's --start is its first day, counted from 0. -->
   <div class="quarter-scale" style="--days: 92;" aria-hidden="true">
     <div class="quarter-scale__ticks"></div>
     <div class="quarter-scale__track"></div>
@@ -21,7 +22,8 @@
     <span class="quarter-scale__needle"></span>
   </div>
   <footer class="cover__meta">
-    <p>Presenter name and role<br>Audience, date of the meeting</p>
+    <p><strong>Presenter name</strong>, role<br>Meeting, date</p>
+    <p class="cover__legal">Confidential. Prepared for the audience.</p>
   </footer>
-  <aside class="notes">Say what period this covers, what comes first and what you will ask for at the end.</aside>
+  <aside class="notes">Say what period this covers, what comes first, and what you will ask for at the end.</aside>
 </section>

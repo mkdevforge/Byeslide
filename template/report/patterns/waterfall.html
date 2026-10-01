@@ -1,12 +1,17 @@
-<section class="slide">
-  <h2 class="headline">A headline that names the biggest step from start to end</h2>
-  <div class="chart">
-    <canvas data-pattern-bridge aria-label="Describe the bridge: start, each step, end"></canvas>
-    <!-- One empty fragment per step between the totals: each click adds the next bar. -->
-    <span class="fragment" data-step></span>
-    <span class="fragment" data-step></span>
-  </div>
-  <p class="source">Source: name the system. Say where the axis starts if it is not zero.</p>
+<section class="slide" id="waterfall">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">An action title that names the step that moved the total most</h2>
+  <figure class="exhibit">
+    <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Measure, from start to end, unit</p>
+    <div class="chart">
+      <canvas data-pattern-bridge aria-label="Describe the bridge: start, each step, end"></canvas>
+      <!-- One empty fragment per step between the totals: each click adds the next bar. -->
+      <span class="fragment" data-step></span>
+      <span class="fragment" data-step></span>
+    </div>
+  </figure>
+  <footer class="footer"><p class="footer__source">Source: name the system. Say where the axis starts if it is not zero.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
   <script src="./assets/vendor/chart.umd.js"></script>
   <script src="./assets/acme-charts.js"></script>
   <script>
@@ -19,7 +24,6 @@
       const colors = window.AcmeCharts.theme();
       // The steps must add up to end minus start. key: true marks the step that matters.
       const steps = [{ label: "Start", value: 10, total: true }, { label: "Step up", value: 3, key: true }, { label: "Step down", value: -1 }, { label: "End", value: 12, total: true }];
-      // Each bar floats from the level before the step to the level after it.
       let level = 0;
       const ranges = steps.map((step) => {
         const start = step.total ? 0 : level;
@@ -27,10 +31,9 @@
         return [start, level];
       });
       const fragments = Array.from(slide.querySelectorAll("[data-step]"));
-      const data = () => {
-        const shown = fragments.filter((fragment) => fragment.classList.contains("visible")).length;
-        return ranges.map((range, index) => (steps[index].total || index <= shown ? range : null));
-      };
+      const shown = (i) => steps[i].total || i <= fragments.filter((f) => f.classList.contains("visible")).length;
+      const data = () => ranges.map((range, i) => (shown(i) ? range : [range[0], range[0]]));
+      const sign = (value) => (value > 0 ? "+" : "−");
       const chart = window.AcmeCharts.create(canvas, {
         type: "bar",
         data: {
@@ -38,18 +41,17 @@
           datasets: [{
             data: data(),
             borderSkipped: false,
-            backgroundColor: steps.map((step) => (step.key ? colors.accent : step.total ? colors.ink : step.value > 0 ? colors.soft : colors.compare)),
-            valueLabels: (_range, index) => (steps[index].total ? `${steps[index].value}` : `${steps[index].value > 0 ? "+" : "−"}${Math.abs(steps[index].value)}`)
+            backgroundColor: steps.map((step) => (step.key ? colors.accent : step.total ? colors.navy : step.value > 0 ? colors.blue1 : colors.blue3)),
+            valueLabels: (_range, i) => (!shown(i) ? "" : steps[i].total ? String(steps[i].value) : `${sign(steps[i].value)}${Math.abs(steps[i].value)}`)
           }]
         },
-        options: { scales: { x: { grid: { display: false } }, y: { min: 0 } } }
+        options: { datasets: { bar: { categoryPercentage: 0.6 } }, scales: { x: { grid: { display: false }, ticks: { color: colors.navy } }, y: { min: 0, max: 16 } } }
       });
-      const observer = new MutationObserver(() => {
+      new MutationObserver(() => {
         chart.data.datasets[0].data = data();
         chart.update("none");
-      });
-      fragments.forEach((fragment) => observer.observe(fragment, { attributes: true, attributeFilter: ["class"] }));
+      }).observe(slide, { attributes: true, subtree: true, attributeFilter: ["class"] });
     })();
   </script>
-  <aside class="notes">Show start and end first, then walk one step per click. Name the cause of each step in plain words.</aside>
+  <aside class="notes">Show start and end, then one step per click. Name the cause of each step.</aside>
 </section>

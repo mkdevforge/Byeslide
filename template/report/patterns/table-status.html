@@ -1,0 +1,33 @@
+<section class="slide" id="table-status">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">An action title that counts what is ahead and what is behind</h2>
+  <figure class="exhibit">
+    <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Measures against plan, this quarter</p>
+    <table class="table table--roomy">
+      <thead>
+        <tr><th scope="col">Measure</th><th scope="col">Unit</th><th scope="col" class="num">Actual</th><th scope="col" class="num">Plan</th><th scope="col">Against plan</th><th scope="col">Progress</th></tr>
+      </thead>
+      <tbody>
+        <!-- is-key-row marks the row that matters. Status dots and Harvey balls always come with a word. -->
+        <tr class="is-key-row">
+          <td class="strong">The measure that matters</td><td class="soft">$M</td><td class="num strong">9.0</td><td class="num soft">10.0</td>
+          <td><span class="status is-behind">Behind by 1.0</span></td>
+          <td><span class="rating"><svg class="harvey" viewBox="0 0 28 28" aria-hidden="true"><circle class="harvey__ring" cx="14" cy="14" r="12.5"/><circle class="harvey__fill" cx="14" cy="14" r="6.25" pathLength="100" stroke-dasharray="75 100" transform="rotate(-90 14 14)"/></svg>Mostly done</span></td>
+        </tr>
+        <tr>
+          <td class="strong">Another measure</td><td class="soft">%</td><td class="num strong">42</td><td class="num soft">40</td>
+          <td><span class="status is-ahead">Ahead by 2 pts</span></td>
+          <td><span class="rating"><svg class="harvey" viewBox="0 0 28 28" aria-hidden="true"><circle class="harvey__ring" cx="14" cy="14" r="12.5"/><circle class="harvey__fill" cx="14" cy="14" r="6.25" pathLength="100" stroke-dasharray="100 100" transform="rotate(-90 14 14)"/></svg>Done</span></td>
+        </tr>
+        <tr>
+          <td class="strong">A third measure</td><td class="soft">Number</td><td class="num strong">1,200</td><td class="num soft">1,200</td>
+          <td><span class="status">On plan</span></td>
+          <td><span class="rating"><svg class="harvey" viewBox="0 0 28 28" aria-hidden="true"><circle class="harvey__ring" cx="14" cy="14" r="12.5"/><circle class="harvey__fill" cx="14" cy="14" r="6.25" pathLength="100" stroke-dasharray="50 100" transform="rotate(-90 14 14)"/></svg>Half done</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+  <footer class="footer"><p class="footer__source">Sources: name each system. Put definitions in the appendix.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">Harvey balls: stroke-dasharray "0 100", "25 100", "50 100", "75 100" or "100 100". Status: is-ahead, is-behind, or neither for on plan.</aside>
+</section>
