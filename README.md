@@ -31,7 +31,7 @@ pnpm preview
 | Template | What it is |
 | --- | --- |
 | `tour` (default) | Presents Byeslide itself. Each slide shows one technique: 3D, charts, fragments, video. |
-| `report` | A quarterly business review for a made-up company: key numbers, charts, risks and decisions. |
+| `report` | A board-style quarterly review for a made-up company: executive summary, exhibits, risks and decisions. |
 | `lesson` | A science lesson for ages 10 to 12, "Why does the Moon have phases?", with a live model, predictions and an exit ticket. |
 
 ```sh

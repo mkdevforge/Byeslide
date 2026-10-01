@@ -1,0 +1,46 @@
+<section class="slide" id="chart-callouts">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">An action title that the numbered notes explain</h2>
+  <div class="panels" style="--aside: 440px;">
+    <figure class="exhibit">
+      <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Measure by category, unit</p>
+      <div class="chart">
+        <canvas data-pattern-bars aria-label="Describe the chart and its key values"></canvas>
+        <!-- Pinned above bar data-at of dataset data-dataset; --lift clears the value label. -->
+        <span class="marker is-key chart-marker" data-at="3" data-dataset="0" style="--lift: 52px;">1</span>
+        <span class="marker chart-marker" data-at="1" data-dataset="0" style="--lift: 52px;">2</span>
+      </div>
+    </figure>
+    <aside class="callout-panel">
+      <p class="exhibit__head"><span class="exhibit__label">Notes</span></p>
+      <ol class="callouts">
+        <li><span class="marker is-key">1</span><p><strong>The point that matters.</strong> What happened and why.</p></li>
+        <li><span class="marker">2</span><p><strong>A second point.</strong> What happened and why.</p></li>
+      </ol>
+    </aside>
+  </div>
+  <footer class="footer"><p class="footer__source">Source: name the system and the date of the data.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <script src="./assets/vendor/chart.umd.js"></script>
+  <script src="./assets/acme-charts.js"></script>
+  <script>
+    (() => {
+      const slide = window.Byeslide?.slideForScript(document.currentScript);
+      const canvas = slide?.querySelector("[data-pattern-bars]");
+      if (!slide || !canvas || !window.AcmeCharts || canvas.dataset.chartReady === "true") {
+        return;
+      }
+      const colors = window.AcmeCharts.theme();
+      const values = [24, 31, 28, 42];
+      window.AcmeCharts.create(canvas, {
+        type: "bar",
+        data: {
+          labels: ["First", "Second", "Third", "Fourth"],
+          datasets: [{ label: "Measure", data: values, backgroundColor: values.map((_v, i) => (i === 3 ? colors.accent : colors.navy)), valueLabels: (value) => String(value) }]
+        },
+        options: { datasets: { bar: { categoryPercentage: 0.56 } }, scales: { x: { grid: { display: false }, ticks: { color: colors.navy } }, y: { display: false, min: 0, max: 56 } } }
+      });
+    })();
+  </script>
+  <aside class="notes">Walk the notes in number order. Every marker on the exhibit has a note with the same number.</aside>
+</section>

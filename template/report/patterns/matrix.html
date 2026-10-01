@@ -1,32 +1,34 @@
-<section class="slide">
-  <h2 class="headline">Name the risk that is both likely and severe</h2>
-  <div class="split split--center" style="--split-left: 0.9fr; --split-right: 1.1fr;">
-    <figure class="matrix" aria-label="Risks placed by likelihood and impact">
-      <p class="matrix__axis-y">Impact</p>
-      <p class="matrix__level matrix__level--y" style="grid-row: 1;">High</p>
-      <p class="matrix__level matrix__level--y" style="grid-row: 2;">Medium</p>
-      <p class="matrix__level matrix__level--y" style="grid-row: 3;">Low</p>
-      <!-- Nine cells, top row first: high impact, likelihood low to high. Move a risk by moving its dot. -->
-      <div class="matrix__cell" style="--heat: 2;"></div>
-      <div class="matrix__cell" style="--heat: 3;"><span class="risk-dot">2</span></div>
-      <div class="matrix__cell" style="--heat: 4;"><span class="risk-dot is-key">1</span></div>
-      <div class="matrix__cell" style="--heat: 1;"></div>
-      <div class="matrix__cell" style="--heat: 2;"><span class="risk-dot">3</span></div>
-      <div class="matrix__cell" style="--heat: 3;"></div>
-      <div class="matrix__cell" style="--heat: 0;"></div>
-      <div class="matrix__cell" style="--heat: 1;"></div>
-      <div class="matrix__cell" style="--heat: 2;"></div>
-      <p class="matrix__level matrix__level--x" style="grid-column: 3;">Low</p>
-      <p class="matrix__level matrix__level--x" style="grid-column: 4;">Medium</p>
-      <p class="matrix__level matrix__level--x" style="grid-column: 5;">High</p>
-      <p class="matrix__axis-x">Likelihood</p>
-    </figure>
-    <ol class="risks">
-      <li><span class="risk-dot is-key">1</span><strong>The risk, as what could happen</strong><p>Owner. What we are doing about it.</p></li>
-      <li><span class="risk-dot">2</span><strong>Another risk</strong><p>Owner. What we are doing about it.</p></li>
-      <li><span class="risk-dot">3</span><strong>A third risk</strong><p>Owner. What we are doing about it.</p></li>
-    </ol>
-  </div>
-  <p class="source">Source: risk register, and the date it was last reviewed.</p>
-  <aside class="notes">Up to six risks fit. --heat on each cell shades it from 0 to 4.</aside>
+<section class="slide" id="matrix">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">An action title that names what lands in the top-right quadrant</h2>
+  <figure class="exhibit">
+    <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Items by the two measures that matter</p>
+    <div class="matrix-layout">
+      <div class="matrix" aria-label="Describe where each numbered item sits">
+        <p class="matrix__axis matrix__axis--y"><span>Lower</span><b>Second measure</b><span>Higher</span></p>
+        <div class="matrix__plot">
+          <p class="matrix__quadrant">Top left</p>
+          <p class="matrix__quadrant is-hot">Top right: act now</p>
+          <p class="matrix__quadrant">Bottom left</p>
+          <p class="matrix__quadrant">Bottom right</p>
+          <!-- --x and --y place each marker, from 0 to 100, measured from the bottom left. -->
+          <span class="marker is-key" style="--x: 78; --y: 80;">1</span>
+          <span class="marker" style="--x: 30; --y: 70;">2</span>
+          <span class="marker" style="--x: 70; --y: 28;">3</span>
+        </div>
+        <p class="matrix__axis matrix__axis--x"><span>Lower</span><b>First measure</b><span>Higher</span></p>
+      </div>
+      <table class="table">
+        <thead><tr><th scope="col"></th><th scope="col">Item and owner</th><th scope="col">Response</th></tr></thead>
+        <tbody>
+          <tr class="is-key-row"><td><span class="marker is-key">1</span></td><td><strong>The item that matters</strong><br><span class="soft">Owner, role</span></td><td>What we do about it</td></tr>
+          <tr><td><span class="marker">2</span></td><td><strong>Another item</strong><br><span class="soft">Owner, role</span></td><td>What we do about it</td></tr>
+          <tr><td><span class="marker">3</span></td><td><strong>A third item</strong><br><span class="soft">Owner, role</span></td><td>What we do about it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </figure>
+  <footer class="footer"><p class="footer__source">Source: name the register or assessment, and its date.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">Start with the top-right quadrant. Up to six items fit.</aside>
 </section>

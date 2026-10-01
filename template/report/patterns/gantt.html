@@ -1,0 +1,29 @@
+<section class="slide" id="gantt">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">An action title that names the date everything depends on</h2>
+  <figure class="exhibit">
+    <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Roadmap by workstream, period</p>
+    <!-- Dates (YYYY-MM-DD) place bars, milestones and lines. Each month span sets --days. -->
+    <div class="gantt" data-from="2027-01-01" data-to="2027-03-31">
+      <p class="gantt__corner">Workstream</p>
+      <p class="gantt__months"><span style="--days: 31;">January</span><span style="--days: 28;">February</span><span style="--days: 31;">March</span></p>
+      <p class="gantt__name">First workstream<span>The work, as a verb and an object</span></p>
+      <div class="gantt__lane">
+        <i class="gantt__bar is-key" data-start="2027-01-04" data-end="2027-02-12"></i>
+        <span class="gantt__milestone is-key" data-date="2027-02-12"><b>12 Feb</b> Done</span>
+      </div>
+      <p class="gantt__name">Second workstream<span>The work</span></p>
+      <div class="gantt__lane">
+        <i class="gantt__bar" data-start="2027-01-18" data-end="2027-03-19"></i>
+        <span class="gantt__milestone" data-date="2027-01-18"><b>18 Jan</b> Start</span>
+        <span class="gantt__milestone" data-date="2027-03-19"><b>19 Mar</b> Live</span>
+      </div>
+      <i class="gantt__line" data-edge="2027-02-01"></i>
+      <i class="gantt__line" data-edge="2027-03-01"></i>
+      <span class="gantt__today" data-date="2027-01-11">Today, 11 Jan</span>
+    </div>
+  </figure>
+  <footer class="footer"><p class="footer__source">Dates are targets as of the date of this review.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">Say which milestone the rest depends on, and what happens if it slips. Up to seven workstreams fit.</aside>
+</section>

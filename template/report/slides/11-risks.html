@@ -1,0 +1,40 @@
+<section class="slide" id="risks">
+  <nav class="tracker" data-tracker aria-label="Sections"></nav>
+  <h2 class="action-title">One risk is both likely and severe: the supply of controller chips</h2>
+  <figure class="exhibit">
+    <p class="exhibit__head"><span class="exhibit__label">Exhibit <span data-exhibit-number></span></span>Main risks to Q4, by likelihood and impact</p>
+    <div class="matrix-layout">
+      <div class="matrix" aria-label="Five numbered risks on a two by two matrix of likelihood and impact. Only risk 1 is in the high likelihood, high impact quadrant.">
+        <p class="matrix__axis matrix__axis--y"><span>Lower</span><b>Impact</b><span>Higher</span></p>
+        <div class="matrix__plot">
+          <p class="matrix__quadrant">Prepare a response</p>
+          <p class="matrix__quadrant is-hot">Act now</p>
+          <p class="matrix__quadrant">Watch</p>
+          <p class="matrix__quadrant">Manage in the plan</p>
+          <!-- --x is likelihood and --y is impact, from 0 to 100. -->
+          <span class="marker is-key" style="--x: 80; --y: 80;">1</span>
+          <span class="marker" style="--x: 28; --y: 30;">2</span>
+          <span class="marker" style="--x: 76; --y: 30;">3</span>
+          <span class="marker" style="--x: 40; --y: 76;">4</span>
+          <span class="marker" style="--x: 18; --y: 64;">5</span>
+        </div>
+        <p class="matrix__axis matrix__axis--x"><span>Lower</span><b>Likelihood</b><span>Higher</span></p>
+      </div>
+      <table class="table">
+        <thead>
+          <tr><th scope="col"></th><th scope="col">Risk and owner</th><th scope="col">Response</th></tr>
+        </thead>
+        <tbody>
+          <tr class="is-key-row"><td><span class="marker is-key">1</span></td><td><strong>Chip supply stays short in Q4</strong><br><span class="soft">Jonas Berg, COO</span></td><td>Second supplier: decision 1</td></tr>
+          <tr><td><span class="marker">2</span></td><td><strong>A large customer delays its Pulse rollout</strong><br><span class="soft">Luis Ortega, CCO</span></td><td>Weekly review with the customer</td></tr>
+          <tr><td><span class="marker">3</span></td><td><strong>Field engineer hiring stays behind plan</strong><br><span class="soft">Mia Laine, HR director</span></td><td>Partner installers in the Nordics</td></tr>
+          <tr><td><span class="marker">4</span></td><td><strong>New security rules need firmware changes</strong><br><span class="soft">Priya Raman, CTO</span></td><td>Firmware review finishes in December</td></tr>
+          <tr><td><span class="marker">5</span></td><td><strong>Low-cost sensor makers cut prices</strong><br><span class="soft">Luis Ortega, CCO</span></td><td>Sell sensors with Pulse, not alone</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </figure>
+  <footer class="footer"><p class="footer__source">Source: risk register, reviewed by the leadership team on 1 October 2026. Placement is the team's judgment.</p><p class="footer__page" data-page-number></p></footer>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">Five risks from the register, placed by how likely they are and how much they would hurt. Risk 1 is the only one in the act-now corner: if the chip stays short, Q4 hardware slips like Q3 did. The answer is a second supplier, which is the first decision we ask for. Risks 3 and 4 are the next to watch. The others have owners and actions, and I'm not asking for anything on them today.</aside>
+</section>

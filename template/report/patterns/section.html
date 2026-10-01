@@ -1,8 +1,17 @@
-<section class="slide" data-background-color="var(--color-panel)">
-  <div class="section-mark">
-    <p class="section-mark__number">2</p>
-    <h2 class="section-mark__title">Name the part of the review that starts here</h2>
-    <p class="lead">One sentence on what this part answers.</p>
+<section class="slide slide--dark" id="section" data-section="Section name" data-background-color="var(--color-navy)">
+  <!-- data-section starts a section: the tracker on this page and the ones after it shows it. -->
+  <div class="divider">
+    <div>
+      <p class="divider__number">1</p>
+      <h2 class="divider__title">Section name</h2>
+      <p class="divider__lead">The question this section answers, in one sentence.</p>
+    </div>
+    <ol class="divider__list">
+      <li><span>First page in this section</span><span data-page-of="chart-takeaway"></span></li>
+      <li><span>Second page in this section</span><span data-page-of="chart-callouts"></span></li>
+    </ol>
   </div>
-  <aside class="notes">Use a divider only in a long review, between results, risks and decisions. Number the parts in the order you present them.</aside>
+  <nav class="tracker tracker--dark" data-tracker aria-label="Sections"></nav>
+  <script src="./assets/acme-deck.js"></script>
+  <aside class="notes">Say what this section shows and how long it takes.</aside>
 </section>

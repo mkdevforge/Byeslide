@@ -1,47 +1,72 @@
 @font-face {
   font-display: block;
-  font-family: "Archivo";
-  font-stretch: 62% 125%;
-  font-weight: 100 900;
-  src: url("assets/fonts/archivo.woff2") format("woff2");
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 200 800;
+  src: url("assets/fonts/newsreader.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: block;
+  font-family: "Instrument Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  src: url("assets/fonts/instrument-sans.woff2") format("woff2");
 }
 
 :root {
-  /* Fonts. One family; its width axis sets the roles. */
-  --font-sans: "Archivo", "Segoe UI", system-ui, sans-serif;
-  --stretch-readout: 70%;
-  --stretch-title: 125%;
+  /* Fonts. Newsreader for action titles, the cover and section dividers; its optical
+     size axis sharpens it at title sizes. Instrument Sans for everything else. */
+  --font-serif: "Newsreader", Georgia, serif;
+  --font-sans: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
 
-  /* Colors. Orange is the needle: it marks the one thing to look at on a slide, and nothing else. */
+  /* Colors. Navy carries text and the main data; blues and grays the rest.
+     Copper is the accent: it marks the point of a slide, once, and nothing else.
+     Green and red mean ahead and behind, only on small markers next to a word. */
   --color-surface: #ffffff;
-  --color-panel: #eef0ed;
-  --color-rule: #d8dcd9;
-  --color-ink: #2a3136;
-  --color-ink-soft: #5d676d;
-  --color-compare: #8f989c;
-  --color-accent: #f2581c;
-  --color-good: #1f7a4d;
-  --color-bad: #b42318;
+  --color-navy: #0f2340;
+  --color-ink-2: #46566c;
+  --color-muted: #5e6b7d;
+  --color-blue-1: #2b5788;
+  --color-blue-2: #5f82ad;
+  --color-blue-3: #9db4d1;
+  --color-blue-4: #d3deec;
+  --color-rule: #d5dbe3;
+  --color-grid: #e6eaef;
+  --color-panel: #f2f4f7;
+  --color-accent: #b8541a;
+  --color-good: #1d7a4e;
+  --color-bad: #b0263a;
 
-  /* Layout */
-  --slide-padding: 88px 112px 64px;
-  --slide-gap: 44px;
-  --gutter: 64px;
-  --track: 8px;
-  --needle: 6px;
-  --radius: 4px;
+  /* On navy: the cover and section dividers. */
+  --color-on-dark: #ffffff;
+  --color-on-dark-soft: #b9c6d8;
+  --color-on-dark-muted: #8fa2bc;
+  --color-on-dark-rule: #33496b;
+  --color-accent-on-dark: #e0864b;
 
-  /* Type sizes */
-  --text-note: 24px;
-  --text-small: 28px;
-  --text-body: 34px;
-  --text-lead: 42px;
-  --text-h3: 44px;
-  --text-h2: 66px;
-  --text-h1: 112px;
-  --text-readout: 136px;
-  --text-display: 290px;
-  --line-tight: 0.9;
-  --line-heading: 1.06;
-  --line-body: 1.3;
+  /* Deck text: the line every content page prints in its footer. */
+  --confidential: "Confidential. Prepared for the Acme Corp leadership team.";
+
+  /* Layout. The tracker sits in the top margin and the footer in the bottom one. */
+  --slide-padding: 108px 104px 104px;
+  --margin-x: 104px;
+  --tracker-top: 40px;
+  --footer-bottom: 40px;
+  --slide-gap: 32px;
+  --gutter: 56px;
+  --radius: 2px;
+
+  /* Type sizes, for a 1920 x 1080 page that is also read as a PDF. */
+  --text-footer: 18px;
+  --text-label: 22px;
+  --text-small: 24px;
+  --text-body: 28px;
+  --text-lead: 32px;
+  --text-title: 54px;
+  --text-divider: 112px;
+  --text-cover: 132px;
+  --text-numeral: 280px;
+  --line-title: 1.1;
+  --line-body: 1.35;
 }
