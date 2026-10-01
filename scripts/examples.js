@@ -27,6 +27,9 @@ async function build() {
   }
 
   await fs.writeFile(path.join(OUT_DIR, "index.html"), renderIndex(listTemplates()), "utf8");
+  // Cloudflare Pages headers: deck files keep their names between releases, so
+  // browsers must check for a newer version on every visit.
+  await fs.writeFile(path.join(OUT_DIR, "_headers"), "/*\n  Cache-Control: no-cache\n", "utf8");
   console.log(`Wrote ${path.relative(process.cwd(), OUT_DIR)}`);
 }
 

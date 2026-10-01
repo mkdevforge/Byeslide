@@ -1,0 +1,5 @@
+# Cloudflare Pages headers for the website.
+# Files keep their names between releases, so browsers must check for a newer
+# version on every visit. Unchanged files answer with a short 304 response.
+/*
+  Cache-Control: no-cache
