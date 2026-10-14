@@ -69,12 +69,13 @@ byeslide build [dir] [--out dist] [--no-clean]
 byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
 byeslide check [dir] [--json] [--out dist] [--no-clean]
 byeslide pdf [dir] [--output dist/<title>.pdf] [--out dist] [--no-clean]
+byeslide screenshot [dir] [--slides 2,5-7] [--wait 1000] [--output dist/screenshots] [--out dist] [--no-clean]
 byeslide bundle [dir] [--output dist/<title>.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]
 byeslide patterns [dir]
 byeslide install-browsers [chromium]
 ```
 
-`build` writes a standalone Reveal deck to `dist/index.html` and copies Reveal runtime assets locally. `preview` rebuilds on file changes and injects a live reload hook. `check` opens the deck in Chromium and reports slide overflow against the fixed logical viewport. `pdf` uses the same HTML deck with `?view=print`.
+`build` writes a standalone Reveal deck to `dist/index.html` and copies Reveal runtime assets locally. `preview` rebuilds on file changes and injects a live reload hook. `check` opens the deck in Chromium and reports slide overflow against the fixed logical viewport. `pdf` uses the same HTML deck with `?view=print`. `screenshot` writes one PNG per slide and a contact sheet, `sheet.png`, to `dist/screenshots/`, so an agent can review the whole deck from one image. `--slides` limits it to some slides, and `--wait` sets how long each slide settles before capture. Screenshots and PDFs show each slide at its last fragment, with CSS animations at their end state.
 
 Built decks include a generator meta tag and expose `window.Byeslide.version`, so hosted decks can be traced back to the Byeslide package version that produced them.
 
@@ -100,7 +101,7 @@ Video makes the file big: every megabyte of video adds about 1.33 MB to the HTML
 
 Limits: files that scripts load while the deck runs, such as `fetch("assets/data.json")` or `new URL("./x.png", import.meta.url)`, are not bundled; `bundle` warns with the file and line. Anything loaded from `http(s)://` still needs a network, and `bundle` warns about each such reference in HTML, CSS and module imports. The command prints the file size and the largest inlined files.
 
-If `check` or `pdf` cannot find a browser, run:
+If `check`, `screenshot` or `pdf` cannot find a browser, run:
 
 ```sh
 byeslide install-browsers
@@ -112,7 +113,7 @@ byeslide install-browsers
 2. Read `patterns/` and choose the closest slide pattern.
 3. Copy that markup into `slides/NN-name.html`.
 4. Replace the content and make small structural edits only where needed.
-5. Run `byeslide build` and `byeslide check`.
+5. Run `byeslide build`, `byeslide check` and `byeslide screenshot`.
 
 Slide files may be fragments or full HTML documents. Fragments are the default and are wrapped in Reveal `<section>` elements during build.
 

@@ -453,12 +453,13 @@ Pause here for questions.</code></pre>
                 <div><dt><code>byeslide preview <span class="nw">[dir]</span> <span class="nw">[--host 127.0.0.1]</span> <span class="nw">[--port 4173]</span> <span class="nw">[--out dist]</span></code></dt><dd>Serves the deck, rebuilds on every change and reloads the browser.</dd></div>
                 <div><dt><code>byeslide check <span class="nw">[dir]</span> <span class="nw">[--json]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Opens each slide in Chromium and reports content that does not fit.</dd></div>
                 <div><dt><code>byeslide pdf <span class="nw">[dir]</span> <span class="nw">[--output dist/&lt;title&gt;.pdf]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Exports the print view to PDF.</dd></div>
+                <div><dt><code>byeslide screenshot <span class="nw">[dir]</span> <span class="nw">[--slides 2,5-7]</span> <span class="nw">[--wait 1000]</span> <span class="nw">[--output dist/screenshots]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Writes one PNG per slide and a contact sheet, <code>sheet.png</code>, with every slide on one image.</dd></div>
                 <div><dt><code>byeslide bundle <span class="nw">[dir]</span> <span class="nw">[--output dist/&lt;title&gt;.html]</span> <span class="nw">[--max-asset-mb 20]</span> <span class="nw">[--link-large-media]</span> <span class="nw">[--out dist]</span> <span class="nw">[--no-clean]</span></code></dt><dd>Writes the whole deck into one HTML file that opens offline.</dd></div>
                 <div><dt><code>byeslide patterns <span class="nw">[dir]</span></code></dt><dd>Lists the pattern files.</dd></div>
-                <div><dt><code>byeslide install-browsers <span class="nw">[chromium]</span></code></dt><dd>Installs the Chromium that <code>check</code> and <code>pdf</code> use.</dd></div>
+                <div><dt><code>byeslide install-browsers <span class="nw">[chromium]</span></code></dt><dd>Installs the Chromium that <code>check</code>, <code>screenshot</code> and <code>pdf</code> use.</dd></div>
                 <div><dt><code>byeslide --version</code></dt><dd>Prints the installed version.</dd></div>
               </dl>
-              <p>A deck installs Byeslide as a dev dependency, so inside a deck run these commands as <code>pnpm exec byeslide</code>, or use the scripts in the starter's <code>package.json</code>: <code>pnpm build</code>, <code>pnpm preview</code>, <code>pnpm check</code>, <code>pnpm pdf</code> and <code>pnpm bundle</code>. <code>pnpm pdf</code> writes <code>dist/deck.pdf</code>.</p>
+              <p>A deck installs Byeslide as a dev dependency, so inside a deck run these commands as <code>pnpm exec byeslide</code>, or use the scripts in the starter's <code>package.json</code>: <code>pnpm build</code>, <code>pnpm preview</code>, <code>pnpm check</code>, <code>pnpm screenshot</code>, <code>pnpm pdf</code> and <code>pnpm bundle</code>. <code>pnpm pdf</code> writes <code>dist/deck.pdf</code>.</p>
             </section>
 
             <section class="doc__section" id="presenting">
@@ -498,7 +499,7 @@ Pause here for questions.</code></pre>
             <section class="doc__section" id="troubleshooting">
               <h2>Troubleshooting</h2>
               <dl class="doc-dl">
-                <div><dt><code>check</code> or <code>pdf</code> cannot find a browser</dt><dd>Run <code>byeslide install-browsers</code>.</dd></div>
+                <div><dt><code>check</code>, <code>screenshot</code> or <code>pdf</code> cannot find a browser</dt><dd>Run <code>byeslide install-browsers</code>.</dd></div>
                 <div><dt>Port 4173 is in use</dt><dd><code>preview</code> tries the next ports and prints the address it uses.</dd></div>
                 <div><dt>Which version built this deck?</dt><dd>Built decks have a <code>generator</code> meta tag, and <code>window.Byeslide.version</code> returns the version.</dd></div>
               </dl>

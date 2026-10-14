@@ -7,13 +7,14 @@ description: Build, preview, check and export this Byeslide deck. Use for the pr
 
 Use for preview, validation, and export.
 
-Byeslide is a dev dependency of the deck. Run the commands inside the deck as `pnpm exec byeslide ...`, or use the scripts in `package.json`: `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm pdf` and `pnpm bundle`.
+Byeslide is a dev dependency of the deck. Run the commands inside the deck as `pnpm exec byeslide ...`, or use the scripts in `package.json`: `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm screenshot`, `pnpm pdf` and `pnpm bundle`.
 
 Commands:
 - `byeslide build --out dist` writes `dist/index.html`.
 - `byeslide preview --host 127.0.0.1 --port 4173` serves the deck and rebuilds on changes.
 - `byeslide check --out dist` opens Chromium and reports fixed-viewport overflow.
 - `byeslide pdf --output dist/deck.pdf --out dist` exports the print view.
+- `byeslide screenshot` writes `dist/screenshots/slide-NN.png` and a contact sheet, `dist/screenshots/sheet.png`. Look at the sheet to review every slide at once. `--slides 3,5` shoots only those slides.
 - `byeslide bundle` writes the deck into one HTML file that opens offline (`dist/<title>.html`). Report its warnings to the user; each names a file that is not inside the bundle.
 - `byeslide patterns` lists available pattern files.
 
@@ -24,5 +25,7 @@ Modes:
 - Speaker view: press `S` from the live deck.
 - Print view: `dist/index.html?view=print`
 - Scroll view: `dist/index.html?view=scroll`
+
+Every command rebuilds the deck and empties `dist/` first, so run `pnpm pdf` last.
 
 Do not edit files under `dist/`; rebuild instead.

@@ -90,6 +90,94 @@ async function checkDeck(deckDir = process.cwd(), options = {}) {
   }
 }
 
+async function screenshotDeck(deckDir = process.cwd(), options = {}) {
+  const result = await buildDeck(deckDir, {
+    clean: options.clean !== false,
+    outDir: options.outDir
+  });
+  const outputDir = options.output
+    ? path.resolve(result.deckDir, options.output)
+    : path.join(result.outDir, "screenshots");
+  const wait = options.wait === undefined ? 1000 : Number(options.wait);
+  if (!Number.isFinite(wait) || wait < 0) {
+    throw new Error("--wait must be a number of milliseconds.");
+  }
+  await fs.mkdir(outputDir, { recursive: true });
+  await removeOldScreenshots(outputDir);
+
+  const server = createStaticServer(result.outDir);
+  const url = await server.start();
+  const { chromium } = loadPlaywright();
+  let browser;
+
+  try {
+    browser = await launchChromium(chromium);
+    const page = await browser.newPage({
+      viewport: {
+        width: result.config.width,
+        height: result.config.height
+      }
+    });
+    const diagnostics = collectPageDiagnostics(page);
+    await page.goto(`${url}/index.html`, { waitUntil: "networkidle" });
+    await waitForReveal(page, diagnostics);
+    // Fill the viewport with the slide at scale 1 and hide the presenter chrome.
+    await page.evaluate(() => {
+      window.Reveal.configure({
+        margin: 0,
+        controls: false,
+        progress: false,
+        slideNumber: false,
+        transition: "none",
+        backgroundTransition: "none"
+      });
+      window.Reveal.layout();
+    });
+
+    const slides = await page.evaluate(() => window.Reveal.getSlides().map((slide, index) => ({
+      index: index + 1,
+      source: slide.getAttribute("data-byeslide-source") || `slide-${index + 1}`
+    })));
+    const selected = selectSlides(slides, options.slides);
+    const digits = Math.max(2, String(slides.length).length);
+    const shots = [];
+
+    for (const slide of selected) {
+      // Show the slide with every fragment visible, as the audience sees it at the end.
+      await page.evaluate((index) => {
+        const target = window.Reveal.getSlides()[index - 1];
+        const { h, v } = window.Reveal.getIndices(target);
+        window.Reveal.slide(h, v);
+        while (window.Reveal.nextFragment()) {
+          // advance to the last fragment
+        }
+      }, slide.index);
+      await waitFrames(page);
+      await page.waitForTimeout(wait);
+      await finishAnimations(page);
+      await waitFrames(page);
+      const file = path.join(outputDir, `slide-${String(slide.index).padStart(digits, "0")}.png`);
+      await page.screenshot({ path: file });
+      shots.push({ ...slide, file });
+    }
+
+    const sheet = path.join(outputDir, "sheet.png");
+    await writeContactSheet(browser, shots, sheet, result.config);
+
+    return {
+      ...result,
+      outputDir,
+      sheet,
+      shots
+    };
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+    await server.close();
+  }
+}
+
 // Print view marks every slide as present, so CSS animations start at load.
 // Jump finite animations and transitions to their end state before capture.
 async function finishAnimations(page) {
@@ -105,6 +193,84 @@ async function finishAnimations(page) {
       }
     }
   });
+}
+
+async function waitFrames(page) {
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+
+function selectSlides(slides, spec) {
+  if (spec === undefined || spec === true || spec === "") {
+    return slides;
+  }
+
+  const wanted = new Set();
+  for (const part of String(spec).split(",")) {
+    const match = part.trim().match(/^(\d+)(?:-(\d+))?$/);
+    if (!match) {
+      throw new Error(`--slides expects slide numbers like 3 or 2,5-7, not "${part.trim()}".`);
+    }
+    const start = Number(match[1]);
+    const end = Number(match[2] || match[1]);
+    for (let index = Math.min(start, end); index <= Math.max(start, end); index += 1) {
+      wanted.add(index);
+    }
+  }
+
+  const missing = [...wanted].filter((index) => index < 1 || index > slides.length);
+  if (missing.length > 0) {
+    throw new Error(`The deck has ${slides.length} slides. No slide ${missing.join(", ")}.`);
+  }
+
+  return slides.filter((slide) => wanted.has(slide.index));
+}
+
+async function removeOldScreenshots(outputDir) {
+  const entries = await fs.readdir(outputDir);
+  await Promise.all(entries
+    .filter((name) => /^slide-\d+\.png$/.test(name) || name === "sheet.png")
+    .map((name) => fs.rm(path.join(outputDir, name), { force: true })));
+}
+
+async function writeContactSheet(browser, shots, output, config) {
+  const columns = Math.min(4, shots.length);
+  const thumbWidth = 480;
+  const thumbHeight = Math.round(thumbWidth * config.height / config.width);
+  const gap = 16;
+  const figures = [];
+  for (const shot of shots) {
+    const data = (await fs.readFile(shot.file)).toString("base64");
+    figures.push(`<figure><img src="data:image/png;base64,${data}"><figcaption>${shot.index} &middot; ${escapeHtml(shot.source)}</figcaption></figure>`);
+  }
+
+  const page = await browser.newPage({
+    viewport: {
+      width: columns * thumbWidth + (columns + 1) * gap,
+      height: thumbHeight
+    }
+  });
+  try {
+    await page.setContent(`<!doctype html>
+<style>
+  body { margin: 0; padding: ${gap}px; background: #d4d4d4; font: 14px/1.3 system-ui, sans-serif; color: #222; }
+  main { display: grid; grid-template-columns: repeat(${columns}, ${thumbWidth}px); gap: ${gap}px; }
+  figure { margin: 0; }
+  img { display: block; width: ${thumbWidth}px; height: ${thumbHeight}px; background: white; }
+  figcaption { padding-top: 4px; }
+</style>
+<main>${figures.join("")}</main>`);
+    await page.waitForFunction(() => Array.from(document.images).every((image) => image.complete));
+    await page.screenshot({ path: output, fullPage: true });
+  } finally {
+    await page.close();
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 function loadPlaywright() {
@@ -286,6 +452,8 @@ module.exports = {
   launchChromium,
   measureSlides,
   resolvePdfOutput,
+  screenshotDeck,
+  selectSlides,
   slugify,
   waitForReveal
 };

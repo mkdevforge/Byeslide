@@ -4,7 +4,7 @@ const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
 const { buildDeck } = require("../src/build");
-const { finishAnimations, launchChromium } = require("../src/browser");
+const { finishAnimations, launchChromium, screenshotDeck } = require("../src/browser");
 const { createStaticServer } = require("../src/static-server");
 
 async function makeDeck(slides, css) {
@@ -93,4 +93,20 @@ test("finishAnimations shows CSS animations at their end state", async (t) => {
   } finally {
     await server.close();
   }
+});
+
+test("screenshotDeck writes slide images and a contact sheet", async (t) => {
+  const deckDir = await makeDeck({
+    "01-one.html": "<section><h2>One</h2></section>",
+    "02-two.html": "<section><h2>Two</h2><p class=\"fragment\">Step</p></section>",
+    "03-three.html": "<section><h2>Three</h2></section>"
+  }, "");
+
+  await withBrowser(t, async () => {
+    const result = await screenshotDeck(deckDir, { slides: "2-3", wait: 0 });
+    const files = (await fs.readdir(result.outputDir)).sort();
+
+    assert.deepEqual(files, ["sheet.png", "slide-02.png", "slide-03.png"]);
+    assert.deepEqual(result.shots.map((shot) => shot.source), ["slides/02-two.html", "slides/03-three.html"]);
+  });
 });

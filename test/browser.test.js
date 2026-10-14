@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const test = require("node:test");
-const { formatDiagnostics, resolvePdfOutput, waitForReveal } = require("../src/browser");
+const { formatDiagnostics, resolvePdfOutput, selectSlides, waitForReveal } = require("../src/browser");
 
 test("waitForReveal fails when Reveal never becomes ready", async () => {
   const page = {
@@ -32,4 +32,14 @@ test("resolvePdfOutput defaults to the actual build output directory", () => {
 
   assert.equal(resolvePdfOutput(result), path.resolve("deck", "public", "demo-deck.pdf"));
   assert.equal(resolvePdfOutput(result, "exports/demo.pdf"), path.resolve("deck", "exports", "demo.pdf"));
+});
+
+test("selectSlides picks slides by number and range", () => {
+  const slides = [1, 2, 3, 4, 5].map((index) => ({ index }));
+
+  assert.deepEqual(selectSlides(slides).map((slide) => slide.index), [1, 2, 3, 4, 5]);
+  assert.deepEqual(selectSlides(slides, "4,1-2").map((slide) => slide.index), [1, 2, 4]);
+  assert.deepEqual(selectSlides(slides, 3).map((slide) => slide.index), [3]);
+  assert.throws(() => selectSlides(slides, "2,9"), /The deck has 5 slides\. No slide 9\./);
+  assert.throws(() => selectSlides(slides, "two"), /--slides expects slide numbers/);
 });

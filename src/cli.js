@@ -4,7 +4,7 @@ const path = require("node:path");
 const packageJson = require("../package.json");
 const { buildDeck } = require("./build");
 const { bundleDeck, formatBytes } = require("./bundle");
-const { checkDeck, exportPdf, installBrowsers } = require("./browser");
+const { checkDeck, exportPdf, installBrowsers, screenshotDeck } = require("./browser");
 const { loadConfig } = require("./config");
 const { initDeck } = require("./init");
 const { pickTemplate } = require("./prompt");
@@ -37,6 +37,8 @@ async function main(argv = process.argv.slice(2)) {
       return runCheck(parsed);
     case "pdf":
       return runPdf(parsed);
+    case "screenshot":
+      return runScreenshot(parsed);
     case "bundle":
       return runBundle(parsed);
     case "patterns":
@@ -132,6 +134,21 @@ async function runPdf(parsed) {
     output: parsed.options.output
   });
   console.log(`Wrote ${path.relative(result.deckDir, result.output) || result.output}`);
+  return 0;
+}
+
+async function runScreenshot(parsed) {
+  const deckDir = parsed.positionals[0] || process.cwd();
+  const result = await screenshotDeck(deckDir, {
+    clean: parsed.options.clean !== false,
+    outDir: parsed.options.out,
+    output: parsed.options.output,
+    slides: parsed.options.slides,
+    wait: parsed.options.wait
+  });
+  const count = result.shots.length;
+  console.log(`Wrote ${count} slide ${count === 1 ? "image" : "images"} to ${path.relative(result.deckDir, result.outputDir) || result.outputDir}`);
+  console.log(`Contact sheet: ${path.relative(result.deckDir, result.sheet) || result.sheet}`);
   return 0;
 }
 
@@ -266,6 +283,7 @@ Usage:
   byeslide preview [dir] [--host 127.0.0.1] [--port 4173] [--out dist]
   byeslide check [dir] [--json] [--out dist] [--no-clean]
   byeslide pdf [dir] [--output dist/<title>.pdf] [--out dist] [--no-clean]
+  byeslide screenshot [dir] [--slides 2,5-7] [--wait 1000] [--output dist/screenshots] [--out dist] [--no-clean]
   byeslide bundle [dir] [--output dist/<title>.html] [--max-asset-mb 20] [--link-large-media] [--out dist] [--no-clean]
   byeslide patterns [dir]
   byeslide install-browsers [chromium]

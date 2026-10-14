@@ -16,6 +16,7 @@ Workflow:
 - Use semantic classes from `styles.css`; use inline CSS variables only for one-off fit changes.
 - Run `pnpm build` after content edits.
 - Run `pnpm check` when text length, media, or layout changed.
+- Run `pnpm screenshot` and look at `dist/screenshots/sheet.png` to see the slides as rendered.
 
 The starter slides and patterns show structure and techniques. Their look is an example, not a house style: for a new deck, design a look that fits its subject in `theme.css` and `styles.css` (see the byeslide-theme skill) before filling slides.
 
