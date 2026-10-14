@@ -28,6 +28,7 @@ async function exportPdf(deckDir = process.cwd(), options = {}) {
     const diagnostics = collectPageDiagnostics(page);
     await page.goto(`${url}/index.html?view=print`, { waitUntil: "networkidle" });
     await waitForReveal(page, diagnostics);
+    await finishAnimations(page);
     await page.pdf({
       path: output,
       printBackground: true,
@@ -87,6 +88,23 @@ async function checkDeck(deckDir = process.cwd(), options = {}) {
     }
     await server.close();
   }
+}
+
+// Print view marks every slide as present, so CSS animations start at load.
+// Jump finite animations and transitions to their end state before capture.
+async function finishAnimations(page) {
+  await page.evaluate(() => {
+    for (const animation of document.getAnimations()) {
+      if (!Number.isFinite(animation.effect?.getComputedTiming().endTime)) {
+        continue;
+      }
+      try {
+        animation.finish();
+      } catch {
+        // A paused animation with playbackRate 0 cannot finish; leave it as is.
+      }
+    }
+  });
 }
 
 function loadPlaywright() {
@@ -262,6 +280,7 @@ module.exports = {
   checkDeck,
   exportPdf,
   collectPageDiagnostics,
+  finishAnimations,
   formatDiagnostics,
   installBrowsers,
   launchChromium,

@@ -4,7 +4,7 @@ const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
 const { buildDeck } = require("../src/build");
-const { launchChromium } = require("../src/browser");
+const { finishAnimations, launchChromium } = require("../src/browser");
 const { createStaticServer } = require("../src/static-server");
 
 async function makeDeck(slides, css) {
@@ -64,6 +64,31 @@ test("print view keeps each slide's live padding", async (t) => {
 
       assert.deepEqual(live, ["108,108", "200,60"]);
       assert.deepEqual(print, live);
+    });
+  } finally {
+    await server.close();
+  }
+});
+
+test("finishAnimations shows CSS animations at their end state", async (t) => {
+  const deckDir = await makeDeck({
+    "01-grow.html": "<section class=\"slide\"><div class=\"grow\" style=\"width: 400px; height: 20px\"></div></section>"
+  }, [
+    "@keyframes grow { from { width: 0; } }",
+    ".reveal .slides section.present .grow { animation: grow 30s both; }"
+  ].join("\n"));
+  const result = await buildDeck(deckDir);
+  const server = createStaticServer(result.outDir);
+  const url = await server.start();
+
+  try {
+    await withBrowser(t, async (browser) => {
+      const page = await openDeck(browser, url, "print");
+      const width = () => page.evaluate(() => document.querySelector(".grow").getBoundingClientRect().width);
+
+      assert.ok(await width() < 400);
+      await finishAnimations(page);
+      assert.equal(await width(), 400);
     });
   } finally {
     await server.close();
