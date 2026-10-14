@@ -121,7 +121,7 @@ Slide files may also include browser-side dependencies and setup scripts. Extern
 
 ## Working on the Templates
 
-The starter decks live in `template/`: one folder for each template (`template/tour`, `template/report`, `template/lesson`), and `template/shared` for the files every deck gets, such as the agent skills and `package.json`. `init` copies the shared files first, then the chosen template.
+The starter decks live in `template/`: one folder for each template (`template/tour`, `template/report`, `template/lesson`), and `template/shared` for the files every deck gets, such as `AGENTS.md`, the agent skills and `package.json`. `AGENTS.md` is a short guide for coding agents, and `CLAUDE.md` imports it for Claude Code. `init` copies the shared files first, then the chosen template.
 
 ```sh
 pnpm run build:template     # builds every template into template/dist/<name>/, with an index page
