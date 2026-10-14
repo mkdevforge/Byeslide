@@ -12,6 +12,7 @@ pnpm install:browsers
 pnpm build
 pnpm preview
 pnpm check
+pnpm screenshot
 pnpm pdf
 pnpm bundle
 ```

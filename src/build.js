@@ -382,7 +382,19 @@ ${slides}
           options.view = requestedView;
           if (requestedView === "print") {
             options.margin = 0;
+            keepLivePadding();
           }
+        }
+
+        // Reveal's print CSS sets padding: 0 !important on every slide, and the
+        // print rule above restores --byeslide-slide-padding. Record each slide's
+        // live padding there before Reveal starts, so the PDF matches the deck.
+        function keepLivePadding() {
+          document.querySelectorAll(".reveal .slides section[data-byeslide-source]").forEach((slide) => {
+            const style = getComputedStyle(slide);
+            const padding = [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].join(" ");
+            slide.style.setProperty("--byeslide-slide-padding", padding);
+          });
         }
 
         const plugins = ${globalsJson}

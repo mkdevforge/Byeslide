@@ -40,6 +40,8 @@ for (const template of listTemplates()) {
     assert.ok(await exists(path.join(target, ".gitignore")));
     assert.ok(await exists(path.join(target, "package.json")));
     assert.ok(await exists(path.join(target, ".codex", "skills", "byeslide-build", "SKILL.md")));
+    assert.ok(await exists(path.join(target, "AGENTS.md")));
+    assert.ok(await exists(path.join(target, "CLAUDE.md")));
   });
 }
 

@@ -59,3 +59,15 @@ test("every shared agent skill has a name and description header", async () => {
     assert.equal(header[1], skill);
   }
 });
+
+test("the shared agent guide names skills that exist and the screenshot script", async () => {
+  const guide = await fs.readFile(path.join(SHARED_DIR, "AGENTS.md"), "utf8");
+  const claude = await fs.readFile(path.join(SHARED_DIR, "CLAUDE.md"), "utf8");
+  const deckPackage = JSON.parse(await fs.readFile(path.join(SHARED_DIR, "package.json"), "utf8"));
+  const named = [...guide.matchAll(/`(byeslide-[a-z]+)\/SKILL\.md`/g)].map((match) => match[1]);
+
+  assert.equal(claude.trim(), "@AGENTS.md");
+  assert.equal(deckPackage.scripts.screenshot, "byeslide screenshot");
+  assert.match(guide, /pnpm screenshot/);
+  assert.deepEqual(named.sort(), (await fs.readdir(path.join(SHARED_DIR, ".codex", "skills"))).sort());
+});
